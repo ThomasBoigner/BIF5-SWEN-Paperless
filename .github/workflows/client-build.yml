@@ -1,0 +1,33 @@
+name: CI with Node
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+defaults:
+  run:
+    working-directory: PaperlessWebUI
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 23
+      - name: install dependencies
+        run: npm install
+      - name: run typescript compiler
+        run: tsc
+      - name: lint files
+        run: npm run lint
+      - name: check style
+        run: npm run prettier
+      - name: run tests
+        run: npm run test:ci
+      - name: build project
+        run: npm run build
