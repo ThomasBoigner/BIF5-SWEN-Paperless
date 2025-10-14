@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  paperless-rest:
+    container_name: paperless-rest
+    build:
+      context: PaperlessRest
+      dockerfile: src/main/docker/Dockerfile
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/paperless
+      - SPRING_DATASOURCE_USERNAME=paperless
+      - SPRING_DATASOURCE_PASSWORD=change-me
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    volumes:
+      - log4j2:/target/log4j-logs
+    networks:
+      - paperless
+
+  postgres:
+    image: 'postgres:17.5'
+    container_name: paperless-database
+    environment:
+      - POSTGRES_USER=paperless
+      - POSTGRES_PASSWORD=change-me
+    volumes:
+      - paperless-database:/var/lib/postgresql/data
+    networks:
+      - paperless
+
+  pgadmin:
+    image: 'dpage/pgadmin4:latest'
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@technikum-wien.at
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "9091:80"
+    networks:
+      - paperless
+
+  paperless-web-ui:
+    container_name: paperless-web-ui
+    build:
+      context: PaperlessWebUI
+      dockerfile: src/docker/Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - paperless
+
+volumes:
+  paperless-database: {}
+  log4j2: {}
+
+networks:
+  paperless:
+    driver: bridge
