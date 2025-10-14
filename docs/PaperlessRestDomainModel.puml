@@ -1,0 +1,26 @@
+@startuml
+hide methods
+
+class FileMetaData <<Entity>> {
+    id: Long
+    fileToken: FileToken
+    creationDate: LocalDateTime
+    fileName: FileName
+    fileSize: int
+    description: String
+    fullText: String
+    summary: String
+}
+
+class FileToken <<ValueObject>> {
+    fileToken: UUID
+}
+
+class FirstName <<ValueObject>> {
+    name: String
+    fileExtension: String
+}
+
+FileMetaData -- FileToken
+FileMetaData -- FirstName
+@enduml
