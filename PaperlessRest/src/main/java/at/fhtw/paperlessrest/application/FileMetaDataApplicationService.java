@@ -1,5 +1,6 @@
 package at.fhtw.paperlessrest.application;
 
+import at.fhtw.paperlessrest.application.commands.DeleteFileCommand;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
@@ -30,6 +31,24 @@ public class FileMetaDataApplicationService {
         List<FileMetaDataDto> fileMetaDataList = fileMetaDataRepository.findAll().stream().map(FileMetaDataDto::new).toList();
         log.debug("Retrieved all ({}) file meta data", fileMetaDataList.size());
         return fileMetaDataList;
+    }
+
+    @Transactional(readOnly = false)
+    public FileMetaDataDto getFileMetaData(@Nullable UUID token) {
+        Objects.requireNonNull(token, "token must not be null!");
+        log.debug("Retrieving file metadata for token {}", token);
+
+        Optional<FileMetaData> entity = fileMetaDataRepository.findFileMetaDataByFileToken(new FileToken(token));
+
+        if (entity.isEmpty()) {
+            log.warn("File with token {} cannot be found!", token);
+            throw new IllegalArgumentException(
+                    "File with token %s cannot be found!".formatted(token));
+        }
+
+        FileMetaDataDto fileMetaDataDto = new FileMetaDataDto(entity.get());
+        log.info("Successfully retrieved file metadata: {}", fileMetaDataDto);
+        return fileMetaDataDto;
     }
 
     @Transactional(readOnly = false)
@@ -68,5 +87,22 @@ public class FileMetaDataApplicationService {
 
         log.info("Successfully updated file meta data {}", fileMetaData);
         return new FileMetaDataDto(fileMetaDataRepository.save(fileMetaData));
+    }
+
+    @Transactional(readOnly = false)
+    public void deleteFileMetaData(@Nullable UUID token, @Nullable DeleteFileCommand command) {
+        Objects.requireNonNull(token, "token must not be null!");
+        Objects.requireNonNull(command, "command must not be null!");
+
+        Optional<FileMetaData> entity = fileMetaDataRepository.findFileMetaDataByFileToken(new FileToken(token));
+
+        if (entity.isEmpty()) {
+            log.warn("File with token {} can not be found!", token);
+            throw new IllegalArgumentException(
+                    "File with token %s can not be found!".formatted(token));
+        }
+
+        log.info("Successfully updated file meta data {}", entity);
+        fileMetaDataRepository.delete(entity.get());
     }
 }
