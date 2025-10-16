@@ -1,21 +1,28 @@
 package at.fhtw.paperlessrest.application;
 
+import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
 import at.fhtw.paperlessrest.domain.model.FileMetaData;
 import at.fhtw.paperlessrest.domain.model.FileMetaDataRepository;
+import at.fhtw.paperlessrest.domain.model.FileToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 
 @Service
 @Slf4j
+@Transactional(readOnly = true)
 public class FileMetaDataApplicationService {
     private final FileMetaDataRepository fileMetaDataRepository;
 
@@ -25,9 +32,11 @@ public class FileMetaDataApplicationService {
         return fileMetaDataList;
     }
 
-    public FileMetaDataDto uploadFile(MultipartFile file, UploadFileCommand command) {
-        Objects.requireNonNull(file);
-        Objects.requireNonNull(command);
+    @Transactional(readOnly = false)
+    public FileMetaDataDto uploadFile(@Nullable MultipartFile file, @Nullable UploadFileCommand command) {
+        Objects.requireNonNull(file, "file must not be null!");
+        Objects.requireNonNull(command, "command must not be null!");
+        log.debug("Trying to create file with file {} and command {}", file.getOriginalFilename(), command);
 
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName(file.getOriginalFilename())
@@ -38,5 +47,26 @@ public class FileMetaDataApplicationService {
         fileMetaDataRepository.save(fileMetaData);
         log.info("Uploaded file {}", fileMetaData);
         return new FileMetaDataDto(fileMetaData);
+    }
+
+    @Transactional(readOnly = false)
+    public FileMetaDataDto updateFileMetaData(@Nullable UUID token, @Nullable UpdateFileCommand command) {
+        Objects.requireNonNull(token, "token must not be null!");
+        Objects.requireNonNull(command, "command must not be null!");
+
+        Optional<FileMetaData> entity = fileMetaDataRepository.findFileMetaDataByFileToken(new FileToken(token));
+
+        if (entity.isEmpty()) {
+            log.warn("File with token {} can not be found!", token);
+            throw new IllegalArgumentException(
+                    "File with token %s can not be found!".formatted(token));
+        }
+
+        FileMetaData fileMetaData = entity.get();
+
+        fileMetaData.setDescription(command.description());
+
+        log.info("Successfully updated file meta data {}", fileMetaData);
+        return new FileMetaDataDto(fileMetaDataRepository.save(fileMetaData));
     }
 }
