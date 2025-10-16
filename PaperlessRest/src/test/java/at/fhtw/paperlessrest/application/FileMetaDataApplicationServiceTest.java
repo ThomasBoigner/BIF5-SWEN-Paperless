@@ -1,5 +1,6 @@
 package at.fhtw.paperlessrest.application;
 
+import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
 import at.fhtw.paperlessrest.domain.model.FileMetaData;
@@ -14,8 +15,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @NullUnmarked
@@ -72,5 +77,52 @@ public class FileMetaDataApplicationServiceTest {
         assertThat(result.fileName()).isEqualTo("test.txt");
         assertThat(result.fileSize()).isEqualTo(fileSize);
         assertThat(result.description()).isEqualTo(command.description());
+    }
+
+    @Test
+    void ensureUpdateFileWorksProperly() {
+        // Given
+        FileMetaData fileMetaData = FileMetaData.builder()
+                .fileName("test.txt")
+                .fileSize(1000)
+                .description("test")
+                .build();
+
+        UpdateFileCommand command = UpdateFileCommand.builder()
+                .description("updated")
+                .build();
+
+        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
+                .thenReturn(Optional.of(fileMetaData));
+        when(fileMetaDataRepository.save(any(FileMetaData.class)))
+                .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
+
+        // When
+        FileMetaDataDto result = fileMetaDataApplicationService.updateFileMetaData(fileMetaData.getFileToken().token(), command);
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.description()).isEqualTo(command.description());
+    }
+
+    @Test
+    void ensureUpdateFileThrowsExceptionWhenFileCanNotBeFound() {
+        // Given
+        FileMetaData fileMetaData = FileMetaData.builder()
+                .fileName("test.txt")
+                .fileSize(1000)
+                .description("test")
+                .build();
+
+        UpdateFileCommand command = UpdateFileCommand.builder()
+                .description("updated")
+                .build();
+
+        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
+                .thenReturn(Optional.empty());
+
+        // When
+        assertThrows(IllegalArgumentException.class,
+                () -> fileMetaDataApplicationService.updateFileMetaData(fileMetaData.getFileToken().token(), command));
     }
 }

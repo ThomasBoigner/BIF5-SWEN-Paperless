@@ -1,10 +1,12 @@
 package at.fhtw.paperlessrest.presentation;
 
 import at.fhtw.paperlessrest.application.FileMetaDataApplicationService;
+import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 
@@ -39,11 +42,17 @@ public class FileRestController {
     }
 
     @PostMapping(value = {"", PATH_INDEX})
-    public HttpEntity<FileMetaDataDto> uploadFile(@RequestPart("file") MultipartFile file,
-            @RequestPart("command") UploadFileCommand command) {
-        log.debug("Got Http POST request to upload file with file {} and command {}", file.getOriginalFilename(), command);
+    public HttpEntity<FileMetaDataDto> uploadFile(@Nullable @RequestPart("file") MultipartFile file,
+           @Nullable @RequestPart("command") UploadFileCommand command) {
+        log.debug("Got Http POST request to upload file with file {} and command {}", file != null ? file.getOriginalFilename() : "[name not found]", command);
         FileMetaDataDto fileMetaData = fileMetaDataApplicationService.uploadFile(file, command);
         return ResponseEntity.created(createSelfLink(fileMetaData)).body(fileMetaData);
+    }
+
+    @PutMapping(PATH_VAR_ID)
+    public HttpEntity<FileMetaDataDto> updateFileMetaData(@PathVariable UUID token, @RequestBody UpdateFileCommand command) {
+        log.debug("Got Http PUT request for token {} with file update command {}", token, command);
+        return ResponseEntity.ok(fileMetaDataApplicationService.updateFileMetaData(token, command));
     }
 
     private URI createSelfLink(FileMetaDataDto fileMetaData) {
