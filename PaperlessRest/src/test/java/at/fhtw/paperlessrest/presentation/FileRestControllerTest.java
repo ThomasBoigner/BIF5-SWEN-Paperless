@@ -1,9 +1,9 @@
 package at.fhtw.paperlessrest.presentation;
 
 import at.fhtw.paperlessrest.application.FileMetaDataApplicationService;
+import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
 import at.fhtw.paperlessrest.domain.model.FileMetaData;
-import at.fhtw.paperlessrest.domain.model.FileName;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jspecify.annotations.NullUnmarked;
@@ -14,13 +14,19 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,10 +50,7 @@ public class FileRestControllerTest {
 
         fileMetaDataDto = new FileMetaDataDto(
                 FileMetaData.builder()
-                .fileName(FileName.builder()
-                        .name("test")
-                        .fileExtension("txt")
-                        .build())
+                .fileName("test.txt")
                 .fileSize(1000)
                 .description("test")
                 .build()
@@ -76,5 +79,38 @@ public class FileRestControllerTest {
         mockMvc.perform(get("/api/files").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void ensureUploadFileWorksProperly() throws Exception {
+        // Given
+        MockMultipartFile filePart = new MockMultipartFile(
+                "file",
+                "test.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "This is a test file".getBytes(StandardCharsets.UTF_8)
+        );
+
+        UploadFileCommand command = UploadFileCommand.builder()
+                .description("test")
+                .build();
+        MockMultipartFile commandPart = new MockMultipartFile(
+                "command",
+                "",
+                MediaType.APPLICATION_JSON_VALUE,
+                objectMapper.writeValueAsBytes(command)
+        );
+
+        when(fileMetaDataApplicationService.uploadFile(any(MultipartFile.class), eq(command))).thenReturn(fileMetaDataDto);
+
+        // Perform
+        mockMvc.perform(multipart("/api/files")
+                        .file(filePart)
+                        .file(commandPart)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(objectMapper.writeValueAsString(fileMetaDataDto)));
     }
 }

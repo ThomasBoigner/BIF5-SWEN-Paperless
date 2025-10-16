@@ -10,6 +10,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Objects;
 
 @Slf4j
@@ -24,10 +25,9 @@ public class FileMetaData {
     @Embedded
     private FileToken fileToken;
     private LocalDateTime creationDate;
-    @Embedded
-    private FileName fileName;
+    private String fileName;
     @Setter
-    private int fileSize;
+    private long fileSize;
     @Nullable
     private String description;
 
@@ -39,14 +39,14 @@ public class FileMetaData {
     public FileMetaData() {
         fileToken = new FileToken();
         creationDate = LocalDateTime.MIN;
-        fileName = new FileName("Empty", "jpg");
+        fileName = "";
         fileSize = 0;
     }
 
     @Builder
-    public FileMetaData(FileName fileName, int fileSize, @Nullable String description) {
+    public FileMetaData(@Nullable String fileName, long fileSize, @Nullable String description) {
         this.setFileToken(new FileToken());
-        this.setCreationDate(LocalDateTime.now());
+        this.setCreationDate(LocalDateTime.now(ZoneId.systemDefault()));
         this.setFileName(fileName);
         this.setFileSize(fileSize);
         this.setDescription(description);
@@ -58,15 +58,18 @@ public class FileMetaData {
     }
 
     public final void setFileToken(@Nullable FileToken fileToken) {
-        Objects.requireNonNull(fileToken,  "fileToken must not be null!");
+        Objects.requireNonNull(fileToken,  "Token must not be null!");
         this.fileToken = fileToken;
     }
 
-    public final void setCreationDate(LocalDateTime creationDate) {
+    public final void setCreationDate(@Nullable LocalDateTime creationDate) {
+        Objects.requireNonNull(creationDate, "Creation date must not be null!");
         this.creationDate = creationDate;
     }
 
-    public final void setFileName(FileName fileName) {
+    public final void setFileName(@Nullable String fileName) {
+        Objects.requireNonNull(fileName, "File name must not be null!");
+        Assert.isTrue(!fileName.isBlank(), "File name must not be blank!");
         this.fileName = fileName;
     }
 
@@ -87,8 +90,7 @@ public class FileMetaData {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        FileMetaData that = (FileMetaData) o;
+        if (!(o instanceof FileMetaData that)) return false;
         return Objects.equals(fileToken, that.fileToken);
     }
 
