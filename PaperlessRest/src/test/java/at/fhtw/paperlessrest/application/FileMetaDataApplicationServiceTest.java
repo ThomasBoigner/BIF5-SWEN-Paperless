@@ -1,5 +1,6 @@
 package at.fhtw.paperlessrest.application;
 
+import at.fhtw.paperlessrest.application.commands.DeleteFileCommand;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
@@ -21,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @NullUnmarked
 @ExtendWith(MockitoExtension.class)
@@ -52,6 +53,28 @@ public class FileMetaDataApplicationServiceTest {
         // Then
         assertThat(result).hasSize(1);
         assertThat(result).contains(new FileMetaDataDto(fileMetaData));
+    }
+
+    @Test
+    void ensureGetFileByTokenWorksProperly() {
+        // Given
+        FileMetaData fileMetaData = FileMetaData.builder()
+                .fileName("test.txt")
+                .fileSize(1000)
+                .description("test")
+                .build();
+
+        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
+                .thenReturn(Optional.of(fileMetaData));
+
+        // When
+        FileMetaDataDto result = fileMetaDataApplicationService.getFileMetaData(fileMetaData.getFileToken().token());
+
+        // Then
+        assertThat(result).isNotNull();
+        assertThat(result.fileName()).isEqualTo("test.txt");
+        assertThat(result.description()).isEqualTo("test");
+        assertThat(result.fileSize()).isEqualTo(1000);
     }
 
     @Test
@@ -124,5 +147,29 @@ public class FileMetaDataApplicationServiceTest {
         // When
         assertThrows(IllegalArgumentException.class,
                 () -> fileMetaDataApplicationService.updateFileMetaData(fileMetaData.getFileToken().token(), command));
+    }
+
+    @Test
+    void ensureDeleteFileWorksProperly() {
+        // given
+        FileMetaData fileMetaData = FileMetaData.builder()
+                .fileName("test.txt")
+                .fileSize(1000)
+                .description("test")
+                .build();
+
+        DeleteFileCommand command = DeleteFileCommand.builder()
+                .description("deleted")
+                .build();
+
+        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
+                .thenReturn(Optional.of(fileMetaData));
+
+        // when
+        fileMetaDataApplicationService.deleteFileMetaData(fileMetaData.getFileToken().token(), command);
+
+        // then
+        verify(fileMetaDataRepository).delete(fileMetaData);
+        verify(fileMetaDataRepository, never()).save(any());
     }
 }
