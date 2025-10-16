@@ -30,7 +30,7 @@
             <AppenderRef ref="RollingFile"/>
         </Root>
 
-        <Logger name="at.fhtw.tourplanner" level="trace"/>
+        <Logger name="at.fhtw.paperlessrest" level="trace"/>
     </Loggers>
 
 </Configuration>

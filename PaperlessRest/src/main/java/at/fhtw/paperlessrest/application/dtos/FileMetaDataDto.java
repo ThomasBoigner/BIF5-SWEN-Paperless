@@ -10,7 +10,7 @@ public record FileMetaDataDto(
         UUID fileToken,
         LocalDateTime creationDate,
         String fileName,
-        int fileSize,
+        long fileSize,
         @Nullable
         String description,
         @Nullable
@@ -20,9 +20,9 @@ public record FileMetaDataDto(
 ) {
     public FileMetaDataDto(FileMetaData fileMetaData) {
         this(
-                fileMetaData.getFileToken().fileToken(),
+                fileMetaData.getFileToken().token(),
                 fileMetaData.getCreationDate(),
-                "%s.%s".formatted(fileMetaData.getFileName().name(), fileMetaData.getFileName().fileExtension()),
+                fileMetaData.getFileName(),
                 fileMetaData.getFileSize(),
                 fileMetaData.getDescription(),
                 fileMetaData.getFullText(),
