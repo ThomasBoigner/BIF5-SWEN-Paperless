@@ -1,0 +1,68 @@
+<div class="container">
+    <section id="sidebar-left">
+        <div class="sidebar-left-header">
+            <a routerLink="/">
+                <img ngSrc="app/assets/svg/logo.svg" width="48" height="64" alt="logo" />
+            </a>
+            <img ngSrc="app/assets/svg/hide-left.svg" width="64" height="64" alt="hide-left" />
+        </div>
+        <file-button
+            text="Upload file"
+            color="primary"
+            [primaryImage]="{
+                src: 'app/assets/svg/import.svg',
+                alt: 'import',
+                height: 32,
+                width: 24,
+            }"
+        ></file-button>
+        <search-bar placeholder="Search for file"></search-bar>
+
+        <div class="file-list">
+            <div class="file-list-item">
+                <h5>File-1.pdf</h5>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ...</p>
+            </div>
+        </div>
+    </section>
+    <section id="content"></section>
+    <section id="sidebar-right">
+        <img ngSrc="app/assets/svg/hide-right.svg" width="64" height="64" alt="hide-left" />
+        <div class="file-information">
+            <div class="description-container">
+                <h6>Description</h6>
+                <p>This is the description of the file.</p>
+            </div>
+            <div class="file-size-container">
+                <h6>File size</h6>
+                <p>100 Mb</p>
+            </div>
+            <div class="upload-date-container">
+                <h6>Upload date</h6>
+                <p>15.10.2025</p>
+            </div>
+        </div>
+        <div class="action-buttons">
+            <file-button
+                text="Update file"
+                color="secondary"
+                [primaryImage]="{
+                    src: 'app/assets/svg/update.svg',
+                    alt: 'update',
+                    height: 32,
+                    width: 41,
+                }"
+            ></file-button>
+            <file-button
+                text="Upload file"
+                color="error"
+                [primaryImage]="{
+                    src: 'app/assets/svg/delete.svg',
+                    alt: 'delete',
+                    height: 32,
+                    width: 28,
+                }"
+            ></file-button>
+        </div>
+    </section>
+</div>

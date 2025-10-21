@@ -3,7 +3,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { ImageData } from '../image-data';
 
 @Component({
-    selector: 'tour-button',
+    selector: 'file-button',
     templateUrl: './file-button.component.html',
     imports: [NgOptimizedImage],
     styleUrls: ['./file-button.component.css'],
