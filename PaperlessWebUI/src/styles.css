@@ -1,1 +1,125 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+    --primary: rgb(18, 199, 230);
+    --secondary: rgb(18, 230, 191);
+    --brand-gradient: linear-gradient(90deg, rgb(18, 199, 230), rgb(18, 230, 191));
+    --error: rgb(230, 18, 18);
+    --white: rgb(255, 255, 255);
+    --black: rgb(19, 21, 21);
+    --black85: rgb(52, 54, 55);
+    --black75: rgb(75, 76, 77);
+    --black50: rgb(131, 132, 132);
+    --black35: rgb(166, 166, 166);
+    --black25: rgb(188, 188, 188);
+    --black10: rgb(223, 223, 223);
+    --black5: rgb(233, 233, 233);
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+body {
+    background-color: var(--white);
+}
+
+/* Typography */
+html {
+    font-size: 21px;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.219rem;
+    font-weight: 400;
+    color: var(--black85);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Open Sans', sans-serif;
+    color: var(--black);
+}
+
+h1 {
+    font-size: 3.81rem;
+    line-height: 5.186rem;
+    font-weight: 700;
+    letter-spacing: -4px;
+}
+
+h2 {
+    font-size: 3.048rem;
+    line-height: 4.152rem;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 2.429rem;
+    line-height: 3.31rem;
+    font-weight: 400;
+    letter-spacing: -2px;
+}
+
+h4 {
+    font-size: 1.952rem;
+    line-height: 2.657rem;
+    font-weight: 700;
+}
+
+h5 {
+    font-size: 1.238rem;
+    line-height: 1.686rem;
+    font-weight: 700;
+}
+
+h6 {
+    font-size: 1rem;
+    line-height: 1.362rem;
+    font-weight: 700;
+}
+
+label,
+p.label {
+    font-size: 0.762rem;
+    line-height: 0.929rem;
+}
+
+label.bold {
+    font-weight: 700;
+}
+
+a {
+    text-decoration: none;
+    color: var(--black85);
+}
+
+input,
+textarea,
+select {
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.219rem;
+    font-weight: 400;
+    color: var(--black85);
+}
+
+a.btn,
+button {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    line-height: 1.219rem;
+    font-weight: 400;
+    color: var(--black85);
+}
+
+button:hover {
+    cursor: pointer;
+}

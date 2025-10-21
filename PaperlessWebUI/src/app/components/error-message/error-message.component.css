@@ -1,0 +1,17 @@
+div {
+    width: 100%;
+    text-align: start;
+    border: 1px solid var(--error);
+    border-radius: 8px;
+    color: var(--error);
+    padding: 16px 24px;
+}
+
+label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+p {
+    overflow-x: scroll;
+}
