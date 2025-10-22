@@ -26,6 +26,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class FileMetaDataApplicationService {
     private final FileMetaDataRepository fileMetaDataRepository;
+    private final FileService fileService;
 
     public List<FileMetaDataDto> getAllFileMetaData() {
         List<FileMetaDataDto> fileMetaDataList = fileMetaDataRepository.findAll().stream().map(FileMetaDataDto::new).toList();
@@ -63,6 +64,7 @@ public class FileMetaDataApplicationService {
                 .description(command.description())
                 .build();
 
+        fileService.uploadFile(fileMetaData.getFileToken().token(), file);
         fileMetaDataRepository.save(fileMetaData);
         log.info("Uploaded file {}", fileMetaData);
         return new FileMetaDataDto(fileMetaData);

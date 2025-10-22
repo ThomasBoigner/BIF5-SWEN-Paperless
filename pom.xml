@@ -36,6 +36,8 @@
         <!-- database -->
         <postgresql.version>42.7.8</postgresql.version>
         <h2.version>2.4.240</h2.version>
+        <!-- minio -->
+        <minio.version>8.5.17</minio.version>
         <!-- testing -->
         <archunit-junit5.version>1.4.1</archunit-junit5.version>
         <!-- other -->
@@ -92,6 +94,13 @@
                 <artifactId>h2</artifactId>
                 <version>${h2.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+
+            <!-- minio -->
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
             </dependency>
 
             <!-- testing -->
