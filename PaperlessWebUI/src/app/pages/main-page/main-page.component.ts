@@ -10,4 +10,5 @@ import { SearchBarComponent } from '../../components/search-bar/search-bar.compo
     imports: [NgOptimizedImage, RouterLink, FileButtonComponent, SearchBarComponent],
     styleUrls: ['./main-page.component.css'],
 })
-export class MainPageComponent {}
+export class MainPageComponent {
+}
