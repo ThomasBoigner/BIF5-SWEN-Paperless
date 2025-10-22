@@ -10,11 +10,11 @@
             <error-message [text]="errorMessage"></error-message>
         }
         <form>
-            <div class="input">
-                <img ngSrc="app/assets/svg/import.svg" alt="import" width="24" height="32" />
+            <div class="file-input">
+                <img ngSrc="app/assets/svg/import-grey.svg" alt="import" width="24" height="32" />
                 <div class="label-input">
-                    <label class="bold">Upload file</label>
-                    <input type="file" />
+                    <label for="file-upload" class="bold">Upload file</label>
+                    <input id="file-upload" type="file" />
                 </div>
             </div>
             <text-input

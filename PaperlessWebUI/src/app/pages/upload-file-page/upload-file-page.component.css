@@ -1,0 +1,73 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 96px;
+    padding: 64px 0;
+    align-items: center;
+}
+
+/* Hero */
+section#upload-file-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Form */
+section#upload-file-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 64px;
+    width: 1080px;
+}
+
+section#upload-file-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+}
+
+/* file input */
+div.file-input label {
+    color: var(--black25);
+}
+
+div.file-input {
+    width: 100%;
+    border: 1px solid var(--black25);
+    border-radius: 8px;
+    display: flex;
+    gap: 24px;
+    padding: 16px 24px;
+    align-items: center;
+}
+
+div.file-input div.label-input {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+    gap: 4px;
+    flex: 1;
+}
+
+div.file-input input[type='file']::file-selector-button {
+    display: none;
+}
+
+div.file-input input[type='file']:hover {
+    cursor: pointer;
+}
+
+/* Error Message */
+error-message {
+    width: 640px;
+}
+
+/* Submit button */
+file-button {
+    width: 640px;
+}
