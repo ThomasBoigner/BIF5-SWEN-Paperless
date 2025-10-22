@@ -15,6 +15,12 @@
                 height: 32,
                 width: 24,
             }"
+            [secondaryImage]="{
+                src: 'app/assets/svg/import-primary.svg',
+                alt: 'import',
+                height: 32,
+                width: 24,
+            }"
         ></file-button>
         <search-bar placeholder="Search for file"></search-bar>
 
@@ -56,12 +62,24 @@
                     height: 32,
                     width: 41,
                 }"
+                [secondaryImage]="{
+                    src: 'app/assets/svg/update-secondary.svg',
+                    alt: 'update',
+                    height: 32,
+                    width: 41,
+                }"
             ></file-button>
             <file-button
                 text="Upload file"
                 color="error"
                 [primaryImage]="{
                     src: 'app/assets/svg/delete.svg',
+                    alt: 'delete',
+                    height: 32,
+                    width: 28,
+                }"
+                [secondaryImage]="{
+                    src: 'app/assets/svg/delete-error.svg',
                     alt: 'delete',
                     height: 32,
                     width: 28,
