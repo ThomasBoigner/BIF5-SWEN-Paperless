@@ -1,0 +1,69 @@
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+/* sidebar left */
+section#sidebar-left {
+    width: 512px;
+    padding: 32px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+div.sidebar-left-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/* file list */
+div.file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* file list item */
+div.file-list-item {
+    padding: 32px;
+    border: 1px solid var(--black25);
+    border-radius: 8px;
+}
+
+div.file-list-item h5 {
+    margin-bottom: 8px;
+}
+
+/* content */
+section#content {
+    flex: 1;
+}
+
+/* sidebar right */
+section#sidebar-right {
+    width: 512px;
+    padding: 32px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* file information */
+div.file-information {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+div.file-information h6 {
+    margin-bottom: 4px;
+}
+
+/* action buttons */
+div.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
