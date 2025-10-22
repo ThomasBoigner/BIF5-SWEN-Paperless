@@ -41,15 +41,15 @@
         <div class="file-information">
             <div class="description-container">
                 <h6>Description</h6>
-                <p>This is the description of the file.</p>
+                <p>{{ fileMetaData.description }}</p>
             </div>
             <div class="file-size-container">
                 <h6>File size</h6>
-                <p>100 Mb</p>
+                <p>{{ fileMetaData.fileSize }} Mb</p>
             </div>
             <div class="upload-date-container">
                 <h6>Upload date</h6>
-                <p>15.10.2025</p>
+                <p>{{ fileMetaData.creationDate | date: 'dd.MM.yyyy HH:mm' }}</p>
             </div>
         </div>
         <div class="action-buttons">
