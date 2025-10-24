@@ -2,43 +2,44 @@
     <section id="sidebar-left">
         <div class="sidebar-left-header">
             <a routerLink="/">
-                <img ngSrc="app/assets/svg/logo.svg" width="48" height="64" alt="logo" />
+                <img ngSrc="app/assets/svg/logo.svg" width="48" height="64" alt="logo"/>
             </a>
-            <img ngSrc="app/assets/svg/hide-left.svg" width="64" height="64" alt="hide-left" />
+            <img ngSrc="app/assets/svg/hide-left.svg" width="64" height="64" alt="hide-left"/>
         </div>
         <file-button
-            text="Upload file"
-            color="primary"
-            [primaryImage]="{
+                text="Upload file"
+                color="primary"
+                [primaryImage]="{
                 src: 'app/assets/svg/import.svg',
                 alt: 'import',
                 height: 32,
                 width: 24,
             }"
-            [secondaryImage]="{
+                [secondaryImage]="{
                 src: 'app/assets/svg/import-primary.svg',
                 alt: 'import',
                 height: 32,
                 width: 24,
             }"
-            routerLink="/file/upload"
+                routerLink="/file/upload"
         ></file-button>
         <search-bar placeholder="Search for file"></search-bar>
-
         <div class="file-list">
-            <div class="file-list-item">
-                <h5>File-1.pdf</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ...</p>
-            </div>
-            <div class="file-list-item">
-                <h5>File-2.pdf</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ...</p>
-            </div>
+            @if (fileMetaDataList$ | async; as fileMetaDataList) {
+                @for (fileMetaDataListItem of fileMetaDataList; track fileMetaDataListItem.fileToken) {
+                    <div class="file-list-item">
+                        <h5>{{ fileMetaDataListItem.fileName }}</h5>
+                        <p>{{ fileMetaDataListItem.description }}</p>
+                    </div>
+                }
+            } @else {
+                <p>No files available</p>
+            }
         </div>
     </section>
     <section id="content"></section>
     <section id="sidebar-right">
-        <img ngSrc="app/assets/svg/hide-right.svg" width="64" height="64" alt="hide-left" />
+        <img ngSrc="app/assets/svg/hide-right.svg" width="64" height="64" alt="hide-left"/>
         <div class="file-information">
             <div class="description-container">
                 <h6>Description</h6>
@@ -55,15 +56,15 @@
         </div>
         <div class="action-buttons">
             <file-button
-                text="Update file"
-                color="secondary"
-                [primaryImage]="{
+                    text="Update file"
+                    color="secondary"
+                    [primaryImage]="{
                     src: 'app/assets/svg/update.svg',
                     alt: 'update',
                     height: 32,
                     width: 41,
                 }"
-                [secondaryImage]="{
+                    [secondaryImage]="{
                     src: 'app/assets/svg/update-secondary.svg',
                     alt: 'update',
                     height: 32,
@@ -71,15 +72,15 @@
                 }"
             ></file-button>
             <file-button
-                text="Upload file"
-                color="error"
-                [primaryImage]="{
+                    text="Delete file"
+                    color="error"
+                    [primaryImage]="{
                     src: 'app/assets/svg/delete.svg',
                     alt: 'delete',
                     height: 32,
                     width: 28,
                 }"
-                [secondaryImage]="{
+                    [secondaryImage]="{
                     src: 'app/assets/svg/delete-error.svg',
                     alt: 'delete',
                     height: 32,

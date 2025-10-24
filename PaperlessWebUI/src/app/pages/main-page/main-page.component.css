@@ -25,6 +25,10 @@ div.file-list {
     gap: 16px;
 }
 
+div.file-list > p {
+    text-align: center;
+}
+
 /* file list item */
 div.file-list-item {
     padding: 32px;
