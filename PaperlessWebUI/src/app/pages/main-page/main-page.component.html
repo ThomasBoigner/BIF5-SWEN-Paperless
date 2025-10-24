@@ -24,16 +24,17 @@
             routerLink="/file/upload"
         ></file-button>
         <search-bar placeholder="Search for file"></search-bar>
-
         <div class="file-list">
-            <div class="file-list-item">
-                <h5>File-1.pdf</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ...</p>
-            </div>
-            <div class="file-list-item">
-                <h5>File-2.pdf</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ...</p>
-            </div>
+            @if (fileMetaDataList$ | async; as fileMetaDataList) {
+                @for (
+                    fileMetaDataListItem of fileMetaDataList;
+                    track fileMetaDataListItem.fileToken
+                ) {
+                    <file-list-item [fileMetaData]="fileMetaDataListItem"></file-list-item>
+                }
+            } @else {
+                <p>No files available</p>
+            }
         </div>
     </section>
     <section id="content"></section>
@@ -71,7 +72,7 @@
                 }"
             ></file-button>
             <file-button
-                text="Upload file"
+                text="Delete file"
                 color="error"
                 [primaryImage]="{
                     src: 'app/assets/svg/delete.svg',
