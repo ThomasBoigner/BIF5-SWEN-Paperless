@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TextInputComponent } from './text-input.component';
-import { FormControl, FormGroup } from '@angular/forms';
+import {ComponentFixture, TestBed} from "@angular/core/testing";
+import {FormControl, FormGroup} from "@angular/forms";
+import {TextAreaInputComponent} from "./textarea-input.component";
 
-describe('TextInputComponent', () => {
+describe('TextareaInputComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({});
     });
@@ -16,8 +16,8 @@ describe('TextInputComponent', () => {
         });
 
         // When
-        const fixture: ComponentFixture<TextInputComponent> =
-            TestBed.createComponent(TextInputComponent);
+        const fixture: ComponentFixture<TextAreaInputComponent> =
+            TestBed.createComponent(TextAreaInputComponent);
 
         fixture.componentRef.setInput('label', label);
         fixture.componentRef.setInput('formGroup', formGroup);
@@ -25,7 +25,7 @@ describe('TextInputComponent', () => {
         fixture.detectChanges();
 
         const nativeElement = fixture.nativeElement as HTMLElement;
-        const input = nativeElement.querySelector('input') ?? new HTMLInputElement();
+        const input = nativeElement.querySelector('textarea') ?? new HTMLTextAreaElement();
 
         input.value = text;
         input.dispatchEvent(new Event('input'));

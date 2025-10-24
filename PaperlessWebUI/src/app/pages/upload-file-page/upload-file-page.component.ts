@@ -2,13 +2,13 @@ import {Component} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {NgOptimizedImage} from '@angular/common';
 import {ErrorMessageComponent} from '../../components/error-message/error-message.component';
-import {TextInputComponent} from '../../components/text-input/text-input.component';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FileButtonComponent} from '../../components/file-button/file-button.component';
 import {FileMetaDataService} from "../../service/file-meta-data.service";
 import {UploadFileCommand} from "../../model/commands/upload-file-command";
 import {ErrorResponse} from "../../model/exception/error-response";
 import {HttpErrorResponse} from '@angular/common/http';
+import {TextAreaInputComponent} from "../../components/textarea-input/textarea-input.component";
 
 @Component({
     selector: 'upload-file-page',
@@ -18,7 +18,7 @@ import {HttpErrorResponse} from '@angular/common/http';
         RouterLink,
         NgOptimizedImage,
         ErrorMessageComponent,
-        TextInputComponent,
+        TextAreaInputComponent,
         FileButtonComponent,
         FormsModule,
         ReactiveFormsModule,
