@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -71,7 +72,7 @@ public class FileRestControllerTest {
     }
 
     @Test
-    void ensureGetAllFileMetaDataReturnsNotFoundIfDataCouldNotBeFound() throws Exception {
+    void ensureGetAllFileMetaDataReturnsNoContentIfDataCouldNotBeFound() throws Exception {
         // When
         when(fileMetaDataApplicationService.getAllFileMetaData()).thenReturn(List.of());
 
@@ -79,6 +80,30 @@ public class FileRestControllerTest {
         mockMvc.perform(get("/api/files").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void ensureGetFileMetaDataWorksProperly() throws Exception {
+        // When
+        when(fileMetaDataApplicationService.getFileMetaData(eq(fileMetaDataDto.fileToken()))).thenReturn(Optional.of(fileMetaDataDto));
+
+        // Perform
+        mockMvc.perform(get("/api/files/%s".formatted(fileMetaDataDto.fileToken())).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(objectMapper.writeValueAsString(fileMetaDataDto)));
+    }
+
+    @Test
+    void ensureGetFileMetaDataReturnsNotFoundIfDataCouldNotBeFound() throws Exception {
+        // When
+        when(fileMetaDataApplicationService.getFileMetaData(eq(fileMetaDataDto.fileToken()))).thenReturn(Optional.empty());
+
+        // Perform
+        mockMvc.perform(get("/api/files/%s".formatted(fileMetaDataDto.fileToken())).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -132,5 +157,14 @@ public class FileRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(objectMapper.writeValueAsString(fileMetaDataDto)));
+    }
+
+    @Test
+    void ensureDeleteFileMetaDataWorksProperly() throws Exception {
+        // Perform
+        mockMvc.perform(delete("/api/files/%s".formatted(fileMetaDataDto.fileToken()))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
