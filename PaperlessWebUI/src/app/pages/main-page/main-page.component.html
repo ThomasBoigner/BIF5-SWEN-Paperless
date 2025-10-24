@@ -27,10 +27,7 @@
         <div class="file-list">
             @if (fileMetaDataList$ | async; as fileMetaDataList) {
                 @for (fileMetaDataListItem of fileMetaDataList; track fileMetaDataListItem.fileToken) {
-                    <div class="file-list-item">
-                        <h5>{{ fileMetaDataListItem.fileName }}</h5>
-                        <p>{{ fileMetaDataListItem.description }}</p>
-                    </div>
+                    <file-list-item [fileMetaData]="fileMetaDataListItem"></file-list-item>
                 }
             } @else {
                 <p>No files available</p>

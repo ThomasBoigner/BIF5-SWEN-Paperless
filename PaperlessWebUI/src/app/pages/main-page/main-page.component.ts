@@ -6,11 +6,12 @@ import { SearchBarComponent } from '../../components/search-bar/search-bar.compo
 import { FileMetaData } from '../../model/file-meta-data';
 import {Observable} from "rxjs";
 import {FileMetaDataService} from "../../service/file-meta-data.service";
+import {FileListItemComponent} from "../../components/file-list-item/file-list-item.component";
 
 @Component({
     selector: 'main-page',
     templateUrl: './main-page.component.html',
-    imports: [NgOptimizedImage, RouterLink, FileButtonComponent, SearchBarComponent, DatePipe, AsyncPipe],
+    imports: [NgOptimizedImage, RouterLink, FileButtonComponent, SearchBarComponent, DatePipe, AsyncPipe, FileListItemComponent],
     styleUrls: ['./main-page.component.css'],
 })
 export class MainPageComponent {
