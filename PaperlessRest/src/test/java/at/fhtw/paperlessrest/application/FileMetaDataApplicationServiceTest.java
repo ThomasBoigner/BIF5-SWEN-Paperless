@@ -1,6 +1,5 @@
 package at.fhtw.paperlessrest.application;
 
-import at.fhtw.paperlessrest.application.commands.DeleteFileCommand;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
@@ -70,17 +69,15 @@ public class FileMetaDataApplicationServiceTest {
                 .thenReturn(Optional.of(fileMetaData));
 
         // When
-        FileMetaDataDto result = fileMetaDataApplicationService.getFileMetaData(fileMetaData.getFileToken().token());
+        Optional<FileMetaDataDto> result = fileMetaDataApplicationService.getFileMetaData(fileMetaData.getFileToken().token());
 
         // Then
-        assertThat(result).isNotNull();
-        assertThat(result.fileName()).isEqualTo("test.txt");
-        assertThat(result.description()).isEqualTo("test");
-        assertThat(result.fileSize()).isEqualTo(1000);
+        assertThat(result).isPresent();
+        assertThat(result).isEqualTo(Optional.of(new FileMetaDataDto(fileMetaData)));
     }
 
     @Test
-    void ensureUploadFIleWorksProperly() {
+    void ensureUploadFileWorksProperly() {
         // Given
         String fileName = "test.txt";
         long fileSize = 1000;
@@ -91,6 +88,7 @@ public class FileMetaDataApplicationServiceTest {
                 .description("test")
                 .build();
 
+        when(file.getContentType()).thenReturn("application/pdf");
         when(file.getOriginalFilename()).thenReturn(fileName);
         when(file.getSize()).thenReturn(fileSize);
 
@@ -102,6 +100,22 @@ public class FileMetaDataApplicationServiceTest {
         assertThat(result.fileName()).isEqualTo("test.txt");
         assertThat(result.fileSize()).isEqualTo(fileSize);
         assertThat(result.description()).isEqualTo(command.description());
+    }
+
+    @Test
+    void ensureUploadFileThrowsExceptionWhenNonPdfIsUploaded() {
+        // Given
+        MultipartFile file = Mockito.mock(MultipartFile.class);
+
+        UploadFileCommand command = UploadFileCommand.builder()
+                .description("test")
+                .build();
+
+        when(file.getContentType()).thenReturn("plain/text");
+
+        // When
+        assertThrows(IllegalArgumentException.class,
+                () -> fileMetaDataApplicationService.uploadFile(file, command));
     }
 
     @Test
@@ -153,25 +167,17 @@ public class FileMetaDataApplicationServiceTest {
 
     @Test
     void ensureDeleteFileWorksProperly() {
-        // given
+        // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
                 .fileSize(1000)
                 .description("test")
                 .build();
 
-        DeleteFileCommand command = DeleteFileCommand.builder()
-                .description("deleted")
-                .build();
+        // When
+        fileMetaDataApplicationService.deleteFileMetaData(fileMetaData.getFileToken().token());
 
-        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
-                .thenReturn(Optional.of(fileMetaData));
-
-        // when
-        fileMetaDataApplicationService.deleteFileMetaData(fileMetaData.getFileToken().token(), command);
-
-        // then
-        verify(fileMetaDataRepository).delete(fileMetaData);
-        verify(fileMetaDataRepository, never()).save(any());
+        // Then
+        verify(fileMetaDataRepository).deleteByFileToken(eq(fileMetaData.getFileToken()));
     }
 }

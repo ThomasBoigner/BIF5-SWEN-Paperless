@@ -21,11 +21,11 @@ div.label-input {
     flex: 1;
 }
 
-input {
+textarea {
     color: var(--black85);
     border: none;
 }
 
-input:focus {
+textarea:focus {
     outline: none;
 }

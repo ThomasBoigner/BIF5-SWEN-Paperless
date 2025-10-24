@@ -1,0 +1,16 @@
+<div class="input" [formGroup]="formGroup()">
+    @if (image(); as imageData) {
+        @if (imageData) {
+            <img
+                [ngSrc]="imageData.src"
+                [alt]="imageData.alt"
+                [width]="imageData.width"
+                [height]="imageData.height"
+            />
+        }
+    }
+    <div class="label-input">
+        <label [for]="controlName()" class="bold">{{ label() }}</label>
+        <input [id]="controlName()" type="file" />
+    </div>
+</div>

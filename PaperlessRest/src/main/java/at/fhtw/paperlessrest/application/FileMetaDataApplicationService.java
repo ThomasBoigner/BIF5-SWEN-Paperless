@@ -1,6 +1,5 @@
 package at.fhtw.paperlessrest.application;
 
-import at.fhtw.paperlessrest.application.commands.DeleteFileCommand;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
@@ -35,21 +34,15 @@ public class FileMetaDataApplicationService {
     }
 
     @Transactional(readOnly = false)
-    public FileMetaDataDto getFileMetaData(@Nullable UUID token) {
-        Objects.requireNonNull(token, "token must not be null!");
-        log.debug("Retrieving file metadata for token {}", token);
+    public Optional<FileMetaDataDto> getFileMetaData(UUID token) {
+        log.debug("Trying to retrieve file metadata with token {}", token);
 
-        Optional<FileMetaData> entity = fileMetaDataRepository.findFileMetaDataByFileToken(new FileToken(token));
+        Optional<FileMetaDataDto> fileMetaData = fileMetaDataRepository.findFileMetaDataByFileToken(new FileToken(token)).map(FileMetaDataDto::new);
 
-        if (entity.isEmpty()) {
-            log.warn("File with token {} cannot be found!", token);
-            throw new IllegalArgumentException(
-                    "File with token %s cannot be found!".formatted(token));
-        }
-
-        FileMetaDataDto fileMetaDataDto = new FileMetaDataDto(entity.get());
-        log.info("Successfully retrieved file metadata: {}", fileMetaDataDto);
-        return fileMetaDataDto;
+        fileMetaData.ifPresentOrElse(
+                fmd -> log.debug("Found file meta data {} with token {}", fmd, token),
+                () -> log.debug("No file meta data with id {} found", token));
+        return fileMetaData;
     }
 
     @Transactional(readOnly = false)
@@ -57,6 +50,10 @@ public class FileMetaDataApplicationService {
         Objects.requireNonNull(file, "file must not be null!");
         Objects.requireNonNull(command, "command must not be null!");
         log.debug("Trying to create file with file {} and command {}", file.getOriginalFilename(), command);
+
+        if (file.getContentType() != null && !file.getContentType().equals("application/pdf")) {
+            throw new IllegalArgumentException("Invalid file content type! The file must be a pdf.");
+        }
 
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName(file.getOriginalFilename())
@@ -92,19 +89,8 @@ public class FileMetaDataApplicationService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteFileMetaData(@Nullable UUID token, @Nullable DeleteFileCommand command) {
-        Objects.requireNonNull(token, "token must not be null!");
-        Objects.requireNonNull(command, "command must not be null!");
-
-        Optional<FileMetaData> entity = fileMetaDataRepository.findFileMetaDataByFileToken(new FileToken(token));
-
-        if (entity.isEmpty()) {
-            log.warn("File with token {} can not be found!", token);
-            throw new IllegalArgumentException(
-                    "File with token %s can not be found!".formatted(token));
-        }
-
-        log.info("Successfully updated file meta data {}", entity);
-        fileMetaDataRepository.delete(entity.get());
+    public void deleteFileMetaData(UUID token) {
+        fileMetaDataRepository.deleteByFileToken(new FileToken(token));
+        log.info("Successfully deleted file with token {}", token);
     }
 }

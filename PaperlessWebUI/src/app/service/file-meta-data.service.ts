@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { FileMetaData } from '../model/file-meta-data';
+import { UploadFileCommand } from '../model/commands/upload-file-command';
 
 @Injectable({ providedIn: 'root' })
 export class FileMetaDataService {
@@ -18,5 +19,18 @@ export class FileMetaDataService {
     public getAllFileMetaData(): Observable<FileMetaData[]> {
         this.logger.debug(`Trying to get all file meta data from endpoint ${this.fileMetaDataUrl}`);
         return this.http.get<FileMetaData[]>(this.fileMetaDataUrl);
+    }
+
+    public uploadFile(file: File, uploadFileCommand: UploadFileCommand): Observable<FileMetaData> {
+        this.logger.debug(
+            `Trying to upload file with command ${JSON.stringify(uploadFileCommand)} with endpoint ${this.fileMetaDataUrl}`,
+        );
+        const formData = new FormData();
+        formData.append('file', file, file.name);
+        formData.append(
+            'command',
+            new Blob([JSON.stringify(uploadFileCommand)], { type: 'application/json' }),
+        );
+        return this.http.post<FileMetaData>(this.fileMetaDataUrl, formData);
     }
 }

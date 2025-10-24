@@ -4,12 +4,12 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ImageData } from '../image-data';
 
 @Component({
-    selector: 'text-input',
-    templateUrl: './text-input.component.html',
+    selector: 'file-input',
+    templateUrl: './file-input.component.html',
     imports: [NgOptimizedImage, ReactiveFormsModule],
-    styleUrls: ['./text-input.component.css'],
+    styleUrls: ['./file-input.component.css'],
 })
-export class TextInputComponent {
+export class FileInputComponent {
     label = input.required<string>();
     formGroup = input.required<FormGroup>();
     controlName = input.required<string>();

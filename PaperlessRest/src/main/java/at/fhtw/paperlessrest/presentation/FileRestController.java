@@ -1,7 +1,6 @@
 package at.fhtw.paperlessrest.presentation;
 
 import at.fhtw.paperlessrest.application.FileMetaDataApplicationService;
-import at.fhtw.paperlessrest.application.commands.DeleteFileCommand;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
@@ -46,8 +45,9 @@ public class FileRestController {
     @GetMapping({PATH_VAR_ID})
     public HttpEntity<FileMetaDataDto> getFileMetaData(@PathVariable UUID token) {
         log.debug("Got Http GET request to retrieve specific file with token {} ", token);
-        FileMetaDataDto fileMetaData = fileMetaDataApplicationService.getFileMetaData(token);
-        return ResponseEntity.ok(fileMetaData);
+        return fileMetaDataApplicationService.getFileMetaData(token)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping(value = {"", PATH_INDEX})
@@ -65,11 +65,10 @@ public class FileRestController {
     }
 
     @DeleteMapping(PATH_VAR_ID)
-    public HttpEntity<FileMetaDataDto> deleteFileMetaData(@PathVariable UUID token, @RequestBody DeleteFileCommand command) {
-
-        log.debug("Got Http DELETE request for token {} with file delete command {}", token, command);
-        fileMetaDataApplicationService.deleteFileMetaData(token, command);
-        return ResponseEntity.noContent().build();
+    public HttpEntity<FileMetaDataDto> deleteFileMetaData(@PathVariable UUID token) {
+        log.debug("Got Http DELETE request to delete file with token {}", token);
+        fileMetaDataApplicationService.deleteFileMetaData(token);
+        return ResponseEntity.ok().build();
     }
 
     private URI createSelfLink(FileMetaDataDto fileMetaData) {
