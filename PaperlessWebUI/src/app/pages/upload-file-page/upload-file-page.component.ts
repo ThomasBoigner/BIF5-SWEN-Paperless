@@ -45,13 +45,15 @@ export class UploadFilePageComponent {
     }
 
     handleSubmit() {
+        const description = this.fileForm.controls.description.value
+
         const command: UploadFileCommand = {
-            description: this.fileForm.controls.description.value
+            description: description?.trim().length !== 0 ? description : null
         }
         const file = this.fileForm.controls.file.value;
 
         if (file == null) {
-            this.errorMessage = 'No file selected';
+            this.errorMessage = 'No file selected.';
             return
         }
 
