@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {FormControl, FormGroup} from "@angular/forms";
-import {TextAreaInputComponent} from "./textarea-input.component";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
+import { TextAreaInputComponent } from './textarea-input.component';
 
 describe('TextareaInputComponent', () => {
     beforeEach(() => {

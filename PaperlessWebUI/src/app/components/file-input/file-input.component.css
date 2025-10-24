@@ -1,0 +1,30 @@
+label {
+    color: var(--black25);
+}
+
+div.input {
+    width: 100%;
+    border: 1px solid var(--black25);
+    border-radius: 8px;
+    display: flex;
+    gap: 24px;
+    padding: 16px 24px;
+    align-items: center;
+}
+
+div.label-input {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+    gap: 4px;
+    flex: 1;
+}
+
+input[type='file']::file-selector-button {
+    display: none;
+}
+
+input[type='file']:hover {
+    cursor: pointer;
+}

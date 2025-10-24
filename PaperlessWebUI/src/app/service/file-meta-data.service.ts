@@ -27,7 +27,10 @@ export class FileMetaDataService {
         );
         const formData = new FormData();
         formData.append('file', file, file.name);
-        formData.append('command', new Blob([JSON.stringify(uploadFileCommand)], { type: 'application/json' }));
+        formData.append(
+            'command',
+            new Blob([JSON.stringify(uploadFileCommand)], { type: 'application/json' }),
+        );
         return this.http.post<FileMetaData>(this.fileMetaDataUrl, formData);
     }
 }
