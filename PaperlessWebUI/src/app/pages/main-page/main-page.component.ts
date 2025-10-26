@@ -7,7 +7,7 @@ import { FileMetaData } from '../../model/file-meta-data';
 import { Observable } from 'rxjs';
 import { FileMetaDataService } from '../../service/file-meta-data.service';
 import { FileListItemComponent } from '../../components/file-list-item/file-list-item.component';
-import {PdfViewerModule} from "ng2-pdf-viewer";
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @Component({
     selector: 'main-page',
@@ -20,11 +20,14 @@ import {PdfViewerModule} from "ng2-pdf-viewer";
         DatePipe,
         AsyncPipe,
         FileListItemComponent,
-        PdfViewerModule
+        PdfViewerModule,
     ],
     styleUrls: ['./main-page.component.css'],
 })
 export class MainPageComponent {
+    leftSidebar = true;
+    rightSidebar = true;
+
     fileMetaDataList$: Observable<FileMetaData[]>;
     fileMetaData: FileMetaData = {
         fileName: 'File-1.pdf',
