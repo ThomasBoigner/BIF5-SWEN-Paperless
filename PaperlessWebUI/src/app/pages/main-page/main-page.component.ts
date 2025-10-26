@@ -7,6 +7,7 @@ import { FileMetaData } from '../../model/file-meta-data';
 import { Observable } from 'rxjs';
 import { FileMetaDataService } from '../../service/file-meta-data.service';
 import { FileListItemComponent } from '../../components/file-list-item/file-list-item.component';
+import {PdfViewerModule} from "ng2-pdf-viewer";
 
 @Component({
     selector: 'main-page',
@@ -19,6 +20,7 @@ import { FileListItemComponent } from '../../components/file-list-item/file-list
         DatePipe,
         AsyncPipe,
         FileListItemComponent,
+        PdfViewerModule
     ],
     styleUrls: ['./main-page.component.css'],
 })
