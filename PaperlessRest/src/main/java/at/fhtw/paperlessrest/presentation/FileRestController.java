@@ -1,13 +1,16 @@
 package at.fhtw.paperlessrest.presentation;
 
 import at.fhtw.paperlessrest.application.FileMetaDataApplicationService;
+import at.fhtw.paperlessrest.application.FileService;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,11 +30,13 @@ import java.util.UUID;
 public class FileRestController {
 
     private final FileMetaDataApplicationService fileMetaDataApplicationService;
+    private final FileService fileService;
 
     public static final String BASE_URL = "/api/files";
     public static final String PATH_INDEX = "/";
     public static final String PATH_VAR_ID = "/{token}";
     public static final String ROUTE_ID = BASE_URL + PATH_VAR_ID;
+    public static final String ROUTE_DOWNLOAD = PATH_VAR_ID + "/download";
 
     @GetMapping({"", PATH_INDEX})
     public HttpEntity<List<FileMetaDataDto>> getAllFileMetaData() {
@@ -48,6 +53,12 @@ public class FileRestController {
         return fileMetaDataApplicationService.getFileMetaData(token)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping(value = {ROUTE_DOWNLOAD}, produces = MediaType.APPLICATION_PDF_VALUE)
+    public HttpEntity<InputStreamResource> getFileContent(@PathVariable UUID token) {
+        log.debug("Got Http GET request to retrieve file content of file with token {} ", token);
+        return ResponseEntity.ok(fileService.downloadFile(token));
     }
 
     @PostMapping(value = {"", PATH_INDEX})

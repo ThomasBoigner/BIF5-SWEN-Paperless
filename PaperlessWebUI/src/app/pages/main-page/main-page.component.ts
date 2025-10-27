@@ -42,4 +42,14 @@ export class MainPageComponent {
     constructor(private fileMetaDataService: FileMetaDataService) {
         this.fileMetaDataList$ = this.fileMetaDataService.getAllFileMetaData();
     }
+
+    setLeftSidebar(leftSidebar: boolean) {
+        this.leftSidebar = leftSidebar;
+        window.dispatchEvent(new Event('resize'));
+    }
+
+    setRightSidebar(rightSidebar: boolean) {
+        this.rightSidebar = rightSidebar;
+        window.dispatchEvent(new Event('resize'));
+    }
 }

@@ -11,7 +11,7 @@
                     width="64"
                     height="64"
                     alt="hide-left"
-                    (click)="leftSidebar = false"
+                    (click)="setLeftSidebar(false)"
                 />
             </div>
             <file-button
@@ -48,11 +48,12 @@
     }
     <section id="content">
         <pdf-viewer
-            src="https://vadimdez.github.io/ng2-pdf-viewer/assets/pdf-test.pdf"
+            src="http://localhost:8081/api/files/6443824d-0754-47e0-a146-efa26de6b190/download"
             [render-text]="false"
             [original-size]="false"
             [zoom-scale]="'page-width'"
             [show-borders]="true"
+            [zoom]="0.75"
         ></pdf-viewer>
         @if (!leftSidebar) {
             <img
@@ -61,7 +62,7 @@
                     width="64"
                     height="64"
                     alt="show-left"
-                    (click)="leftSidebar = true"
+                    (click)="setLeftSidebar(true)"
             />
         }
         @if (!rightSidebar) {
@@ -71,7 +72,7 @@
                 width="64"
                 height="64"
                 alt="show-right"
-                (click)="rightSidebar = true"
+                (click)="setRightSidebar(true)"
             />
         }
     </section>
@@ -83,7 +84,7 @@
                 width="64"
                 height="64"
                 alt="hide-right"
-                (click)="rightSidebar = false"
+                (click)="setRightSidebar(false)"
             />
             <div class="file-information">
                 <div class="description-container">

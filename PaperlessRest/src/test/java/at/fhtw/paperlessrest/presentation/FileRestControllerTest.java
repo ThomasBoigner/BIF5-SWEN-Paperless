@@ -1,6 +1,7 @@
 package at.fhtw.paperlessrest.presentation;
 
 import at.fhtw.paperlessrest.application.FileMetaDataApplicationService;
+import at.fhtw.paperlessrest.application.FileService;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
@@ -40,12 +41,14 @@ public class FileRestControllerTest {
 
     @Mock
     private FileMetaDataApplicationService fileMetaDataApplicationService;
+    @Mock
+    private FileService fileService;
     private FileMetaDataDto fileMetaDataDto;
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new FileRestController(fileMetaDataApplicationService)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new FileRestController(fileMetaDataApplicationService, fileService)).build();
 
         objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
@@ -104,6 +107,14 @@ public class FileRestControllerTest {
         mockMvc.perform(get("/api/files/%s".formatted(fileMetaDataDto.fileToken())).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void ensureGetFileContentWorksProperly() throws Exception {
+        // Perform
+        mockMvc.perform(get("/api/files/%s/download".formatted(fileMetaDataDto.fileToken())).accept(MediaType.APPLICATION_PDF_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
