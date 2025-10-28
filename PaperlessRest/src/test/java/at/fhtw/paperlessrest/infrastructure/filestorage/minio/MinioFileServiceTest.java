@@ -84,4 +84,16 @@ public class MinioFileServiceTest {
         assertThat(result).isNotNull();
         assertThat(response).isEqualTo(result.getInputStream());
     }
+
+    @Test
+    void ensureDeleteFileWorksProperly() throws Exception {
+        // Given
+        UUID token =  UUID.randomUUID();
+
+        // When
+        minioFileService.deleteFile(token);
+
+        // Then
+        verify(minioClient).removeObject(any());
+    }
 }
