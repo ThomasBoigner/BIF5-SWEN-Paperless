@@ -41,20 +41,26 @@
                         <file-list-item [fileMetaData]="fileMetaDataListItem" [isSelected]="fileMetaDataListItem.fileToken == fileToken"></file-list-item>
                     }
                 } @else {
-                    <p>No files available</p>
+                    <p>No files available!</p>
                 }
             </div>
         </section>
     }
     <section id="content">
-        <pdf-viewer
-            [src]="this.fileToken ? `http://localhost:8081/api/files/${this.fileToken}/download` : undefined"
-            [render-text]="false"
-            [original-size]="false"
-            [zoom-scale]="'page-width'"
-            [show-borders]="true"
-            [zoom]="0.75"
-        ></pdf-viewer>
+        @if (fileToken) {
+            <pdf-viewer
+                    [src]="this.fileToken ? `http://localhost:8081/api/files/${this.fileToken}/download` : undefined"
+                    [render-text]="false"
+                    [original-size]="false"
+                    [zoom-scale]="'page-width'"
+                    [show-borders]="true"
+                    [zoom]="0.75"
+            ></pdf-viewer>
+        } @else {
+            <div class="unselected-container">
+                <p>No file selected!</p>
+            </div>
+        }
         @if (!leftSidebar) {
             <img
                     class="show-left"
@@ -86,54 +92,62 @@
                 alt="hide-right"
                 (click)="setRightSidebar(false)"
             />
-            <div class="file-information">
-                <div class="description-container">
-                    <h6>Description</h6>
-                    <p>{{ fileMetaData.description }}</p>
+            @if (fileMetaData$ | async; as fileMetaData) {
+                <div class="file-information">
+                    <div class="description-container">
+                        <h6>Description</h6>
+                        @if (fileMetaData.description) {
+                            <p>{{ fileMetaData.description }}</p>
+                        } @else {
+                            <p>No description</p>
+                        }
+                    </div>
+                    <div class="file-size-container">
+                        <h6>File size</h6>
+                        <p>{{ fileMetaData.fileSize }} Mb</p>
+                    </div>
+                    <div class="upload-date-container">
+                        <h6>Upload date</h6>
+                        <p>{{ fileMetaData.creationDate | date: 'dd.MM.yyyy HH:mm' }}</p>
+                    </div>
                 </div>
-                <div class="file-size-container">
-                    <h6>File size</h6>
-                    <p>{{ fileMetaData.fileSize }} Mb</p>
-                </div>
-                <div class="upload-date-container">
-                    <h6>Upload date</h6>
-                    <p>{{ fileMetaData.creationDate | date: 'dd.MM.yyyy HH:mm' }}</p>
-                </div>
-            </div>
-            <div class="action-buttons">
-                <file-button
-                    text="Update file"
-                    color="secondary"
-                    [primaryImage]="{
+                <div class="action-buttons">
+                    <file-button
+                            text="Update file"
+                            color="secondary"
+                            [primaryImage]="{
                         src: 'app/assets/svg/update.svg',
                         alt: 'update',
                         height: 32,
                         width: 41,
                     }"
-                    [secondaryImage]="{
+                            [secondaryImage]="{
                         src: 'app/assets/svg/update-secondary.svg',
                         alt: 'update',
                         height: 32,
                         width: 41,
                     }"
-                ></file-button>
-                <file-button
-                    text="Delete file"
-                    color="error"
-                    [primaryImage]="{
+                    ></file-button>
+                    <file-button
+                            text="Delete file"
+                            color="error"
+                            [primaryImage]="{
                         src: 'app/assets/svg/delete.svg',
                         alt: 'delete',
                         height: 32,
                         width: 28,
                     }"
-                    [secondaryImage]="{
+                            [secondaryImage]="{
                         src: 'app/assets/svg/delete-error.svg',
                         alt: 'delete',
                         height: 32,
                         width: 28,
                     }"
-                ></file-button>
-            </div>
+                    ></file-button>
+                </div>
+            } @else {
+                <p class="unselected">No file selected!</p>
+            }
         </section>
     }
 </div>

@@ -4,6 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { FileMetaDataService } from './file-meta-data.service';
 import { FileMetaData } from '../model/file-meta-data';
+import {UploadFileCommand} from "../model/commands/upload-file-command";
 
 describe('FileMetaDataService', () => {
     beforeEach(() => {
@@ -57,4 +58,69 @@ describe('FileMetaDataService', () => {
         req.flush(expectedFileMetaData);
         expect(req.request.responseType).toEqual('json');
     });
+
+    it('#getFileMetaData should return file meta data from the server', () => {
+        // Given
+        const fileMetaDataService = TestBed.inject(FileMetaDataService);
+        const expectedFileMetaData = {
+            fileName: 'File-1.pdf',
+            description: 'This is the description of the first file.',
+            fileToken: 'abc',
+            fileSize: 100,
+            creationDate: new Date(),
+            fullText: '',
+            summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ...',
+        }
+
+        // When
+        const response = fileMetaDataService.getFileMetaData("abc")
+
+        // Then
+        response.subscribe((fileMetaData) => {
+            expect(fileMetaData).toEqual(expectedFileMetaData);
+        });
+
+        const req = TestBed.inject(HttpTestingController).expectOne({
+            method: 'GET',
+            url: 'http://localhost:8081/api/files/abc',
+        });
+
+        req.flush(expectedFileMetaData);
+        expect(req.request.responseType).toEqual('json');
+    });
+
+    it('#upload file should upload a file to the server and return its metadata', () => {
+        const fileMetaDataService = TestBed.inject(FileMetaDataService);
+        const expectedFileMetaData = {
+            fileName: 'File-1.pdf',
+            description: 'This is the description of the first file.',
+            fileToken: 'abc',
+            fileSize: 100,
+            creationDate: new Date(),
+            fullText: '',
+            summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ...',
+        }
+
+        const file = new File(["foo"], "foo.txt")
+
+        const uploadFileCommand: UploadFileCommand = {
+            description: 'Upload a file to the server',
+        }
+
+        // When
+        const response = fileMetaDataService.uploadFile(file, uploadFileCommand);
+
+        // Then
+        response.subscribe((fileMetaData) => {
+            expect(fileMetaData).toEqual(expectedFileMetaData);
+        });
+
+        const req = TestBed.inject(HttpTestingController).expectOne({
+            method: 'POST',
+            url: 'http://localhost:8081/api/files',
+        });
+
+        req.flush(expectedFileMetaData);
+        expect(req.request.responseType).toEqual('json');
+    })
 });

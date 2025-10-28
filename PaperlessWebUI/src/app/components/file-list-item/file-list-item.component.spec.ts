@@ -26,6 +26,7 @@ describe('FileListItemComponent', () => {
         const fixture = TestBed.createComponent(FileListItemComponent);
 
         fixture.componentRef.setInput('fileMetaData', fileMetaData);
+        fixture.componentRef.setInput('isSelected', true)
         fixture.detectChanges();
 
         // Then

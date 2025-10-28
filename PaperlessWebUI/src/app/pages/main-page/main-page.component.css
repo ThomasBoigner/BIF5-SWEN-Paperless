@@ -55,6 +55,14 @@ pdf-viewer {
     height: 100%;
 }
 
+section#content div.unselected-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 img.show-right {
     position: absolute;
     right: 32px;
@@ -68,6 +76,10 @@ section#sidebar-right {
     display: flex;
     flex-direction: column;
     gap: 32px;
+}
+
+section#sidebar-right p.unselected {
+    text-align: center;
 }
 
 /* file information */

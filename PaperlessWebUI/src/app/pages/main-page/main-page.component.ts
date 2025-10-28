@@ -26,15 +26,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 })
 export class MainPageComponent {
     fileToken: string | null = null;
-    fileMetaData: FileMetaData = {
-        fileName: 'File-1.pdf',
-        description: 'This is the description of the file.',
-        fileToken: 'abc',
-        fileSize: 100,
-        creationDate: new Date(),
-        fullText: '',
-        summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ...',
-    };
+    fileMetaData$: Observable<FileMetaData> | undefined;
     fileMetaDataList$: Observable<FileMetaData[]>;
 
     leftSidebar = true;
@@ -43,6 +35,9 @@ export class MainPageComponent {
     constructor(private fileMetaDataService: FileMetaDataService, private route: ActivatedRoute) {
         this.route.paramMap.subscribe(paramMap => {
             this.fileToken = paramMap.get("token");
+            if (this.fileToken) {
+                this.fileMetaData$ = fileMetaDataService.getFileMetaData(this.fileToken);
+            }
         })
         this.fileMetaDataList$ = this.fileMetaDataService.getAllFileMetaData();
     }
