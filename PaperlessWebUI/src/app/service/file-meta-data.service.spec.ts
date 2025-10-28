@@ -123,4 +123,20 @@ describe('FileMetaDataService', () => {
         req.flush(expectedFileMetaData);
         expect(req.request.responseType).toEqual('json');
     });
+
+    it('#deleteFile should delete a file on the server', () => {
+        // Given
+        const fileMetaDataService = TestBed.inject(FileMetaDataService);
+
+        // When
+        fileMetaDataService.deleteFile('abc').subscribe();
+
+        // Then
+        const req = TestBed.inject(HttpTestingController).expectOne({
+            method: 'DELETE',
+            url: 'http://localhost:8081/api/files/abc',
+        });
+
+        req.flush(null, { status: 200, statusText: 'ok' });
+    });
 });
