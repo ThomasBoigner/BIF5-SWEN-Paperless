@@ -4,7 +4,7 @@ import { UploadFilePageComponent } from './pages/upload-file-page/upload-file-pa
 
 export const routes: Routes = [
     {
-        path: '',
+        path: 'file/view/:token',
         title: 'Paperless',
         component: MainPageComponent,
     },
@@ -12,5 +12,10 @@ export const routes: Routes = [
         path: 'file/upload',
         title: 'Upload a file!',
         component: UploadFilePageComponent,
+    },
+    {
+        path: '**',
+        title: 'Paperless',
+        component: MainPageComponent,
     },
 ];

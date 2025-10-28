@@ -1,13 +1,11 @@
 package at.fhtw.paperlessrest.infrastructure.filestorage.minio;
 
 import at.fhtw.paperlessrest.application.FileService;
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,7 +39,29 @@ public class MinioFileService implements FileService {
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                  InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                  XmlParserException e) {
-            log.error("Got an error when trying to upload a file to minio storage {}", e.getMessage());
+            log.error("Got an error when trying to upload a file to minio storage, message: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public InputStreamResource downloadFile(UUID token) {
+        try {
+            GetObjectResponse response = minioClient.getObject(
+                GetObjectArgs.builder()
+                        .bucket("files")
+                        .object(token.toString())
+                        .build()
+            );
+
+            return new InputStreamResource(response);
+        } catch (ErrorResponseException ere) {
+            log.warn("User tried to download a file that does not exist!");
+            throw new IllegalArgumentException("File with the token %s does not exist!".formatted(token));
+        } catch (InsufficientDataException | InternalException | InvalidKeyException |
+                 InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                 XmlParserException e) {
+            log.error("Got an error when trying to download a file to minio storage, message: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }

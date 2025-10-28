@@ -11,6 +11,6 @@
     }
     <div class="label-input">
         <label [for]="controlName()" class="bold">{{ label() }}</label>
-        <input [id]="controlName()" type="file" />
+        <input [id]="controlName()" type="file" [formControlName]="controlName()" />
     </div>
 </div>

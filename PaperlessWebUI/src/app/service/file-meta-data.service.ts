@@ -21,6 +21,13 @@ export class FileMetaDataService {
         return this.http.get<FileMetaData[]>(this.fileMetaDataUrl);
     }
 
+    public getFileMetaData(token: string): Observable<FileMetaData> {
+        this.logger.debug(
+            `Trying to get file meta data with token ${token} from endpoint ${this.fileMetaDataUrl}`,
+        );
+        return this.http.get<FileMetaData>(`${this.fileMetaDataUrl}/${token}`);
+    }
+
     public uploadFile(file: File, uploadFileCommand: UploadFileCommand): Observable<FileMetaData> {
         this.logger.debug(
             `Trying to upload file with command ${JSON.stringify(uploadFileCommand)} with endpoint ${this.fileMetaDataUrl}`,

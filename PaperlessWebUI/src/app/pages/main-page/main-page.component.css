@@ -1,6 +1,14 @@
 .container {
     display: flex;
     flex-direction: row;
+    height: 100%;
+}
+
+img.show-left:hover,
+img.show-right:hover,
+img.hide-left:hover,
+img.hide-right:hover {
+    cursor: pointer;
 }
 
 /* sidebar left */
@@ -23,6 +31,7 @@ div.file-list {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    overflow: scroll;
 }
 
 div.file-list > p {
@@ -31,7 +40,43 @@ div.file-list > p {
 
 /* content */
 section#content {
+    position: relative;
     flex: 1;
+    height: 100%;
+}
+
+div.content-selector {
+    position: absolute;
+    left: 32px;
+    top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+div.content-selector-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+pdf-viewer {
+    width: 100%;
+    height: 100%;
+}
+
+section#content div.content-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+img.show-right {
+    position: absolute;
+    right: 32px;
+    top: 32px;
 }
 
 /* sidebar right */
@@ -41,6 +86,10 @@ section#sidebar-right {
     display: flex;
     flex-direction: column;
     gap: 32px;
+}
+
+section#sidebar-right p.unselected {
+    text-align: center;
 }
 
 /* file information */
