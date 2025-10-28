@@ -42,7 +42,9 @@ export class FileMetaDataService {
     }
 
     public deleteFile(token: string) {
-        this.logger.debug(`Trying to delete file with token ${token} from endpoint ${this.fileMetaDataUrl}`);
+        this.logger.debug(
+            `Trying to delete file with token ${token} from endpoint ${this.fileMetaDataUrl}`,
+        );
         return this.http.delete(`${this.fileMetaDataUrl}/${token}`);
     }
 }

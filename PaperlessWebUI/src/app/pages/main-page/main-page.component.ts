@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AsyncPipe, DatePipe, NgOptimizedImage } from '@angular/common';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FileButtonComponent } from '../../components/file-button/file-button.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { FileMetaData } from '../../model/file-meta-data';
@@ -40,7 +40,7 @@ export class MainPageComponent {
     constructor(
         private fileMetaDataService: FileMetaDataService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
     ) {
         this.route.paramMap.subscribe((paramMap) => {
             const fileToken = paramMap.get('token');
@@ -62,6 +62,8 @@ export class MainPageComponent {
     }
 
     deleteFile(token: string) {
-        this.fileMetaDataService.deleteFile(token).subscribe(() => void this.router.navigate(['/']))
+        this.fileMetaDataService
+            .deleteFile(token)
+            .subscribe(() => void this.router.navigate(['/']));
     }
 }
