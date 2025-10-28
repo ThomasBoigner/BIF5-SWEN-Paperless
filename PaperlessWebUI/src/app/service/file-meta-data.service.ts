@@ -22,7 +22,9 @@ export class FileMetaDataService {
     }
 
     public getFileMetaData(token: string): Observable<FileMetaData> {
-        this.logger.debug(`Trying to get file meta data with token ${token} from endpoint ${this.fileMetaDataUrl}`);
+        this.logger.debug(
+            `Trying to get file meta data with token ${token} from endpoint ${this.fileMetaDataUrl}`,
+        );
         return this.http.get<FileMetaData>(`${this.fileMetaDataUrl}/${token}`);
     }
 

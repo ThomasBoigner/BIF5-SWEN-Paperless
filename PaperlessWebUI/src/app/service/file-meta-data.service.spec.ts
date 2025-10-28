@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { FileMetaDataService } from './file-meta-data.service';
 import { FileMetaData } from '../model/file-meta-data';
-import {UploadFileCommand} from "../model/commands/upload-file-command";
+import { UploadFileCommand } from '../model/commands/upload-file-command';
 
 describe('FileMetaDataService', () => {
     beforeEach(() => {
@@ -70,10 +70,10 @@ describe('FileMetaDataService', () => {
             creationDate: new Date(),
             fullText: '',
             summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ...',
-        }
+        };
 
         // When
-        const response = fileMetaDataService.getFileMetaData("abc")
+        const response = fileMetaDataService.getFileMetaData('abc');
 
         // Then
         response.subscribe((fileMetaData) => {
@@ -99,13 +99,13 @@ describe('FileMetaDataService', () => {
             creationDate: new Date(),
             fullText: '',
             summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ...',
-        }
+        };
 
-        const file = new File(["foo"], "foo.txt")
+        const file = new File(['foo'], 'foo.txt');
 
         const uploadFileCommand: UploadFileCommand = {
             description: 'Upload a file to the server',
-        }
+        };
 
         // When
         const response = fileMetaDataService.uploadFile(file, uploadFileCommand);
@@ -122,5 +122,5 @@ describe('FileMetaDataService', () => {
 
         req.flush(expectedFileMetaData);
         expect(req.request.responseType).toEqual('json');
-    })
+    });
 });

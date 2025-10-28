@@ -38,7 +38,10 @@
                         fileMetaDataListItem of fileMetaDataList;
                         track fileMetaDataListItem.fileToken
                     ) {
-                        <file-list-item [fileMetaData]="fileMetaDataListItem" [isSelected]="fileMetaDataListItem.fileToken == fileToken"></file-list-item>
+                        <file-list-item
+                            [fileMetaData]="fileMetaDataListItem"
+                            [isSelected]="fileMetaDataListItem.fileToken == fileToken"
+                        ></file-list-item>
                     }
                 } @else {
                     <p>No files available!</p>
@@ -49,12 +52,16 @@
     <section id="content">
         @if (fileToken) {
             <pdf-viewer
-                    [src]="this.fileToken ? `http://localhost:8081/api/files/${this.fileToken}/download` : undefined"
-                    [render-text]="false"
-                    [original-size]="false"
-                    [zoom-scale]="'page-width'"
-                    [show-borders]="true"
-                    [zoom]="0.75"
+                [src]="
+                    this.fileToken
+                        ? `http://localhost:8081/api/files/${this.fileToken}/download`
+                        : undefined
+                "
+                [render-text]="false"
+                [original-size]="false"
+                [zoom-scale]="'page-width'"
+                [show-borders]="true"
+                [zoom]="0.75"
             ></pdf-viewer>
         } @else {
             <div class="unselected-container">
@@ -63,12 +70,12 @@
         }
         @if (!leftSidebar) {
             <img
-                    class="show-left"
-                    ngSrc="app/assets/svg/show-left.svg"
-                    width="64"
-                    height="64"
-                    alt="show-left"
-                    (click)="setLeftSidebar(true)"
+                class="show-left"
+                ngSrc="app/assets/svg/show-left.svg"
+                width="64"
+                height="64"
+                alt="show-left"
+                (click)="setLeftSidebar(true)"
             />
         }
         @if (!rightSidebar) {
@@ -113,36 +120,36 @@
                 </div>
                 <div class="action-buttons">
                     <file-button
-                            text="Update file"
-                            color="secondary"
-                            [primaryImage]="{
-                        src: 'app/assets/svg/update.svg',
-                        alt: 'update',
-                        height: 32,
-                        width: 41,
-                    }"
-                            [secondaryImage]="{
-                        src: 'app/assets/svg/update-secondary.svg',
-                        alt: 'update',
-                        height: 32,
-                        width: 41,
-                    }"
+                        text="Update file"
+                        color="secondary"
+                        [primaryImage]="{
+                            src: 'app/assets/svg/update.svg',
+                            alt: 'update',
+                            height: 32,
+                            width: 41,
+                        }"
+                        [secondaryImage]="{
+                            src: 'app/assets/svg/update-secondary.svg',
+                            alt: 'update',
+                            height: 32,
+                            width: 41,
+                        }"
                     ></file-button>
                     <file-button
-                            text="Delete file"
-                            color="error"
-                            [primaryImage]="{
-                        src: 'app/assets/svg/delete.svg',
-                        alt: 'delete',
-                        height: 32,
-                        width: 28,
-                    }"
-                            [secondaryImage]="{
-                        src: 'app/assets/svg/delete-error.svg',
-                        alt: 'delete',
-                        height: 32,
-                        width: 28,
-                    }"
+                        text="Delete file"
+                        color="error"
+                        [primaryImage]="{
+                            src: 'app/assets/svg/delete.svg',
+                            alt: 'delete',
+                            height: 32,
+                            width: 28,
+                        }"
+                        [secondaryImage]="{
+                            src: 'app/assets/svg/delete-error.svg',
+                            alt: 'delete',
+                            height: 32,
+                            width: 28,
+                        }"
                     ></file-button>
                 </div>
             } @else {
