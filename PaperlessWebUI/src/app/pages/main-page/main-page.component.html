@@ -40,13 +40,15 @@
                     ) {
                         @if (fileMetaData$ | async; as fileMetaData) {
                             <file-list-item
-                                    [fileMetaData]="fileMetaDataListItem"
-                                    [isSelected]="fileMetaData.fileToken === fileMetaDataListItem.fileToken"
+                                [fileMetaData]="fileMetaDataListItem"
+                                [isSelected]="
+                                    fileMetaData.fileToken === fileMetaDataListItem.fileToken
+                                "
                             ></file-list-item>
                         } @else {
                             <file-list-item
-                                    [fileMetaData]="fileMetaDataListItem"
-                                    [isSelected]="false"
+                                [fileMetaData]="fileMetaDataListItem"
+                                [isSelected]="false"
                             ></file-list-item>
                         }
                     }
@@ -106,9 +108,18 @@
             }
             @if (fileMetaData$ | async) {
                 <div class="content-selector-buttons">
-                    <button (click)="mainContentMode = 'pdf'">Pdf</button>
-                    <button (click)="mainContentMode = 'text'">Text</button>
-                    <button (click)="mainContentMode = 'summary'">Summary</button>
+                    <small-file-button
+                        text="Pdf"
+                        (click)="mainContentMode = 'pdf'"
+                    ></small-file-button>
+                    <small-file-button
+                        text="Text"
+                        (click)="mainContentMode = 'text'"
+                    ></small-file-button>
+                    <small-file-button
+                        text="Summary"
+                        (click)="mainContentMode = 'summary'"
+                    ></small-file-button>
                 </div>
             }
         </div>

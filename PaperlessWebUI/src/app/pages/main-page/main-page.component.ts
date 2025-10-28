@@ -9,6 +9,7 @@ import { FileMetaDataService } from '../../service/file-meta-data.service';
 import { FileListItemComponent } from '../../components/file-list-item/file-list-item.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { FileSizePipe } from '../../pipes/file-size-pipe';
+import { SmallFileButton } from '../../components/small-file-button/small-file-button.component';
 
 @Component({
     selector: 'main-page',
@@ -23,6 +24,7 @@ import { FileSizePipe } from '../../pipes/file-size-pipe';
         FileListItemComponent,
         PdfViewerModule,
         FileSizePipe,
+        SmallFileButton,
     ],
     styleUrls: ['./main-page.component.css'],
 })

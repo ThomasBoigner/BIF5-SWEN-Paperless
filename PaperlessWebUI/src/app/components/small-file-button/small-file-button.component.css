@@ -1,0 +1,12 @@
+button {
+    padding: 8px;
+    background: var(--white);
+    border: 1px solid var(--black25);
+    border-radius: 8px;
+    width: 100%;
+}
+
+button:hover {
+    border: 3px solid var(--black25);
+    padding: 6px;
+}
