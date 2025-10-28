@@ -1,6 +1,4 @@
-<div class="file-list-item">
-    <a routerLink="/file/view/{{fileMetaData().fileToken}}">
-        <h5>{{ fileMetaData().fileName }}</h5>
-        <p>{{ fileMetaData().description }}</p>
-    </a>
-</div>
+<a [class]="isSelected() ? 'file-list-item selected' : 'file-list-item unselected'" routerLink="/file/view/{{fileMetaData().fileToken}}">
+    <h5>{{ fileMetaData().fileName }}</h5>
+    <p>{{ fileMetaData().description }}</p>
+</a>

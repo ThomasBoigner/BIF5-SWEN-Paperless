@@ -1,10 +1,18 @@
 /* file list item */
-div.file-list-item {
+a.file-list-item {
     padding: 32px;
-    border: 1px solid var(--black25);
     border-radius: 8px;
+    display: block;
 }
 
-div.file-list-item h5 {
+a.unselected {
+    border: 1px solid var(--black25);
+}
+
+a.selected {
+    border: 3px solid var(--primary);
+}
+
+a.file-list-item h5 {
     margin-bottom: 8px;
 }

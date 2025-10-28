@@ -12,4 +12,5 @@ import {RouterLink} from "@angular/router";
 })
 export class FileListItemComponent {
     fileMetaData = input.required<FileMetaData>();
+    isSelected = input.required<boolean>();
 }
