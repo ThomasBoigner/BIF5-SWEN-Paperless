@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AsyncPipe, DatePipe, NgOptimizedImage } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import { FileButtonComponent } from '../../components/file-button/file-button.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { FileMetaData } from '../../model/file-meta-data';
@@ -25,10 +25,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     styleUrls: ['./main-page.component.css'],
 })
 export class MainPageComponent {
-    leftSidebar = true;
-    rightSidebar = true;
-
-    fileMetaDataList$: Observable<FileMetaData[]>;
+    fileToken: string | null = null;
     fileMetaData: FileMetaData = {
         fileName: 'File-1.pdf',
         description: 'This is the description of the file.',
@@ -38,8 +35,15 @@ export class MainPageComponent {
         fullText: '',
         summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ...',
     };
+    fileMetaDataList$: Observable<FileMetaData[]>;
 
-    constructor(private fileMetaDataService: FileMetaDataService) {
+    leftSidebar = true;
+    rightSidebar = true;
+
+    constructor(private fileMetaDataService: FileMetaDataService, private route: ActivatedRoute) {
+        this.route.paramMap.subscribe(paramMap => {
+            this.fileToken = paramMap.get("token");
+        })
         this.fileMetaDataList$ = this.fileMetaDataService.getAllFileMetaData();
     }
 

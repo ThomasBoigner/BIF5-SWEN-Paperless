@@ -48,7 +48,7 @@
     }
     <section id="content">
         <pdf-viewer
-            src="http://localhost:8081/api/files/6443824d-0754-47e0-a146-efa26de6b190/download"
+            [src]="this.fileToken ? `http://localhost:8081/api/files/${this.fileToken}/download` : undefined"
             [render-text]="false"
             [original-size]="false"
             [zoom-scale]="'page-width'"

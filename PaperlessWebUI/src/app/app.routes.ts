@@ -9,6 +9,11 @@ export const routes: Routes = [
         component: MainPageComponent,
     },
     {
+        path: 'file/view/:token',
+        title: 'Paperless',
+        component: MainPageComponent,
+    },
+    {
         path: 'file/upload',
         title: 'Upload a file!',
         component: UploadFilePageComponent,
