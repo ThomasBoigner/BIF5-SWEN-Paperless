@@ -1,16 +1,17 @@
 /* file list item */
 a.file-list-item {
-    padding: 32px;
     border-radius: 8px;
     display: block;
 }
 
 a.unselected {
     border: 1px solid var(--black25);
+    padding: 32px;
 }
 
 a.selected {
     border: 3px solid var(--primary);
+    padding: 30px;
 }
 
 a.file-list-item h5 {

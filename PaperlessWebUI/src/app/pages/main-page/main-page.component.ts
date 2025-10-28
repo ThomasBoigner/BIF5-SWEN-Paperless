@@ -31,6 +31,8 @@ export class MainPageComponent {
     fileMetaData$: Observable<FileMetaData> | undefined;
     fileMetaDataList$: Observable<FileMetaData[]>;
 
+    mainContentMode: 'pdf' | 'text' | 'summary' = 'pdf';
+
     leftSidebar = true;
     rightSidebar = true;
 
