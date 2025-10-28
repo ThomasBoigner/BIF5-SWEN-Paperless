@@ -38,10 +38,17 @@
                         fileMetaDataListItem of fileMetaDataList;
                         track fileMetaDataListItem.fileToken
                     ) {
-                        <file-list-item
-                            [fileMetaData]="fileMetaDataListItem"
-                            [isSelected]="fileMetaDataListItem.fileToken == fileToken"
-                        ></file-list-item>
+                        @if (fileMetaData$ | async; as fileMetaData) {
+                            <file-list-item
+                                    [fileMetaData]="fileMetaDataListItem"
+                                    [isSelected]="fileMetaData.fileToken === fileMetaDataListItem.fileToken"
+                            ></file-list-item>
+                        } @else {
+                            <file-list-item
+                                    [fileMetaData]="fileMetaDataListItem"
+                                    [isSelected]="false"
+                            ></file-list-item>
+                        }
                     }
                 } @else {
                     <p>No files available!</p>
@@ -54,11 +61,7 @@
             @switch (mainContentMode) {
                 @case ('pdf') {
                     <pdf-viewer
-                        [src]="
-                            this.fileToken
-                                ? `http://localhost:8081/api/files/${fileMetaData.fileToken}/download`
-                                : undefined
-                        "
+                        src="http://localhost:8081/api/files/{{ fileMetaData.fileToken }}/download"
                         [render-text]="false"
                         [original-size]="false"
                         [zoom-scale]="'page-width'"
@@ -101,7 +104,7 @@
                     (click)="setLeftSidebar(true)"
                 />
             }
-            @if (fileToken) {
+            @if (fileMetaData$ | async) {
                 <div class="content-selector-buttons">
                     <button (click)="mainContentMode = 'pdf'">Pdf</button>
                     <button (click)="mainContentMode = 'text'">Text</button>
@@ -109,7 +112,7 @@
                 </div>
             }
         </div>
-        @if (!rightSidebar && fileToken) {
+        @if (!rightSidebar) {
             <img
                 class="show-right"
                 ngSrc="app/assets/svg/show-right.svg"
@@ -120,17 +123,17 @@
             />
         }
     </section>
-    @if (rightSidebar && fileToken) {
-        <section id="sidebar-right">
-            <img
-                class="hide-right"
-                ngSrc="app/assets/svg/hide-right.svg"
-                width="64"
-                height="64"
-                alt="hide-right"
-                (click)="setRightSidebar(false)"
-            />
-            @if (fileMetaData$ | async; as fileMetaData) {
+    @if (rightSidebar) {
+        @if (fileMetaData$ | async; as fileMetaData) {
+            <section id="sidebar-right">
+                <img
+                    class="hide-right"
+                    ngSrc="app/assets/svg/hide-right.svg"
+                    width="64"
+                    height="64"
+                    alt="hide-right"
+                    (click)="setRightSidebar(false)"
+                />
                 <div class="file-information">
                     <div class="description-container">
                         <h6>Description</h6>
@@ -183,9 +186,7 @@
                         }"
                     ></file-button>
                 </div>
-            } @else {
-                <p class="unselected">File meta data not available!</p>
-            }
-        </section>
+            </section>
+        }
     }
 </div>

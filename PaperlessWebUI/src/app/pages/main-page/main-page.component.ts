@@ -27,7 +27,6 @@ import { FileSizePipe } from '../../pipes/file-size-pipe';
     styleUrls: ['./main-page.component.css'],
 })
 export class MainPageComponent {
-    fileToken: string | null = null;
     fileMetaData$: Observable<FileMetaData> | undefined;
     fileMetaDataList$: Observable<FileMetaData[]>;
 
@@ -41,9 +40,9 @@ export class MainPageComponent {
         private route: ActivatedRoute,
     ) {
         this.route.paramMap.subscribe((paramMap) => {
-            this.fileToken = paramMap.get('token');
-            if (this.fileToken) {
-                this.fileMetaData$ = fileMetaDataService.getFileMetaData(this.fileToken);
+            const fileToken = paramMap.get('token');
+            if (fileToken) {
+                this.fileMetaData$ = fileMetaDataService.getFileMetaData(fileToken);
             }
         });
         this.fileMetaDataList$ = this.fileMetaDataService.getAllFileMetaData();
