@@ -8,4 +8,5 @@ import java.util.UUID;
 public interface FileService {
     void uploadFile(UUID token, MultipartFile file);
     InputStreamResource downloadFile(UUID token);
+    void deleteFile(UUID token);
 }

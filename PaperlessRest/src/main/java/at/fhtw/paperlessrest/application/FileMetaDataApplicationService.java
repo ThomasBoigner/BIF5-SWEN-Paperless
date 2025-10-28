@@ -90,6 +90,7 @@ public class FileMetaDataApplicationService {
 
     @Transactional(readOnly = false)
     public void deleteFileMetaData(UUID token) {
+        fileService.deleteFile(token);
         fileMetaDataRepository.deleteByFileToken(new FileToken(token));
         log.info("Successfully deleted file with token {}", token);
     }

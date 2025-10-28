@@ -65,4 +65,19 @@ public class MinioFileService implements FileService {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void deleteFile(UUID token) {
+        try {
+            minioClient.removeObject(RemoveObjectArgs.builder()
+                            .bucket("files")
+                            .object(token.toString())
+                    .build());
+        } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                 InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                 XmlParserException e) {
+            log.error("Got an error when trying to delete a file from minio storage, message: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 }
