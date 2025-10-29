@@ -30,6 +30,7 @@ section#upload-file-form form {
     width: 100%;
 }
 
-file-button, error-message {
+file-button,
+error-message {
     width: 640px;
 }

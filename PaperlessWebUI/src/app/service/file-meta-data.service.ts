@@ -4,6 +4,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { FileMetaData } from '../model/file-meta-data';
 import { UploadFileCommand } from '../model/commands/upload-file-command';
+import { UpdateFileCommand } from '../model/commands/update-file-command';
 
 @Injectable({ providedIn: 'root' })
 export class FileMetaDataService {
@@ -39,6 +40,16 @@ export class FileMetaDataService {
             new Blob([JSON.stringify(uploadFileCommand)], { type: 'application/json' }),
         );
         return this.http.post<FileMetaData>(this.fileMetaDataUrl, formData);
+    }
+
+    public updateFile(
+        token: string,
+        updateFileCommand: UpdateFileCommand,
+    ): Observable<FileMetaData> {
+        this.logger.debug(
+            `Trying to update file with token ${token} with command ${JSON.stringify(updateFileCommand)} with endpoint ${this.fileMetaDataUrl}`,
+        );
+        return this.http.put<FileMetaData>(`${this.fileMetaDataUrl}/${token}`, updateFileCommand);
     }
 
     public deleteFile(token: string) {
