@@ -23,7 +23,7 @@ import { ErrorResponse } from '../../model/exception/error-response';
     styleUrls: ['./update-file-page.component.css'],
 })
 export class UpdateFilePageComponent {
-    errorMessage = 'Test';
+    errorMessage = '';
 
     fileToken?: string;
     fileForm = new FormGroup({
