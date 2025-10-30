@@ -24,7 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 
 @Slf4j
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:80", "http://localhost"})
 @RestController
 @RequestMapping(FileRestController.BASE_URL)
 public class FileRestController {

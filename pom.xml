@@ -21,6 +21,8 @@
 
     <modules>
         <module>PaperlessRest</module>
+        <module>OcrWorker</module>
+        <module>GenAiWorker</module>
     </modules>
 
     <properties>

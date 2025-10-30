@@ -20,6 +20,26 @@ services:
     networks:
       - paperless
 
+  ocr-worker:
+    container_name: ocr-worker
+    build:
+      context: OcrWorker
+      dockerfile: src/main/docker/Dockerfile
+    ports:
+      - "8082:8082"
+    networks:
+      - paperless
+
+  gen-ai-worker:
+    container_name: gen-ai-worker
+    build:
+      context: GenAiWorker
+      dockerfile: src/main/docker/Dockerfile
+    ports:
+      - "8083:8083"
+    networks:
+      - paperless
+
   postgres:
     image: 'postgres:17.5'
     container_name: paperless-database
@@ -39,6 +59,8 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=admin
     ports:
       - "9091:80"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
     networks:
       - paperless
 
@@ -52,8 +74,26 @@ services:
     networks:
       - paperless
 
+  minio:
+    image: 'quay.io/minio/minio:latest'
+    container_name: minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9090:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - paperless-minio:/data
+    networks:
+      - paperless
+
+
 volumes:
   paperless-database: {}
+  pgadmin: {}
+  paperless-minio: {}
   log4j2: {}
 
 networks:
