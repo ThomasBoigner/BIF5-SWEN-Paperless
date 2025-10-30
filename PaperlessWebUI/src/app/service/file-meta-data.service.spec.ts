@@ -124,6 +124,41 @@ describe('FileMetaDataService', () => {
         expect(req.request.responseType).toEqual('json');
     });
 
+    it('#update file should update the file meta data on the server and then return its metadata', () => {
+        const fileMetaDataService = TestBed.inject(FileMetaDataService);
+        const expectedFileMetaData = {
+            fileName: 'File-1.pdf',
+            description: 'This is the description of the first file.',
+            fileToken: 'abc',
+            fileSize: 100,
+            creationDate: new Date(),
+            fullText: '',
+            summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ...',
+        };
+        const updateFileMetaDataCommand: UploadFileCommand = {
+            description: 'abc',
+        };
+
+        // When
+        const response = fileMetaDataService.updateFile(
+            expectedFileMetaData.fileToken,
+            updateFileMetaDataCommand,
+        );
+
+        // Then
+        response.subscribe((fileMetaData) => {
+            expect(fileMetaData).toEqual(expectedFileMetaData);
+        });
+
+        const req = TestBed.inject(HttpTestingController).expectOne({
+            method: 'PUT',
+            url: `http://localhost:8081/api/files/${expectedFileMetaData.fileToken}`,
+        });
+
+        req.flush(expectedFileMetaData);
+        expect(req.request.responseType).toEqual('json');
+    });
+
     it('#deleteFile should delete a file on the server', () => {
         // Given
         const fileMetaDataService = TestBed.inject(FileMetaDataService);

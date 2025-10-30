@@ -7,7 +7,7 @@
 }
 
 /* Hero */
-section#upload-file-hero {
+section#update-file-hero {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,7 +15,7 @@ section#upload-file-hero {
 }
 
 /* Form */
-section#upload-file-form {
+section#update-file-form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -23,14 +23,19 @@ section#upload-file-form {
     width: 1080px;
 }
 
-section#upload-file-form form {
+section#update-file-form form {
     display: flex;
     flex-direction: column;
     gap: 32px;
     width: 100%;
 }
 
-file-button,
+/* Error Message */
 error-message {
+    width: 640px;
+}
+
+/* Submit button */
+file-button {
     width: 640px;
 }

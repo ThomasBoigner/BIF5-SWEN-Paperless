@@ -1,0 +1,45 @@
+<div class="container">
+    <section id="update-file-hero">
+        <a routerLink="/">
+            <img ngSrc="app/assets/svg/logo-secondary.svg" width="48" height="64" alt="logo" />
+        </a>
+        <h1>Update a file!</h1>
+    </section>
+    <section id="update-file-form">
+        @if (errorMessage) {
+            <error-message [text]="errorMessage"></error-message>
+        }
+        <form>
+            <textarea-input
+                label="Description"
+                [formGroup]="fileForm"
+                controlName="description"
+                [image]="{
+                    src: 'app/assets/svg/pencil.svg',
+                    alt: 'pencil',
+                    width: 32,
+                    height: 32,
+                }"
+            >
+            </textarea-input>
+        </form>
+        <file-button
+            text="Update file"
+            color="secondary"
+            [primaryImage]="{
+                src: 'app/assets/svg/update.svg',
+                alt: 'plus',
+                width: 41,
+                height: 32,
+            }"
+            [secondaryImage]="{
+                src: 'app/assets/svg/update-secondary.svg',
+                alt: 'plus',
+                width: 41,
+                height: 32,
+            }"
+            (click)="handleSubmit()"
+        >
+        </file-button>
+    </section>
+</div>

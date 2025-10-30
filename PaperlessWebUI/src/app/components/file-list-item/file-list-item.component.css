@@ -15,5 +15,9 @@ a.selected {
 }
 
 a.file-list-item h5 {
-    margin-bottom: 8px;
+    word-break: break-word;
+}
+
+a.file-list-item p {
+    margin-top: 8px;
 }
