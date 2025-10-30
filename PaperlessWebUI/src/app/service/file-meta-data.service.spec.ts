@@ -137,10 +137,13 @@ describe('FileMetaDataService', () => {
         };
         const updateFileMetaDataCommand: UploadFileCommand = {
             description: 'abc',
-        }
+        };
 
         // When
-        const response = fileMetaDataService.updateFile(expectedFileMetaData.fileToken, updateFileMetaDataCommand)
+        const response = fileMetaDataService.updateFile(
+            expectedFileMetaData.fileToken,
+            updateFileMetaDataCommand,
+        );
 
         // Then
         response.subscribe((fileMetaData) => {
@@ -154,7 +157,7 @@ describe('FileMetaDataService', () => {
 
         req.flush(expectedFileMetaData);
         expect(req.request.responseType).toEqual('json');
-    })
+    });
 
     it('#deleteFile should delete a file on the server', () => {
         // Given
