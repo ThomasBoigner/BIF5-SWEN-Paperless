@@ -20,6 +20,26 @@ services:
     networks:
       - paperless
 
+  ocr-worker:
+    container_name: ocr-worker
+    build:
+      context: OcrWorker
+      dockerfile: src/main/docker/Dockerfile
+    ports:
+      - "8082:8082"
+    networks:
+      - paperless
+
+  gen-ai-worker:
+    container_name: gen-ai-worker
+    build:
+      context: GenAiWorker
+      dockerfile: src/main/docker/Dockerfile
+    ports:
+      - "8083:8083"
+    networks:
+      - paperless
+
   postgres:
     image: 'postgres:17.5'
     container_name: paperless-database
