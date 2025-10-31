@@ -11,18 +11,14 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
 @Getter
 @ToString
-@Entity
 public class FileMetaData {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Nullable
-    private Long id;
-    @Embedded
     private FileToken fileToken;
     private LocalDateTime creationDate;
     private String fileName;
@@ -36,38 +32,51 @@ public class FileMetaData {
     @Nullable
     private String summary;
 
-    public FileMetaData() {
-        fileToken = new FileToken();
-        creationDate = LocalDateTime.MIN;
-        fileName = "";
-        fileSize = 0;
-    }
+    private final List<FileUploaded> fileUploadedEvents;
 
     @Builder
-    public FileMetaData(@Nullable String fileName, long fileSize, @Nullable String description) {
+    public FileMetaData(@Nullable String fileName, byte[] file, @Nullable String description) {
         this.setFileToken(new FileToken());
         this.setCreationDate(LocalDateTime.now(ZoneId.systemDefault()));
         this.setFileName(fileName);
+        this.setFileSize(file.length);
+        this.setDescription(description);
+        this.fileUploadedEvents = new ArrayList<>();
+        log.debug("FileMetaData {} created", this);
+        this.fileUploadedEvents.add(FileUploaded.builder()
+                        .file(file)
+                .build());
+    }
+
+    public FileMetaData(FileToken fileToken,
+                        LocalDateTime creationDate,
+                        String fileName,
+                        long fileSize,
+                        @Nullable String description,
+                        @Nullable String fullText,
+                        @Nullable String summary
+    ) {
+        this.setFileToken(fileToken);
+        this.setCreationDate(creationDate);
+        this.setFileName(fileName);
         this.setFileSize(fileSize);
         this.setDescription(description);
-        log.debug("FileMetaData {} created", this);
+        this.setFullText(fullText);
+        this.setSummary(summary);
+        this.fileUploadedEvents = new ArrayList<>();
     }
 
-    public void setId(@Nullable Long id) {
-        this.id = id;
-    }
-
-    public final void setFileToken(@Nullable FileToken fileToken) {
+    private void setFileToken(@Nullable FileToken fileToken) {
         Objects.requireNonNull(fileToken,  "Token must not be null!");
         this.fileToken = fileToken;
     }
 
-    public final void setCreationDate(@Nullable LocalDateTime creationDate) {
+    private void setCreationDate(@Nullable LocalDateTime creationDate) {
         Objects.requireNonNull(creationDate, "Creation date must not be null!");
         this.creationDate = creationDate;
     }
 
-    public final void setFileName(@Nullable String fileName) {
+    private void setFileName(@Nullable String fileName) {
         Objects.requireNonNull(fileName, "File name must not be null!");
         Assert.isTrue(!fileName.isBlank(), "File name must not be blank!");
         this.fileName = fileName;

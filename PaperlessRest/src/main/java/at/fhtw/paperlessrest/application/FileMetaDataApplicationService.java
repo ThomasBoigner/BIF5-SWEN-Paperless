@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,6 +26,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class FileMetaDataApplicationService {
     private final FileMetaDataRepository fileMetaDataRepository;
+    private final FileMetaDataEventPublisher fileMetaDataEventPublisher;
     private final FileService fileService;
 
     public List<FileMetaDataDto> getAllFileMetaData() {
@@ -55,14 +57,22 @@ public class FileMetaDataApplicationService {
             throw new IllegalArgumentException("Invalid file content type! The file must be a pdf.");
         }
 
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName(file.getOriginalFilename())
-                .fileSize(file.getSize())
-                .description(command.description())
-                .build();
+
+        FileMetaData fileMetaData = null;
+        try {
+            fileMetaData = FileMetaData.builder()
+                    .fileName(file.getOriginalFilename())
+                    .file(file.getBytes())
+                    .description(command.description())
+                    .build();
+        } catch (IOException e) {
+            log.warn("Could not convert file, got exception with message {}!", e.getMessage());
+            throw new IllegalArgumentException("Could not get the files content!");
+        }
 
         fileService.uploadFile(fileMetaData.getFileToken().token(), file);
         fileMetaDataRepository.save(fileMetaData);
+        fileMetaDataEventPublisher.publishEvents(fileMetaData);
         log.info("Uploaded file {}", fileMetaData);
         return new FileMetaDataDto(fileMetaData);
     }
@@ -85,7 +95,9 @@ public class FileMetaDataApplicationService {
         fileMetaData.setDescription(command.description());
 
         log.info("Successfully updated file meta data {}", fileMetaData);
-        return new FileMetaDataDto(fileMetaDataRepository.save(fileMetaData));
+        fileMetaDataRepository.save(fileMetaData);
+        fileMetaDataEventPublisher.publishEvents(fileMetaData);
+        return new FileMetaDataDto(fileMetaData);
     }
 
     @Transactional(readOnly = false)

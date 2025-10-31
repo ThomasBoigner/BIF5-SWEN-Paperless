@@ -18,7 +18,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         log.warn("Encountered validation exception while processing request:"
                 .concat(" Type: {} - Msg: {}"), ex.getClass().getSimpleName(), ex.getMessage());
 
-        return handleExceptionInternal(ex, new ErrorResponse(ex.getMessage()), new HttpHeaders(),
-                HttpStatus.BAD_REQUEST, request);
+        String message = ex.getMessage();
+
+        ResponseEntity<Object> response = handleExceptionInternal(
+                ex,
+                new ErrorResponse((message != null) ? message : "Bad Request"),
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST,
+                request
+        );
+
+        return (response != null) ? response : ResponseEntity.internalServerError().build();
     }
 }

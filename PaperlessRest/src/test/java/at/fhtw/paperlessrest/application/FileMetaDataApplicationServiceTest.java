@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,10 +32,12 @@ public class FileMetaDataApplicationServiceTest {
     private FileMetaDataRepository fileMetaDataRepository;
     @Mock
     private FileService fileService;
+    @Mock
+    private FileMetaDataEventPublisher fileMetaDataEventPublisher;
 
     @BeforeEach
     void setUp() {
-        fileMetaDataApplicationService = new FileMetaDataApplicationService(fileMetaDataRepository, fileService);
+        fileMetaDataApplicationService = new FileMetaDataApplicationService(fileMetaDataRepository, fileMetaDataEventPublisher, fileService);
     }
 
     @Test
@@ -42,7 +45,7 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .fileSize(1000)
+                .file(new byte[8])
                 .description("test")
                 .build();
 
@@ -61,7 +64,7 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .fileSize(1000)
+                .file(new byte[8])
                 .description("test")
                 .build();
 
@@ -77,10 +80,9 @@ public class FileMetaDataApplicationServiceTest {
     }
 
     @Test
-    void ensureUploadFileWorksProperly() {
+    void ensureUploadFileWorksProperly() throws IOException {
         // Given
-        String fileName = "test.txt";
-        long fileSize = 1000;
+        String fileName = "test.pdf";
 
         MultipartFile file = Mockito.mock(MultipartFile.class);
 
@@ -90,15 +92,15 @@ public class FileMetaDataApplicationServiceTest {
 
         when(file.getContentType()).thenReturn("application/pdf");
         when(file.getOriginalFilename()).thenReturn(fileName);
-        when(file.getSize()).thenReturn(fileSize);
+        when(file.getBytes()).thenReturn(new byte[8]);
 
         // When
         FileMetaDataDto result = fileMetaDataApplicationService.uploadFile(file, command);
 
         // Then
         assertThat(result).isNotNull();
-        assertThat(result.fileName()).isEqualTo("test.txt");
-        assertThat(result.fileSize()).isEqualTo(fileSize);
+        assertThat(result.fileName()).isEqualTo(fileName);
+        assertThat(result.fileSize()).isEqualTo(8L);
         assertThat(result.description()).isEqualTo(command.description());
     }
 
@@ -123,7 +125,7 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .fileSize(1000)
+                .file(new byte[8])
                 .description("test")
                 .build();
 
@@ -149,7 +151,7 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .fileSize(1000)
+                .file(new byte[8])
                 .description("test")
                 .build();
 
@@ -170,7 +172,7 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .fileSize(1000)
+                .file(new byte[8])
                 .description("test")
                 .build();
 
