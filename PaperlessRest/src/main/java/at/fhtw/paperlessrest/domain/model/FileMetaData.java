@@ -11,6 +11,8 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -30,14 +32,20 @@ public class FileMetaData {
     @Nullable
     private String summary;
 
+    private final List<FileUploaded> fileUploadedEvents;
+
     @Builder
-    public FileMetaData(@Nullable String fileName, long fileSize, @Nullable String description) {
+    public FileMetaData(@Nullable String fileName, byte[] file, @Nullable String description) {
         this.setFileToken(new FileToken());
         this.setCreationDate(LocalDateTime.now(ZoneId.systemDefault()));
         this.setFileName(fileName);
-        this.setFileSize(fileSize);
+        this.setFileSize(file.length);
         this.setDescription(description);
+        this.fileUploadedEvents = new ArrayList<>();
         log.debug("FileMetaData {} created", this);
+        this.fileUploadedEvents.add(FileUploaded.builder()
+                        .file(file)
+                .build());
     }
 
     public FileMetaData(FileToken fileToken,
@@ -55,6 +63,7 @@ public class FileMetaData {
         this.setDescription(description);
         this.setFullText(fullText);
         this.setSummary(summary);
+        this.fileUploadedEvents = new ArrayList<>();
     }
 
     private void setFileToken(@Nullable FileToken fileToken) {

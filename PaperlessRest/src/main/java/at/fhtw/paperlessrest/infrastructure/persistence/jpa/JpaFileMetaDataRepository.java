@@ -17,7 +17,7 @@ public class JpaFileMetaDataRepository implements FileMetaDataRepository {
 
     @Override
     public FileMetaData save(FileMetaData fileMetaData) {
-        FileMetaDataEntity fileMetaDataEntity = new FileMetaDataEntity();
+        FileMetaDataEntity fileMetaDataEntity = new FileMetaDataEntity(fileMetaData);
         this.fileMetaDataEntityRepository.save(fileMetaDataEntity);
         return fileMetaData;
     }
