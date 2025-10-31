@@ -1,14 +1,11 @@
 package at.fhtw.paperlessrest.domain.model;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
+import java.util.List;
 import java.util.Optional;
 
-@Repository
-public interface FileMetaDataRepository extends JpaRepository<FileMetaData, Long> {
+public interface FileMetaDataRepository {
+    FileMetaData save(FileMetaData fileMetaData);
+    List<FileMetaData> findAll();
     Optional<FileMetaData> findFileMetaDataByFileToken(FileToken token);
-    void deleteFileMetaDataByFileToken(FileToken token);
-
     void deleteByFileToken(FileToken fileToken);
 }
