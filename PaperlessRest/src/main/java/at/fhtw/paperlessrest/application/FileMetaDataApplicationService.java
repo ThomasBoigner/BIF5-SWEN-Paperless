@@ -1,5 +1,6 @@
 package at.fhtw.paperlessrest.application;
 
+import at.fhtw.paperlessrest.application.commands.AddFullTextCommand;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
@@ -57,7 +58,6 @@ public class FileMetaDataApplicationService {
             throw new IllegalArgumentException("Invalid file content type! The file must be a pdf.");
         }
 
-
         FileMetaData fileMetaData = null;
         try {
             fileMetaData = FileMetaData.builder()
@@ -75,6 +75,25 @@ public class FileMetaDataApplicationService {
         fileMetaDataEventPublisher.publishEvents(fileMetaData);
         log.info("Uploaded file {}", fileMetaData);
         return new FileMetaDataDto(fileMetaData);
+    }
+
+    @Transactional(readOnly = false)
+    public void addFullText(@Nullable AddFullTextCommand command) {
+        Objects.requireNonNull(command, "command must not be null!");
+        log.debug("Trying to add full text with command {}", command);
+
+        Optional<FileMetaData> entity = fileMetaDataRepository.findFileMetaDataByFileToken(new FileToken(command.fileToken()));
+
+        if (entity.isEmpty()) {
+            log.warn("File with token {} can not be found!", command.fileToken());
+            return;
+        }
+
+        FileMetaData fileMetaData = entity.get();
+        fileMetaData.addFullText(command.FullText());
+
+        fileMetaDataEventPublisher.publishEvents(fileMetaData);
+        fileMetaDataRepository.save(fileMetaData);
     }
 
     @Transactional(readOnly = false)

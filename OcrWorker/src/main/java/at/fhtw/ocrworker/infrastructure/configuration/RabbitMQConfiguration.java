@@ -7,7 +7,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfiguration {
     @Bean
-    public TopicExchange topic() {
+    public TopicExchange ocrWorkerTopic() {
+        return new TopicExchange("at.fhtw.ocrworker", true, false);
+    }
+
+    @Bean
+    public TopicExchange paperlessRestTopic() {
         return new TopicExchange("at.fhtw.paperlessrest", true, false);
     }
 
@@ -18,6 +23,6 @@ public class RabbitMQConfiguration {
 
     @Bean
     public Binding fileUploadedBinding() {
-        return BindingBuilder.bind(fileUploadedQueue()).to(topic()).with("at.fhtw.paperlessrest.domain.model.fileuploaded");
+        return BindingBuilder.bind(fileUploadedQueue()).to(paperlessRestTopic()).with("at.fhtw.paperlessrest.domain.model.fileuploaded");
     }
 }

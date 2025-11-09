@@ -19,6 +19,8 @@ import java.util.Objects;
 @Getter
 @ToString
 public class FileMetaData {
+    @Nullable
+    private Long id;
     private FileToken fileToken;
     private LocalDateTime creationDate;
     private String fileName;
@@ -45,10 +47,12 @@ public class FileMetaData {
         log.debug("FileMetaData {} created", this);
         this.fileUploadedEvents.add(FileUploaded.builder()
                         .file(file)
+                        .fileToken(fileToken)
                 .build());
     }
 
-    public FileMetaData(FileToken fileToken,
+    public FileMetaData(@Nullable Long id,
+                        FileToken fileToken,
                         LocalDateTime creationDate,
                         String fileName,
                         long fileSize,
@@ -56,6 +60,7 @@ public class FileMetaData {
                         @Nullable String fullText,
                         @Nullable String summary
     ) {
+        this.id = id;
         this.setFileToken(fileToken);
         this.setCreationDate(creationDate);
         this.setFileName(fileName);
@@ -64,6 +69,10 @@ public class FileMetaData {
         this.setFullText(fullText);
         this.setSummary(summary);
         this.fileUploadedEvents = new ArrayList<>();
+    }
+
+    public void addFullText(@Nullable String fullText) {
+        this.setFullText(fullText);
     }
 
     private void setFileToken(@Nullable FileToken fileToken) {

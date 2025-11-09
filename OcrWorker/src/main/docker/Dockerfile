@@ -14,4 +14,4 @@ RUN true
 COPY --from=builder spring-boot-loader/ ./
 RUN true
 COPY --from=builder application/ ./
-ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
+ENTRYPOINT ["java", "--enable-native-access=ALL-UNNAMED", "org.springframework.boot.loader.launch.JarLauncher"]

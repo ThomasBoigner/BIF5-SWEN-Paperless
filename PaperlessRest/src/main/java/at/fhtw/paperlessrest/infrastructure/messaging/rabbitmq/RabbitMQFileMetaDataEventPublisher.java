@@ -19,7 +19,7 @@ import java.util.List;
 @Component
 public class RabbitMQFileMetaDataEventPublisher implements FileMetaDataEventPublisher {
     private final RabbitTemplate template;
-    private final TopicExchange topic;
+    private final TopicExchange paperlessRestTopic;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -31,9 +31,9 @@ public class RabbitMQFileMetaDataEventPublisher implements FileMetaDataEventPubl
         events.forEach(event -> {
             log.trace("Publishing file uploaded event: {}", event);
             try {
-                template.convertAndSend(topic.getName(), "at.fhtw.paperlessrest.domain.model.fileuploaded", objectMapper.writeValueAsString(event));
+                template.convertAndSend(paperlessRestTopic.getName(), "at.fhtw.paperlessrest.domain.model.fileuploaded", objectMapper.writeValueAsString(event));
             } catch (JsonProcessingException e) {
-                log.error("Could not convert UserRegisteredEvent {} to JSON.", event, e);
+                log.error("Could not convert FileUploaded {} to JSON.", event, e);
             }
         });
     }

@@ -6,10 +6,11 @@ import java.time.LocalDateTime;
 
 public record FileUploaded(
         byte[] file,
+        FileToken fileToken,
         LocalDateTime occurredOn
 ) {
     @Builder
-    public FileUploaded(byte[] file) {
-        this(file, LocalDateTime.now());
+    public FileUploaded(byte[] file, FileToken fileToken) {
+        this(file, fileToken, LocalDateTime.now());
     }
 }
