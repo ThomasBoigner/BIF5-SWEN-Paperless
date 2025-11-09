@@ -29,6 +29,7 @@ public class RabbitMQFileMetaDataEventPublisher implements FileMetaDataEventPubl
 
     private void publishFileUploadedEvents(List<FileUploaded> events) {
         events.forEach(event -> {
+            log.trace("Publishing file uploaded event: {}", event);
             try {
                 template.convertAndSend(topic.getName(), "at.fhtw.paperlessrest.domain.model.fileuploaded", objectMapper.writeValueAsString(event));
             } catch (JsonProcessingException e) {
