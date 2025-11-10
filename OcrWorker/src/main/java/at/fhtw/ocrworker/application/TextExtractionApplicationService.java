@@ -20,29 +20,15 @@ import java.util.Objects;
 
 @Service
 @Slf4j
-public class OcrApplicationService {
-    private final Tesseract tesseract;
+public class TextExtractionApplicationService {
+    private final OcrService ocrService;
     private final TextExtractedEventPublisher textExtractedEventPublisher;
 
     public void extractText(@Nullable ExtractTextCommand command) {
         Objects.requireNonNull(command, "command must not be null!");
         log.debug("Trying to extract full text with command: {}", command);
 
-        StringBuilder fullTextBuilder = new StringBuilder();
-        try(PDDocument document = Loader.loadPDF(command.imageBytes())) {
-            PDFRenderer renderer = new PDFRenderer(document);
-            for (int pageNumber = 0; pageNumber < document.getNumberOfPages(); pageNumber++) {
-                fullTextBuilder.append(tesseract.doOCR(renderer.renderImageWithDPI(pageNumber, 70)));
-            }
-        } catch (IOException e) {
-            log.error("Could not create buffered image from byte array {}.", command.imageBytes(), e);
-            throw new RuntimeException(e);
-        } catch (TesseractException e) {
-            log.error("Could not extract full text from byte array {}.", command.imageBytes(), e);
-            throw new RuntimeException(e);
-        }
-
-        String fullText = fullTextBuilder.toString();
+        String fullText = ocrService.extractText(command.imageBytes());
         log.info("Extracted full text {} from image", fullText);
 
         TextExtracted textExtracted = TextExtracted.builder()

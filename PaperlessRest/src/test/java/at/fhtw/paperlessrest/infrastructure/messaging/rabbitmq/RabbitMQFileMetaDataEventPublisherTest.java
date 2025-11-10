@@ -22,12 +22,11 @@ public class RabbitMQFileMetaDataEventPublisherTest {
     private RabbitMQFileMetaDataEventPublisher publisher;
     @Mock
     private RabbitTemplate rabbitTemplate;
-    private TopicExchange topicExchange;
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
-        topicExchange = new TopicExchange("at.fhtw.paperlessrest", true, false);
+        TopicExchange topicExchange = new TopicExchange("at.fhtw.paperlessrest", true, false);
         objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
         publisher = new RabbitMQFileMetaDataEventPublisher(rabbitTemplate, topicExchange, objectMapper);
     }

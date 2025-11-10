@@ -1,6 +1,6 @@
 package at.fhtw.ocrworker.infrastructure.messaging.rabbitmq;
 
-import at.fhtw.ocrworker.application.OcrApplicationService;
+import at.fhtw.ocrworker.application.TextExtractionApplicationService;
 import at.fhtw.ocrworker.application.commands.ExtractTextCommand;
 import at.fhtw.ocrworker.infrastructure.messaging.rabbitmq.events.FileUploaded;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class RabbitMQFilePaperlessRestListener {
-    private final OcrApplicationService ocrApplicationService;
+    private final TextExtractionApplicationService textExtractionApplicationService;
     private final ObjectMapper objectMapper;
 
     @RabbitListener(queues = "at.fhtw.paperlessrest.domain.model.fileuploaded")
@@ -24,7 +24,7 @@ public class RabbitMQFilePaperlessRestListener {
         try {
             FileUploaded event = objectMapper.readValue(in, FileUploaded.class);
             log.trace("Received file uploaded event: {}", event);
-            ocrApplicationService.extractText(ExtractTextCommand.builder()
+            textExtractionApplicationService.extractText(ExtractTextCommand.builder()
                             .imageBytes(event.file())
                             .fileToken(event.fileToken().token())
                     .build());
