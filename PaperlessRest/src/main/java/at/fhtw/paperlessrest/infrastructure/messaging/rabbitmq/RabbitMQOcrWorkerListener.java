@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class RabbitMqTextExtractedListener {
+public class RabbitMQOcrWorkerListener {
     private final FileMetaDataApplicationService fileMetaDataApplicationService;
     private final ObjectMapper objectMapper;
 

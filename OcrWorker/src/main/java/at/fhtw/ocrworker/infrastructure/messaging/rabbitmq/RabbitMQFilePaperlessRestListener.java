@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class RabbitMQFileUploadedEventListener {
+public class RabbitMQFilePaperlessRestListener {
     private final OcrApplicationService ocrApplicationService;
     private final ObjectMapper objectMapper;
 
