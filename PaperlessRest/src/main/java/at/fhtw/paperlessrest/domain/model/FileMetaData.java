@@ -19,6 +19,8 @@ import java.util.Objects;
 @Getter
 @ToString
 public class FileMetaData {
+    @Nullable
+    private Long id;
     private FileToken fileToken;
     private LocalDateTime creationDate;
     private String fileName;
@@ -33,6 +35,7 @@ public class FileMetaData {
     private String summary;
 
     private final List<FileUploaded> fileUploadedEvents;
+    private final List<FullTextAdded> fullTextAddedEvents;
 
     @Builder
     public FileMetaData(@Nullable String fileName, byte[] file, @Nullable String description) {
@@ -42,13 +45,16 @@ public class FileMetaData {
         this.setFileSize(file.length);
         this.setDescription(description);
         this.fileUploadedEvents = new ArrayList<>();
+        this.fullTextAddedEvents = new ArrayList<>();
         log.debug("FileMetaData {} created", this);
         this.fileUploadedEvents.add(FileUploaded.builder()
                         .file(file)
+                        .fileToken(fileToken)
                 .build());
     }
 
-    public FileMetaData(FileToken fileToken,
+    public FileMetaData(@Nullable Long id,
+                        FileToken fileToken,
                         LocalDateTime creationDate,
                         String fileName,
                         long fileSize,
@@ -56,6 +62,7 @@ public class FileMetaData {
                         @Nullable String fullText,
                         @Nullable String summary
     ) {
+        this.id = id;
         this.setFileToken(fileToken);
         this.setCreationDate(creationDate);
         this.setFileName(fileName);
@@ -64,6 +71,16 @@ public class FileMetaData {
         this.setFullText(fullText);
         this.setSummary(summary);
         this.fileUploadedEvents = new ArrayList<>();
+        this.fullTextAddedEvents = new ArrayList<>();
+    }
+
+    public void addFullText(String fullText) {
+        this.setFullText(fullText);
+        this.fullTextAddedEvents.add(FullTextAdded.builder()
+                .fullText(fullText)
+                .fileToken(this.fileToken)
+                .build()
+        );
     }
 
     private void setFileToken(@Nullable FileToken fileToken) {

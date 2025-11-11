@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   paperless-rest:
     container_name: paperless-rest

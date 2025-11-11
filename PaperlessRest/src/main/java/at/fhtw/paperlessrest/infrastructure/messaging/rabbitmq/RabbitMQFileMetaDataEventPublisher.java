@@ -3,6 +3,7 @@ package at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq;
 import at.fhtw.paperlessrest.application.FileMetaDataEventPublisher;
 import at.fhtw.paperlessrest.domain.model.FileMetaData;
 import at.fhtw.paperlessrest.domain.model.FileUploaded;
+import at.fhtw.paperlessrest.domain.model.FullTextAdded;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,20 +20,33 @@ import java.util.List;
 @Component
 public class RabbitMQFileMetaDataEventPublisher implements FileMetaDataEventPublisher {
     private final RabbitTemplate template;
-    private final TopicExchange topic;
+    private final TopicExchange paperlessRestTopic;
     private final ObjectMapper objectMapper;
 
     @Override
     public void publishEvents(FileMetaData fileMetaData) {
         publishFileUploadedEvents(fileMetaData.getFileUploadedEvents());
+        publishFullTextAddedEvents(fileMetaData.getFullTextAddedEvents());
     }
 
     private void publishFileUploadedEvents(List<FileUploaded> events) {
         events.forEach(event -> {
+            log.trace("Publishing file uploaded event: {}", event);
             try {
-                template.convertAndSend(topic.getName(), "at.fhtw.paperlessrest.domain.model.fileuploaded", objectMapper.writeValueAsString(event));
+                template.convertAndSend(paperlessRestTopic.getName(), "at.fhtw.paperlessrest.domain.model.fileuploaded", objectMapper.writeValueAsString(event));
             } catch (JsonProcessingException e) {
-                log.error("Could not convert UserRegisteredEvent {} to JSON.", event, e);
+                log.error("Could not convert FileUploaded {} to JSON.", event, e);
+            }
+        });
+    }
+
+    private void publishFullTextAddedEvents(List<FullTextAdded> events) {
+        events.forEach(event -> {
+            log.trace("Publishing full text added event: {}", event);
+            try {
+                template.convertAndSend(paperlessRestTopic.getName(), "at.fhtw.paperlessrest.domain.model.fulltextadded", objectMapper.writeValueAsString(event));
+            } catch (JsonProcessingException e) {
+                log.error("Could not convert FullTextAdded {} to JSON.", event, e);
             }
         });
     }

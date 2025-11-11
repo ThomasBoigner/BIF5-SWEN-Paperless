@@ -24,6 +24,7 @@ public class FileMetaDataEntity {
     private String description;
 
     @Nullable
+    @Column(length = 1048576)
     private String fullText;
     @Nullable
     private String summary;
@@ -35,6 +36,7 @@ public class FileMetaDataEntity {
     }
 
     public FileMetaDataEntity(FileMetaData fileMetaData) {
+        this.id = fileMetaData.getId();
         this.fileToken = fileMetaData.getFileToken().token();
         this.creationDate = fileMetaData.getCreationDate();
         this.fileName = fileMetaData.getFileName();
@@ -46,6 +48,7 @@ public class FileMetaDataEntity {
 
     public FileMetaData toFileMetaData() {
         return new FileMetaData(
+                this.id,
                 new FileToken(fileToken),
                 this.creationDate,
                 this.fileName,

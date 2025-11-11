@@ -14,7 +14,7 @@ img.hide-right:hover {
 /* sidebar left */
 section#sidebar-left {
     width: 512px;
-    padding: 32px 48px;
+    padding: 32px 0 32px 48px;
     display: flex;
     flex-direction: column;
     gap: 32px;
@@ -34,30 +34,34 @@ div.file-list {
     overflow: scroll;
 }
 
-div.file-list > p {
-    text-align: center;
-}
-
 /* content */
 section#content {
-    position: relative;
     flex: 1;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0 48px;
 }
 
 div.content-selector {
-    position: absolute;
-    left: 32px;
-    top: 32px;
     display: flex;
-    flex-direction: column;
+    padding: 32px 0;
+    justify-content: space-between;
+}
+
+div.content-selector > div {
+    display: flex;
     gap: 32px;
 }
 
 div.content-selector-buttons {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 8px;
+}
+
+section#content div.content-container {
+    flex: 1;
+    overflow: scroll;
 }
 
 pdf-viewer {
@@ -65,24 +69,15 @@ pdf-viewer {
     height: 100%;
 }
 
-section#content div.content-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-img.show-right {
-    position: absolute;
-    right: 32px;
-    top: 32px;
+p.full-text {
+    white-space: pre-line;
+    padding-bottom: 32px;
 }
 
 /* sidebar right */
 section#sidebar-right {
     width: 512px;
-    padding: 32px 48px;
+    padding: 32px 48px 32px 0;
     display: flex;
     flex-direction: column;
     gap: 32px;
@@ -108,4 +103,8 @@ div.action-buttons {
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
+
+p.warning {
+    text-align: center;
 }

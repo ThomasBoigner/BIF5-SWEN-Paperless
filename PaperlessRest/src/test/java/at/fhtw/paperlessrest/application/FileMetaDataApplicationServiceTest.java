@@ -1,5 +1,6 @@
 package at.fhtw.paperlessrest.application;
 
+import at.fhtw.paperlessrest.application.commands.AddFullTextCommand;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
@@ -118,6 +119,58 @@ public class FileMetaDataApplicationServiceTest {
         // When
         assertThrows(IllegalArgumentException.class,
                 () -> fileMetaDataApplicationService.uploadFile(file, command));
+    }
+
+    @Test
+    void ensureAddFullTextWorksProperly() {
+        // Given
+        String fullText = "Full Text";
+
+        FileMetaData fileMetaData = FileMetaData.builder()
+                .fileName("test.txt")
+                .file(new byte[8])
+                .description("test")
+                .build();
+
+        AddFullTextCommand command = AddFullTextCommand.builder()
+                .FullText(fullText)
+                .fileToken(fileMetaData.getFileToken().token())
+                .build();
+
+        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
+                .thenReturn(Optional.of(fileMetaData));
+
+        // When
+        fileMetaDataApplicationService.addFullText(command);
+
+        // Then
+        assertThat(fileMetaData.getFullText()).isEqualTo(fullText);
+    }
+
+    @Test
+    void ensureAddFullTextThrowsExceptionWhenFileCanNotBeFound() {
+        // Given
+        String fullText = "Full Text";
+
+        FileMetaData fileMetaData = FileMetaData.builder()
+                .fileName("test.txt")
+                .file(new byte[8])
+                .description("test")
+                .build();
+
+        AddFullTextCommand command = AddFullTextCommand.builder()
+                .FullText(fullText)
+                .fileToken(fileMetaData.getFileToken().token())
+                .build();
+
+        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
+                .thenReturn(Optional.empty());
+
+        // When
+        fileMetaDataApplicationService.addFullText(command);
+
+        // Then
+        assertThat(fileMetaData.getFullText()).isEqualTo(null);
     }
 
     @Test
