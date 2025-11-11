@@ -9,8 +9,10 @@ public class TesseractConfiguration {
     @Bean
     public Tesseract tesseract() {
         Tesseract tesseract = new Tesseract();
-        tesseract.setDatapath("/mnt/data/Bachelor/Semester-5/BIF5-SWEN/BIF5-SWEN-Paperless/OcrWorker/src/main/resources/tessdata");
+        tesseract.setDatapath("OcrWorker/src/main/resources/tessdata");
         tesseract.setLanguage("eng");
+        tesseract.setPageSegMode(1);
+        tesseract.setOcrEngineMode(1);
         return tesseract;
     }
 }
