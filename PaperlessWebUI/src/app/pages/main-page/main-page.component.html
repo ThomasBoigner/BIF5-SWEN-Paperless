@@ -59,80 +59,78 @@
         </section>
     }
     <section id="content">
-        @if (fileMetaData$ | async; as fileMetaData) {
-            @switch (mainContentMode) {
-                @case ('pdf') {
-                    <pdf-viewer
-                        src="http://localhost:8081/api/files/{{ fileMetaData.fileToken }}/download"
-                        [render-text]="false"
-                        [original-size]="false"
-                        [zoom-scale]="'page-width'"
-                        [show-borders]="true"
-                        [zoom]="0.75"
-                    ></pdf-viewer>
-                }
-                @case ('text') {
-                    <div class="content-container">
-                        @if (fileMetaData.fullText) {
-                            <p>{{ fileMetaData.fullText }}</p>
-                        } @else {
-                            <p>Full text not available!</p>
-                        }
-                    </div>
-                }
-                @case ('summary') {
-                    <div class="content-container">
-                        @if (fileMetaData.summary) {
-                            <p>{{ fileMetaData.summary }}</p>
-                        } @else {
-                            <p>Summary not available!</p>
-                        }
-                    </div>
-                }
-            }
-        } @else {
-            <div class="content-container">
-                <p>No file selected!</p>
-            </div>
-        }
         <div class="content-selector">
             @if (!leftSidebar) {
                 <img
-                    class="show-left"
-                    ngSrc="app/assets/svg/show-left.svg"
-                    width="64"
-                    height="64"
-                    alt="show-left"
-                    (click)="setLeftSidebar(true)"
+                        class="show-left"
+                        ngSrc="app/assets/svg/show-left.svg"
+                        width="64"
+                        height="64"
+                        alt="show-left"
+                        (click)="setLeftSidebar(true)"
                 />
             }
             @if (fileMetaData$ | async) {
                 <div class="content-selector-buttons">
                     <small-file-button
-                        text="Pdf"
-                        (click)="mainContentMode = 'pdf'"
+                            text="Pdf"
+                            (click)="mainContentMode = 'pdf'"
                     ></small-file-button>
                     <small-file-button
-                        text="Text"
-                        (click)="mainContentMode = 'text'"
+                            text="Text"
+                            (click)="mainContentMode = 'text'"
                     ></small-file-button>
                     <small-file-button
-                        text="Summary"
-                        (click)="mainContentMode = 'summary'"
+                            text="Summary"
+                            (click)="mainContentMode = 'summary'"
                     ></small-file-button>
                 </div>
             }
+            @if (!rightSidebar) {
+                <img
+                        class="show-right"
+                        ngSrc="app/assets/svg/show-right.svg"
+                        width="64"
+                        height="64"
+                        alt="show-right"
+                        (click)="setRightSidebar(true)"
+                />
+            }
         </div>
-        @if (!rightSidebar) {
-            <img
-                class="show-right"
-                ngSrc="app/assets/svg/show-right.svg"
-                width="64"
-                height="64"
-                alt="show-right"
-                (click)="setRightSidebar(true)"
-            />
-        }
+        <div class="content-container">
+            @if (fileMetaData$ | async; as fileMetaData) {
+                @switch (mainContentMode) {
+                    @case ('pdf') {
+                        <pdf-viewer
+                            src="http://localhost:8081/api/files/
+                                {{ fileMetaData.fileToken }}
+                                /download"
+                            [render-text]="false"
+                            [original-size]="false"
+                            [zoom-scale]="'page-width'"
+                            [show-borders]="true"
+                            [zoom]="0.75"
+                        ></pdf-viewer>
+                    }
+                    @case ('text') {
+                        @if (fileMetaData.fullText) {
+                            <p>{{ fileMetaData.fullText }}</p>
+                        } @else {
+                            <p>Full text not available!</p>
+                        }
+                    }
+                    @case ('summary') {
+                        @if (fileMetaData.summary) {
+                            <p>{{ fileMetaData.summary }}</p>
+                        } @else {
+                            <p>Summary not available!</p>
+                        }
+                    }
+                }
+            } @else {
+                <p>No file selected!</p>
+            }
+        </div>
     </section>
     @if (rightSidebar) {
         @if (fileMetaData$ | async; as fileMetaData) {
