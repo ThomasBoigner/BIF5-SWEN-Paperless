@@ -53,47 +53,49 @@
                         }
                     }
                 } @else {
-                    <p>No files available!</p>
+                    <p class="warning">No files available!</p>
                 }
             </div>
         </section>
     }
     <section id="content">
         <div class="content-selector">
-            @if (!leftSidebar) {
-                <img
+            <div>
+                @if (!leftSidebar) {
+                    <img
                         class="show-left"
                         ngSrc="app/assets/svg/show-left.svg"
                         width="64"
                         height="64"
                         alt="show-left"
                         (click)="setLeftSidebar(true)"
-                />
-            }
-            @if (fileMetaData$ | async) {
-                <div class="content-selector-buttons">
-                    <small-file-button
+                    />
+                }
+                @if (fileMetaData$ | async) {
+                    <div class="content-selector-buttons">
+                        <small-file-button
                             text="Pdf"
                             (click)="mainContentMode = 'pdf'"
-                    ></small-file-button>
-                    <small-file-button
+                        ></small-file-button>
+                        <small-file-button
                             text="Text"
                             (click)="mainContentMode = 'text'"
-                    ></small-file-button>
-                    <small-file-button
+                        ></small-file-button>
+                        <small-file-button
                             text="Summary"
                             (click)="mainContentMode = 'summary'"
-                    ></small-file-button>
-                </div>
-            }
+                        ></small-file-button>
+                    </div>
+                }
+            </div>
             @if (!rightSidebar) {
                 <img
-                        class="show-right"
-                        ngSrc="app/assets/svg/show-right.svg"
-                        width="64"
-                        height="64"
-                        alt="show-right"
-                        (click)="setRightSidebar(true)"
+                    class="show-right"
+                    ngSrc="app/assets/svg/show-right.svg"
+                    width="64"
+                    height="64"
+                    alt="show-right"
+                    (click)="setRightSidebar(true)"
                 />
             }
         </div>
@@ -114,21 +116,21 @@
                     }
                     @case ('text') {
                         @if (fileMetaData.fullText) {
-                            <p>{{ fileMetaData.fullText }}</p>
+                            <p class="full-text">{{ fileMetaData.fullText }}</p>
                         } @else {
-                            <p>Full text not available!</p>
+                            <p class="warning">Full text not available!</p>
                         }
                     }
                     @case ('summary') {
                         @if (fileMetaData.summary) {
-                            <p>{{ fileMetaData.summary }}</p>
+                            <p class="summary">{{ fileMetaData.summary }}</p>
                         } @else {
-                            <p>Summary not available!</p>
+                            <p class="warning">Summary not available!</p>
                         }
                     }
                 }
             } @else {
-                <p>No file selected!</p>
+                <p class="warning">No file selected!</p>
             }
         </div>
     </section>
