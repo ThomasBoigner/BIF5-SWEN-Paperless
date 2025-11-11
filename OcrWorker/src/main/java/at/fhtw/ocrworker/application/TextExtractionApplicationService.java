@@ -5,15 +5,9 @@ import at.fhtw.ocrworker.domain.model.FileToken;
 import at.fhtw.ocrworker.domain.model.TextExtracted;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
-import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.rendering.PDFRenderer;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Objects;
 
 @RequiredArgsConstructor
