@@ -14,7 +14,7 @@ export class FileMetaDataService {
         private http: HttpClient,
         private logger: NGXLogger,
     ) {
-        this.fileMetaDataUrl = 'http://localhost:8081/api/files';
+        this.fileMetaDataUrl = 'http://localhost:80/api/files';
     }
 
     public getAllFileMetaData(): Observable<FileMetaData[]> {

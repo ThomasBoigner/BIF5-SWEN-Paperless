@@ -1,37 +1,4 @@
 services:
-  paperless-rest:
-    container_name: paperless-rest
-    build:
-      context: PaperlessRest
-      dockerfile: src/main/docker/Dockerfile
-    depends_on:
-      - postgres
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/paperless
-      - SPRING_DATASOURCE_USERNAME=paperless
-      - SPRING_DATASOURCE_PASSWORD=change-me
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    volumes:
-      - log4j2:/target/log4j-logs
-    networks:
-      - paperless
-
-  ocr-worker:
-    container_name: ocr-worker
-    build:
-      context: OcrWorker
-      dockerfile: src/main/docker/Dockerfile
-    networks:
-      - paperless
-
-  gen-ai-worker:
-    container_name: gen-ai-worker
-    build:
-      context: GenAiWorker
-      dockerfile: src/main/docker/Dockerfile
-    networks:
-      - paperless
-
   postgres:
     image: 'postgres:17.5'
     container_name: paperless-database
@@ -56,23 +23,12 @@ services:
     networks:
       - paperless
 
-  paperless-web-ui:
-    container_name: paperless-web-ui
-    build:
-      context: PaperlessWebUI
-      dockerfile: src/docker/Dockerfile
-    depends_on:
-      - paperless-rest
-    ports:
-      - "80:80"
-    networks:
-      - paperless
-
   minio:
     image: 'quay.io/minio/minio:latest'
     container_name: minio
     command: server /data --console-address ":9001"
     ports:
+      - "9000:9000"
       - "9090:9001"
     environment:
       - MINIO_ROOT_USER=minioadmin
@@ -86,15 +42,14 @@ services:
     image: 'rabbitmq:4.2-management'
     container_name: rabbitmq
     ports:
+      - "5672:5672"
       - "15672:15672"
     networks:
       - paperless
-
 volumes:
   paperless-database: {}
   pgadmin: {}
   paperless-minio: {}
-  log4j2: {}
 
 networks:
   paperless:
