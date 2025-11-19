@@ -12,7 +12,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=change-me
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     volumes:
-      - log4j2:/target/log4j-logs
+      - paperless-paperless-rest-log4j2:/target/log4j-logs
     networks:
       - paperless
 
@@ -21,6 +21,8 @@ services:
     build:
       context: OcrWorker
       dockerfile: src/main/docker/Dockerfile
+    volumes:
+      - paperless-ocr-worker-log4j2:/target/log4j-logs
     networks:
       - paperless
 
@@ -29,6 +31,8 @@ services:
     build:
       context: GenAiWorker
       dockerfile: src/main/docker/Dockerfile
+    volumes:
+      - paperless-gen-ai-worker-log4j2:/target/log4j-logs
     networks:
       - paperless
 
@@ -52,7 +56,7 @@ services:
     ports:
       - "9091:80"
     volumes:
-      - pgadmin:/var/lib/pgadmin
+      - paperless-pgadmin:/var/lib/pgadmin
     networks:
       - paperless
 
@@ -87,14 +91,19 @@ services:
     container_name: rabbitmq
     ports:
       - "15672:15672"
+    volumes:
+      - paperless-rabbitmq:/var/lib/rabbitmq
     networks:
       - paperless
 
 volumes:
   paperless-database: {}
-  pgadmin: {}
+  paperless-pgadmin: {}
   paperless-minio: {}
-  log4j2: {}
+  paperless-paperless-rest-log4j2: {}
+  paperless-ocr-worker-log4j2: {}
+  paperless-gen-ai-worker-log4j2: {}
+  paperless-rabbitmq: {}
 
 networks:
   paperless:
