@@ -10,7 +10,7 @@ import { FileListItemComponent } from '../../components/file-list-item/file-list
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { FileSizePipe } from '../../pipes/file-size-pipe';
 import { SmallFileButton } from '../../components/small-file-button/small-file-button.component';
-import {environment} from "../../../environments/environment";
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'main-page',

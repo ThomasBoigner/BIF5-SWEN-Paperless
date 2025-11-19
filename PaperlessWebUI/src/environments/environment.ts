@@ -1,3 +1,3 @@
 export const environment = {
-    paperlessRestUrl: "http://localhost:80",
+    paperlessRestUrl: 'http://localhost:80',
 };

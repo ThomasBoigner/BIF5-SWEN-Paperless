@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { FileMetaData } from '../model/file-meta-data';
 import { UploadFileCommand } from '../model/commands/upload-file-command';
 import { UpdateFileCommand } from '../model/commands/update-file-command';
-import {environment} from "../../environments/environment";
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class FileMetaDataService {
