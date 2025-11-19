@@ -104,7 +104,7 @@
                 @switch (mainContentMode) {
                     @case ('pdf') {
                         <pdf-viewer
-                            src="http://localhost:80/api/files/
+                            src="{{ environment.paperlessRestUrl }}/api/files/
                                 {{ fileMetaData.fileToken }}
                                 /download"
                             [render-text]="false"
