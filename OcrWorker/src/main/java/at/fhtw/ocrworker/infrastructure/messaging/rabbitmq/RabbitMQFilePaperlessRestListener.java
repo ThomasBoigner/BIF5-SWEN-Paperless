@@ -25,7 +25,6 @@ public class RabbitMQFilePaperlessRestListener {
             FileUploaded event = objectMapper.readValue(in, FileUploaded.class);
             log.trace("Received file uploaded event: {}", event);
             textExtractionApplicationService.extractText(ExtractTextCommand.builder()
-                            .imageBytes(event.file())
                             .fileToken(event.fileToken().token())
                     .build());
         } catch (JsonProcessingException e) {

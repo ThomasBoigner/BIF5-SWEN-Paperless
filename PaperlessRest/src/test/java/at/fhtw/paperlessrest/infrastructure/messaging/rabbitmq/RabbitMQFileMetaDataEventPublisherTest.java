@@ -36,7 +36,7 @@ public class RabbitMQFileMetaDataEventPublisherTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .file(new byte[8])
+                .fileSize(100)
                 .description("test")
                 .build();
 
@@ -56,7 +56,7 @@ public class RabbitMQFileMetaDataEventPublisherTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .file(new byte[8])
+                .fileSize(100)
                 .description("test")
                 .build();
         fileMetaData.addFullText("Full Text");

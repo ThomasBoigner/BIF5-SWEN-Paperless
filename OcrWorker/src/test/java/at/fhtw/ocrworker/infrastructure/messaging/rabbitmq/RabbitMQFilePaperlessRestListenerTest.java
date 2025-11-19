@@ -42,7 +42,6 @@ public class RabbitMQFilePaperlessRestListenerTest {
 
         FileUploaded event = FileUploaded.builder()
                 .fileToken(new FileToken(fileToken))
-                .file(fileBytes)
                 .build();
 
         // When

@@ -46,7 +46,7 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .file(new byte[8])
+                .fileSize(100)
                 .description("test")
                 .build();
 
@@ -65,7 +65,7 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .file(new byte[8])
+                .fileSize(100)
                 .description("test")
                 .build();
 
@@ -93,7 +93,7 @@ public class FileMetaDataApplicationServiceTest {
 
         when(file.getContentType()).thenReturn("application/pdf");
         when(file.getOriginalFilename()).thenReturn(fileName);
-        when(file.getBytes()).thenReturn(new byte[8]);
+        when(file.getSize()).thenReturn(8L);
 
         // When
         FileMetaDataDto result = fileMetaDataApplicationService.uploadFile(file, command);
@@ -128,7 +128,7 @@ public class FileMetaDataApplicationServiceTest {
 
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .file(new byte[8])
+                .fileSize(100)
                 .description("test")
                 .build();
 
@@ -154,7 +154,7 @@ public class FileMetaDataApplicationServiceTest {
 
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .file(new byte[8])
+                .fileSize(100)
                 .description("test")
                 .build();
 
@@ -178,7 +178,7 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .file(new byte[8])
+                .fileSize(100)
                 .description("test")
                 .build();
 
@@ -204,7 +204,7 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .file(new byte[8])
+                .fileSize(100)
                 .description("test")
                 .build();
 
@@ -225,7 +225,7 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .file(new byte[8])
+                .fileSize(100)
                 .description("test")
                 .build();
 
