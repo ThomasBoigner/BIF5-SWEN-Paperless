@@ -52,7 +52,7 @@ describe('FileMetaDataService', () => {
 
         const req = TestBed.inject(HttpTestingController).expectOne({
             method: 'GET',
-            url: 'http://localhost:8081/api/files',
+            url: 'http://localhost:80/api/files',
         });
 
         req.flush(expectedFileMetaData);
@@ -82,7 +82,7 @@ describe('FileMetaDataService', () => {
 
         const req = TestBed.inject(HttpTestingController).expectOne({
             method: 'GET',
-            url: 'http://localhost:8081/api/files/abc',
+            url: 'http://localhost:80/api/files/abc',
         });
 
         req.flush(expectedFileMetaData);
@@ -117,7 +117,7 @@ describe('FileMetaDataService', () => {
 
         const req = TestBed.inject(HttpTestingController).expectOne({
             method: 'POST',
-            url: 'http://localhost:8081/api/files',
+            url: 'http://localhost:80/api/files',
         });
 
         req.flush(expectedFileMetaData);
@@ -152,7 +152,7 @@ describe('FileMetaDataService', () => {
 
         const req = TestBed.inject(HttpTestingController).expectOne({
             method: 'PUT',
-            url: `http://localhost:8081/api/files/${expectedFileMetaData.fileToken}`,
+            url: `http://localhost:80/api/files/${expectedFileMetaData.fileToken}`,
         });
 
         req.flush(expectedFileMetaData);
@@ -169,7 +169,7 @@ describe('FileMetaDataService', () => {
         // Then
         const req = TestBed.inject(HttpTestingController).expectOne({
             method: 'DELETE',
-            url: 'http://localhost:8081/api/files/abc',
+            url: 'http://localhost:80/api/files/abc',
         });
 
         req.flush(null, { status: 200, statusText: 'ok' });
