@@ -1,11 +1,12 @@
-package at.fhtw.ocrworker.infrastructure.minio;
+package at.fhtw.ocrworker.infrastructure.filestorage.minio;
 
 import at.fhtw.ocrworker.application.FileService;
 import io.minio.*;
 import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.InputStreamResource;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,16 +22,14 @@ public class MinioFileService implements FileService {
     private final MinioClient minioClient;
 
     @Override
-    public InputStreamResource downloadFile(UUID token) {
-        try {
-            GetObjectResponse response = minioClient.getObject(
+    public PDDocument downloadFile(UUID token) {
+        try (GetObjectResponse response = minioClient.getObject(
                 GetObjectArgs.builder()
                         .bucket("files")
                         .object(token.toString())
                         .build()
-            );
-
-            return new InputStreamResource(response);
+        )) {
+            return Loader.loadPDF(response.readAllBytes());
         } catch (ErrorResponseException ere) {
             log.warn("User tried to download a file that does not exist!");
             throw new IllegalArgumentException("File with the token %s does not exist!".formatted(token));

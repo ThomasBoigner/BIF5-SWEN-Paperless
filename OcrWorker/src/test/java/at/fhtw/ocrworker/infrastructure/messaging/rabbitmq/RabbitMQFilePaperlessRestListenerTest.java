@@ -36,8 +36,6 @@ public class RabbitMQFilePaperlessRestListenerTest {
     @Test
     void ensureReceiveFileUploadedEvent() throws JsonProcessingException {
         // Given
-        byte[] fileBytes = new byte[8];
-
         UUID fileToken = UUID.randomUUID();
 
         FileUploaded event = FileUploaded.builder()

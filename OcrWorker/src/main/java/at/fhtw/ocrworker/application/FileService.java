@@ -1,9 +1,9 @@
 package at.fhtw.ocrworker.application;
 
-import org.springframework.core.io.InputStreamResource;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 import java.util.UUID;
 
 public interface FileService {
-    InputStreamResource downloadFile(UUID token);
+    PDDocument downloadFile(UUID token);
 }

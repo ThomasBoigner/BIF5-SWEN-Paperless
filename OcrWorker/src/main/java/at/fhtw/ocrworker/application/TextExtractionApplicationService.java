@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -24,12 +23,7 @@ public class TextExtractionApplicationService {
         Objects.requireNonNull(command, "command must not be null!");
         log.debug("Trying to extract full text with command: {}", command);
 
-        String fullText = null;
-        try {
-            fullText = ocrService.extractText(fileService.downloadFile(command.fileToken()).getContentAsByteArray());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String fullText = ocrService.extractText(fileService.downloadFile(command.fileToken()));
         log.info("Extracted full text {} from image", fullText);
 
         TextExtracted textExtracted = TextExtracted.builder()
