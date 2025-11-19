@@ -11,6 +11,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=paperless
       - SPRING_DATASOURCE_PASSWORD=change-me
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - MINIO_URL=http://minio:9000
+      - SPRING_RABBITMQ_HOST=rabbitmq
     volumes:
       - paperless-paperless-rest-log4j2:/target/log4j-logs
     networks:
@@ -21,6 +23,8 @@ services:
     build:
       context: OcrWorker
       dockerfile: src/main/docker/Dockerfile
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
     volumes:
       - paperless-ocr-worker-log4j2:/target/log4j-logs
     networks:

@@ -5,6 +5,8 @@ services:
     environment:
       - POSTGRES_USER=paperless
       - POSTGRES_PASSWORD=change-me
+    ports:
+      - "5432:5432"
     volumes:
       - paperless-database:/var/lib/postgresql/data
     networks:
@@ -19,7 +21,7 @@ services:
     ports:
       - "9091:80"
     volumes:
-      - pgadmin:/var/lib/pgadmin
+      - paperless-pgadmin:/var/lib/pgadmin
     networks:
       - paperless
 
@@ -44,12 +46,16 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    volumes:
+      - paperless-rabbitmq:/var/lib/rabbitmq
     networks:
       - paperless
+
 volumes:
   paperless-database: {}
-  pgadmin: {}
+  paperless-pgadmin: {}
   paperless-minio: {}
+  paperless-rabbitmq: {}
 
 networks:
   paperless:
