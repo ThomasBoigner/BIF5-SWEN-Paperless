@@ -38,17 +38,16 @@ public class FileMetaData {
     private final List<FullTextAdded> fullTextAddedEvents;
 
     @Builder
-    public FileMetaData(@Nullable String fileName, byte[] file, @Nullable String description) {
+    public FileMetaData(@Nullable String fileName, long fileSize, @Nullable String description) {
         this.setFileToken(new FileToken());
         this.setCreationDate(LocalDateTime.now(ZoneId.systemDefault()));
         this.setFileName(fileName);
-        this.setFileSize(file.length);
+        this.setFileSize(fileSize);
         this.setDescription(description);
         this.fileUploadedEvents = new ArrayList<>();
         this.fullTextAddedEvents = new ArrayList<>();
         log.debug("FileMetaData {} created", this);
         this.fileUploadedEvents.add(FileUploaded.builder()
-                        .file(file)
                         .fileToken(fileToken)
                 .build());
     }

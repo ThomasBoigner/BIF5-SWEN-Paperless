@@ -4,8 +4,6 @@ services:
     build:
       context: PaperlessRest
       dockerfile: src/main/docker/Dockerfile
-    ports:
-      - "8081:8081"
     depends_on:
       - postgres
     environment:
@@ -13,8 +11,10 @@ services:
       - SPRING_DATASOURCE_USERNAME=paperless
       - SPRING_DATASOURCE_PASSWORD=change-me
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - MINIO_URL=http://minio:9000
+      - SPRING_RABBITMQ_HOST=rabbitmq
     volumes:
-      - log4j2:/target/log4j-logs
+      - paperless-paperless-rest-log4j2:/target/log4j-logs
     networks:
       - paperless
 
@@ -23,8 +23,11 @@ services:
     build:
       context: OcrWorker
       dockerfile: src/main/docker/Dockerfile
-    ports:
-      - "8082:8082"
+    environment:
+      - MINIO_URL=http://minio:9000
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    volumes:
+      - paperless-ocr-worker-log4j2:/target/log4j-logs
     networks:
       - paperless
 
@@ -33,8 +36,8 @@ services:
     build:
       context: GenAiWorker
       dockerfile: src/main/docker/Dockerfile
-    ports:
-      - "8083:8083"
+    volumes:
+      - paperless-gen-ai-worker-log4j2:/target/log4j-logs
     networks:
       - paperless
 
@@ -58,7 +61,7 @@ services:
     ports:
       - "9091:80"
     volumes:
-      - pgadmin:/var/lib/pgadmin
+      - paperless-pgadmin:/var/lib/pgadmin
     networks:
       - paperless
 
@@ -67,6 +70,8 @@ services:
     build:
       context: PaperlessWebUI
       dockerfile: src/docker/Dockerfile
+    depends_on:
+      - paperless-rest
     ports:
       - "80:80"
     networks:
@@ -77,7 +82,6 @@ services:
     container_name: minio
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000"
       - "9090:9001"
     environment:
       - MINIO_ROOT_USER=minioadmin
@@ -88,19 +92,23 @@ services:
       - paperless
 
   rabbitmq:
-    image: 'rabbitmq:4.2'
+    image: 'rabbitmq:4.2-management'
     container_name: rabbitmq
     ports:
-      - "5672:5672"
       - "15672:15672"
+    volumes:
+      - paperless-rabbitmq:/var/lib/rabbitmq
     networks:
       - paperless
 
 volumes:
   paperless-database: {}
-  pgadmin: {}
+  paperless-pgadmin: {}
   paperless-minio: {}
-  log4j2: {}
+  paperless-paperless-rest-log4j2: {}
+  paperless-ocr-worker-log4j2: {}
+  paperless-gen-ai-worker-log4j2: {}
+  paperless-rabbitmq: {}
 
 networks:
   paperless:

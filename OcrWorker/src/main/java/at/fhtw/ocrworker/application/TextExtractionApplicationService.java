@@ -16,13 +16,14 @@ import java.util.Objects;
 @Slf4j
 public class TextExtractionApplicationService {
     private final OcrService ocrService;
+    private final FileService fileService;
     private final TextExtractedEventPublisher textExtractedEventPublisher;
 
     public void extractText(@Nullable ExtractTextCommand command) {
         Objects.requireNonNull(command, "command must not be null!");
         log.debug("Trying to extract full text with command: {}", command);
 
-        String fullText = ocrService.extractText(command.imageBytes());
+        String fullText = ocrService.extractText(fileService.downloadFile(command.fileToken()));
         log.info("Extracted full text {} from image", fullText);
 
         TextExtracted textExtracted = TextExtracted.builder()

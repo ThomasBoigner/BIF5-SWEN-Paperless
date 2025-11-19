@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
-import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.stereotype.Service;
@@ -20,19 +19,19 @@ public class TesseractOcrService implements OcrService {
     private final Tesseract tesseract;
 
     @Override
-    public String extractText(byte[] imageBytes) {
-        log.trace("Trying to extract full text with image");
+    public String extractText(PDDocument pdf) {
+        log.trace("Trying to extract full text from pdf {}", pdf);
         StringBuilder fullTextBuilder = new StringBuilder();
-        try(PDDocument document = Loader.loadPDF(imageBytes)) {
-            PDFRenderer renderer = new PDFRenderer(document);
-            for (int pageNumber = 0; pageNumber < document.getNumberOfPages(); pageNumber++) {
+        try {
+            PDFRenderer renderer = new PDFRenderer(pdf);
+            for (int pageNumber = 0; pageNumber < pdf.getNumberOfPages(); pageNumber++) {
                 fullTextBuilder.append(tesseract.doOCR(renderer.renderImageWithDPI(pageNumber, 70)));
             }
         } catch (IOException e) {
-            log.error("Could not create buffered image from byte array {}.", imageBytes, e);
+            log.error("Could not create buffered image from pdf {}.", pdf, e);
             throw new RuntimeException(e);
         } catch (TesseractException e) {
-            log.error("Could not extract full text from byte array {}.", imageBytes, e);
+            log.error("Could not extract full text from pdf {}.", pdf, e);
             throw new RuntimeException(e);
         }
         return fullTextBuilder.toString();

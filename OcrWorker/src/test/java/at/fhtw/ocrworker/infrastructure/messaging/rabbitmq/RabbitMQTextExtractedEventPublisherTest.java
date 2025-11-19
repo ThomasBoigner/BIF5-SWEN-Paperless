@@ -3,8 +3,6 @@ package at.fhtw.ocrworker.infrastructure.messaging.rabbitmq;
 import at.fhtw.ocrworker.domain.model.FileToken;
 import at.fhtw.ocrworker.domain.model.TextExtracted;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,13 +23,11 @@ public class RabbitMQTextExtractedEventPublisherTest {
     private RabbitMQTextExtractedEventPublisher publisher;
     @Mock
     private RabbitTemplate rabbitTemplate;
-    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
         TopicExchange topicExchange = new TopicExchange("at.fhtw.ocrworker", true, false);
-        objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        publisher = new RabbitMQTextExtractedEventPublisher(rabbitTemplate, topicExchange, objectMapper);
+        publisher = new RabbitMQTextExtractedEventPublisher(rabbitTemplate, topicExchange);
     }
 
     @Test
@@ -53,7 +49,7 @@ public class RabbitMQTextExtractedEventPublisherTest {
         verify(rabbitTemplate).convertAndSend(
                 eq("at.fhtw.ocrworker"),
                 eq("at.fhtw.ocrworker.domain.model.textextracted"),
-                eq(objectMapper.writeValueAsString(event))
+                eq(event)
         );
     }
 }

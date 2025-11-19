@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: 'postgres:17.5'
+    container_name: paperless-database
+    environment:
+      - POSTGRES_USER=paperless
+      - POSTGRES_PASSWORD=change-me
+    ports:
+      - "5432:5432"
+    volumes:
+      - paperless-database:/var/lib/postgresql/data
+    networks:
+      - paperless
+
+  pgadmin:
+    image: 'dpage/pgadmin4:latest'
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@technikum-wien.at
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "9091:80"
+    volumes:
+      - paperless-pgadmin:/var/lib/pgadmin
+    networks:
+      - paperless
+
+  minio:
+    image: 'quay.io/minio/minio:latest'
+    container_name: minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9090:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - paperless-minio:/data
+    networks:
+      - paperless
+
+  rabbitmq:
+    image: 'rabbitmq:4.2-management'
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - paperless-rabbitmq:/var/lib/rabbitmq
+    networks:
+      - paperless
+
+volumes:
+  paperless-database: {}
+  paperless-pgadmin: {}
+  paperless-minio: {}
+  paperless-rabbitmq: {}
+
+networks:
+  paperless:
+    driver: bridge

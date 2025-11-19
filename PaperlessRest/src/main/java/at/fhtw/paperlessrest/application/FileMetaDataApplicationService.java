@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -58,17 +57,11 @@ public class FileMetaDataApplicationService {
             throw new IllegalArgumentException("Invalid file content type! The file must be a pdf.");
         }
 
-        FileMetaData fileMetaData = null;
-        try {
-            fileMetaData = FileMetaData.builder()
-                    .fileName(file.getOriginalFilename())
-                    .file(file.getBytes())
-                    .description(command.description())
-                    .build();
-        } catch (IOException e) {
-            log.warn("Could not convert file, got exception with message {}!", e.getMessage());
-            throw new IllegalArgumentException("Could not get the files content!");
-        }
+        FileMetaData fileMetaData = FileMetaData.builder()
+                .fileName(file.getOriginalFilename())
+                .fileSize(file.getSize())
+                .description(command.description())
+                .build();
 
         fileService.uploadFile(fileMetaData.getFileToken().token(), file);
         fileMetaDataRepository.save(fileMetaData);

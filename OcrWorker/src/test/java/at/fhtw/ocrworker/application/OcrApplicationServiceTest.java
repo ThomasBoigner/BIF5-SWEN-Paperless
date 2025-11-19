@@ -3,6 +3,7 @@ package at.fhtw.ocrworker.application;
 import at.fhtw.ocrworker.application.commands.ExtractTextCommand;
 import at.fhtw.ocrworker.domain.model.TextExtracted;
 import net.sourceforge.tess4j.TesseractException;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,11 +23,13 @@ public class OcrApplicationServiceTest {
     @Mock
     private OcrService ocrService;
     @Mock
+    private FileService fileService;
+    @Mock
     private TextExtractedEventPublisher textExtractedEventPublisher;
 
     @BeforeEach
     void setUp() {
-        textExtractionApplicationService = new TextExtractionApplicationService(ocrService, textExtractedEventPublisher);
+        textExtractionApplicationService = new TextExtractionApplicationService(ocrService, fileService, textExtractedEventPublisher);
     }
 
     @Test
@@ -36,12 +39,14 @@ public class OcrApplicationServiceTest {
 
         UUID fileToken = UUID.randomUUID();
 
+        PDDocument pdf = mock(PDDocument.class);
+
         ExtractTextCommand command = ExtractTextCommand.builder()
-                .imageBytes(new byte[8])
                 .fileToken(fileToken)
                 .build();
 
-        when(ocrService.extractText(eq(command.imageBytes()))).thenReturn(fullText);
+        when(fileService.downloadFile(eq(fileToken))).thenReturn(pdf);
+        when(ocrService.extractText(eq(pdf))).thenReturn(fullText);
 
         // When
         textExtractionApplicationService.extractText(command);

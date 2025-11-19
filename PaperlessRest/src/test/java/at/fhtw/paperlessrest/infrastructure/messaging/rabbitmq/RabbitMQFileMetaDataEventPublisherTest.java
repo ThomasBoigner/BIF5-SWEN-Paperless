@@ -2,8 +2,6 @@ package at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq;
 
 import at.fhtw.paperlessrest.domain.model.FileMetaData;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,13 +20,11 @@ public class RabbitMQFileMetaDataEventPublisherTest {
     private RabbitMQFileMetaDataEventPublisher publisher;
     @Mock
     private RabbitTemplate rabbitTemplate;
-    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
         TopicExchange topicExchange = new TopicExchange("at.fhtw.paperlessrest", true, false);
-        objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        publisher = new RabbitMQFileMetaDataEventPublisher(rabbitTemplate, topicExchange, objectMapper);
+        publisher = new RabbitMQFileMetaDataEventPublisher(rabbitTemplate, topicExchange);
     }
 
     @Test
@@ -36,7 +32,7 @@ public class RabbitMQFileMetaDataEventPublisherTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .file(new byte[8])
+                .fileSize(100)
                 .description("test")
                 .build();
 
@@ -47,7 +43,7 @@ public class RabbitMQFileMetaDataEventPublisherTest {
         verify(rabbitTemplate).convertAndSend(
                 eq("at.fhtw.paperlessrest"),
                 eq("at.fhtw.paperlessrest.domain.model.fileuploaded"),
-                eq(objectMapper.writeValueAsString(fileMetaData.getFileUploadedEvents().getFirst()))
+                eq(fileMetaData.getFileUploadedEvents().getFirst())
         );
     }
 
@@ -56,7 +52,7 @@ public class RabbitMQFileMetaDataEventPublisherTest {
         // Given
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName("test.txt")
-                .file(new byte[8])
+                .fileSize(100)
                 .description("test")
                 .build();
         fileMetaData.addFullText("Full Text");
@@ -68,7 +64,7 @@ public class RabbitMQFileMetaDataEventPublisherTest {
         verify(rabbitTemplate).convertAndSend(
                 eq("at.fhtw.paperlessrest"),
                 eq("at.fhtw.paperlessrest.domain.model.fulltextadded"),
-                eq(objectMapper.writeValueAsString(fileMetaData.getFullTextAddedEvents().getFirst()))
+                eq(fileMetaData.getFullTextAddedEvents().getFirst())
         );
     }
 }

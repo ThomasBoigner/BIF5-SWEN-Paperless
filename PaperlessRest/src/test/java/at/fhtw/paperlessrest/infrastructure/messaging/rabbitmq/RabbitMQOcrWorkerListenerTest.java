@@ -5,8 +5,6 @@ import at.fhtw.paperlessrest.application.commands.AddFullTextCommand;
 import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.FileToken;
 import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.TextExtracted;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,12 +23,10 @@ public class RabbitMQOcrWorkerListenerTest {
     private RabbitMQOcrWorkerListener listener;
     @Mock
     private FileMetaDataApplicationService fileMetaDataApplicationService;
-    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
-        objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        listener = new RabbitMQOcrWorkerListener(fileMetaDataApplicationService, objectMapper);
+        listener = new RabbitMQOcrWorkerListener(fileMetaDataApplicationService);
     }
 
     @Test
@@ -46,7 +42,7 @@ public class RabbitMQOcrWorkerListenerTest {
                 .build();
 
         // When
-        listener.receiveTextExtractedEvent(objectMapper.writeValueAsString(event));
+        listener.receiveTextExtractedEvent(event);
 
         // Then
         verify(fileMetaDataApplicationService).addFullText(eq(AddFullTextCommand.builder()

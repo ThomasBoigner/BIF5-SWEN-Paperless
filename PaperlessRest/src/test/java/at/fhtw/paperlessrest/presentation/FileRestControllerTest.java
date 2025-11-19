@@ -55,7 +55,7 @@ public class FileRestControllerTest {
         fileMetaDataDto = new FileMetaDataDto(
                 FileMetaData.builder()
                 .fileName("test.txt")
-                .file(new byte[8])
+                .fileSize(100)
                 .description("test")
                 .build()
         );
