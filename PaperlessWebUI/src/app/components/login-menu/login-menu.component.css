@@ -1,0 +1,30 @@
+div.dropdown-content {
+    display: none;
+    position: absolute;
+}
+
+div.login-menu:hover div.dropdown-content {
+    display: block;
+}
+
+h6:hover {
+    cursor: pointer;
+}
+
+a {
+    display: block;
+    padding: 8px;
+    background: var(--white);
+    border-radius: 8px;
+    border: 1px solid var(--black25);
+}
+
+a:hover {
+    cursor: pointer;
+    border: 3px solid var(--black25);
+    padding: 6px;
+}
+
+a:first-child {
+    margin: 8px 0;
+}

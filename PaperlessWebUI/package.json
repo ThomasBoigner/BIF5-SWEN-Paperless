@@ -32,6 +32,8 @@
         "@angular/forms": "^20.3.0",
         "@angular/platform-browser": "^20.3.0",
         "@angular/router": "^20.3.0",
+        "keycloak-angular": "^20.0.0",
+        "keycloak-js": "^26.2.1",
         "ng2-pdf-viewer": "^10.4.0",
         "ngx-logger": "^5.0.12",
         "rxjs": "~7.8.0",

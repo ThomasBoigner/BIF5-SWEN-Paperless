@@ -135,8 +135,8 @@
         </div>
     </section>
     @if (rightSidebar) {
-        @if (fileMetaData$ | async; as fileMetaData) {
-            <section id="sidebar-right">
+        <section id="sidebar-right">
+            <div class="sidebar-right-header">
                 <img
                     class="hide-right"
                     ngSrc="app/assets/svg/hide-right.svg"
@@ -145,6 +145,9 @@
                     alt="hide-right"
                     (click)="setRightSidebar(false)"
                 />
+                <login-menu></login-menu>
+            </div>
+            @if (fileMetaData$ | async; as fileMetaData) {
                 <div class="file-information">
                     <div class="description-container">
                         <h6>Description</h6>
@@ -199,7 +202,9 @@
                         (click)="deleteFile(fileMetaData.fileToken)"
                     ></file-button>
                 </div>
-            </section>
-        }
+            } @else {
+                <p class="warning">No file selected!</p>
+            }
+        </section>
     }
 </div>

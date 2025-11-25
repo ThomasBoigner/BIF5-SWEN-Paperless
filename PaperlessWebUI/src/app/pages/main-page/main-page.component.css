@@ -83,6 +83,13 @@ section#sidebar-right {
     gap: 32px;
 }
 
+div.sidebar-right-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
 section#sidebar-right p.unselected {
     text-align: center;
 }

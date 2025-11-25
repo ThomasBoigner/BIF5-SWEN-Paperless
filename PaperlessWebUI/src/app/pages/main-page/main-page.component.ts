@@ -11,6 +11,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { FileSizePipe } from '../../pipes/file-size-pipe';
 import { SmallFileButton } from '../../components/small-file-button/small-file-button.component';
 import { environment } from '../../../environments/environment';
+import { LoginMenuComponent } from '../../components/login-menu/login-menu.component';
 
 @Component({
     selector: 'main-page',
@@ -26,10 +27,13 @@ import { environment } from '../../../environments/environment';
         PdfViewerModule,
         FileSizePipe,
         SmallFileButton,
+        LoginMenuComponent,
     ],
     styleUrls: ['./main-page.component.css'],
 })
 export class MainPageComponent {
+    protected readonly environment;
+
     fileMetaData$: Observable<FileMetaData> | undefined;
     fileMetaDataList$: Observable<FileMetaData[]>;
 
@@ -43,6 +47,7 @@ export class MainPageComponent {
         private route: ActivatedRoute,
         private router: Router,
     ) {
+        this.environment = environment;
         this.route.paramMap.subscribe((paramMap) => {
             const fileToken = paramMap.get('token');
             if (fileToken) {
@@ -67,6 +72,4 @@ export class MainPageComponent {
             .deleteFile(token)
             .subscribe(() => void this.router.navigate(['/']));
     }
-
-    protected readonly environment = environment;
 }
