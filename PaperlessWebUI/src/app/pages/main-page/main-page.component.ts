@@ -11,6 +11,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { FileSizePipe } from '../../pipes/file-size-pipe';
 import { SmallFileButton } from '../../components/small-file-button/small-file-button.component';
 import { environment } from '../../../environments/environment';
+import Keycloak from "keycloak-js";
 
 @Component({
     selector: 'main-page',
@@ -32,6 +33,7 @@ import { environment } from '../../../environments/environment';
 export class MainPageComponent {
     fileMetaData$: Observable<FileMetaData> | undefined;
     fileMetaDataList$: Observable<FileMetaData[]>;
+    profile;
 
     mainContentMode: 'pdf' | 'text' | 'summary' = 'pdf';
 
@@ -42,7 +44,9 @@ export class MainPageComponent {
         private fileMetaDataService: FileMetaDataService,
         private route: ActivatedRoute,
         private router: Router,
+        private keycloak: Keycloak
     ) {
+        await this.keycloak.login();
         this.route.paramMap.subscribe((paramMap) => {
             const fileToken = paramMap.get('token');
             if (fileToken) {
@@ -50,6 +54,7 @@ export class MainPageComponent {
             }
         });
         this.fileMetaDataList$ = this.fileMetaDataService.getAllFileMetaData();
+        this.profile = await this.keycloak.loadUserProfile();
     }
 
     setLeftSidebar(leftSidebar: boolean) {

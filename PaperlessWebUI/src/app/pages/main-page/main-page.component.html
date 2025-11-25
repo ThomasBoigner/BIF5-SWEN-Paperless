@@ -137,14 +137,17 @@
     @if (rightSidebar) {
         @if (fileMetaData$ | async; as fileMetaData) {
             <section id="sidebar-right">
-                <img
-                    class="hide-right"
-                    ngSrc="app/assets/svg/hide-right.svg"
-                    width="64"
-                    height="64"
-                    alt="hide-right"
-                    (click)="setRightSidebar(false)"
-                />
+                <div class="sidebar-right-header">
+                    <img
+                            class="hide-right"
+                            ngSrc="app/assets/svg/hide-right.svg"
+                            width="64"
+                            height="64"
+                            alt="hide-right"
+                            (click)="setRightSidebar(false)"
+                    />
+                    <h6>{{profile.username}}</h6>
+                </div>
                 <div class="file-information">
                     <div class="description-container">
                         <h6>Description</h6>
