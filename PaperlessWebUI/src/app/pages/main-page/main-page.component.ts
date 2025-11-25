@@ -11,9 +11,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { FileSizePipe } from '../../pipes/file-size-pipe';
 import { SmallFileButton } from '../../components/small-file-button/small-file-button.component';
 import { environment } from '../../../environments/environment';
-import Keycloak, {KeycloakProfile} from "keycloak-js";
-import {NGXLogger} from "ngx-logger";
-import {LoginMenuComponent} from "../../components/login-menu/login-menu.component";
+import { LoginMenuComponent } from '../../components/login-menu/login-menu.component';
 
 @Component({
     selector: 'main-page',

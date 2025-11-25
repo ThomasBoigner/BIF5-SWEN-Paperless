@@ -9,8 +9,8 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
-import {AutoRefreshTokenService, provideKeycloak, UserActivityService} from "keycloak-angular";
-import {environment} from "../environments/environment";
+import { AutoRefreshTokenService, provideKeycloak, UserActivityService } from 'keycloak-angular';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -21,13 +21,13 @@ export const appConfig: ApplicationConfig = {
         provideKeycloak({
             config: {
                 url: environment.keycloak.authority,
-                realm: "paperless",
-                clientId: "paperless-web-ui"
+                realm: 'paperless',
+                clientId: 'paperless-web-ui',
             },
             initOptions: {
                 onLoad: 'login-required',
             },
-            providers: [AutoRefreshTokenService, UserActivityService]
+            providers: [AutoRefreshTokenService, UserActivityService],
         }),
         importProvidersFrom(
             LoggerModule.forRoot({
