@@ -25,7 +25,7 @@ export const appConfig: ApplicationConfig = {
                 clientId: "paperless-web-ui"
             },
             initOptions: {
-                onLoad: 'check-sso',
+                onLoad: 'login-required',
             },
             providers: [AutoRefreshTokenService, UserActivityService]
         }),
