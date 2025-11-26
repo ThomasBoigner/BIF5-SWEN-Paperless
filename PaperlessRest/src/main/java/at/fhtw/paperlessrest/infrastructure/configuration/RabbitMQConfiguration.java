@@ -33,6 +33,21 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
+    public TopicExchange keycloakTopic() {
+        return new TopicExchange("KK.EVENT", true, false);
+    }
+
+    @Bean
+    public Queue userRegisteredQueue() {
+        return QueueBuilder.durable("KK.EVENT.CLIENT.paperless.SUCCESS.*.REGISTER").build();
+    }
+
+    @Bean
+    public Binding userRegisteredBinding() {
+        return BindingBuilder.bind(userRegisteredQueue()).to(keycloakTopic()).with("KK.EVENT.CLIENT.paperless.SUCCESS.*.REGISTER");
+    }
+
+    @Bean
     public Queue textExtractedQueue() {
         return QueueBuilder.durable("at.fhtw.ocrworker.domain.model.textextracted").build();
     }
