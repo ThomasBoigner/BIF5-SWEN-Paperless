@@ -36,7 +36,8 @@ public class FileMetaDataApplicationService {
     }
 
     @Transactional(readOnly = false)
-    public Optional<FileMetaDataDto> getFileMetaData(UUID token) {
+    public Optional<FileMetaDataDto> getFileMetaData(@Nullable UUID token) {
+        Objects.requireNonNull(token, "token must not be null!");
         log.debug("Trying to retrieve file metadata with token {}", token);
 
         Optional<FileMetaDataDto> fileMetaData = fileMetaDataRepository.findFileMetaDataByFileToken(new FileToken(token)).map(FileMetaDataDto::new);
@@ -113,7 +114,8 @@ public class FileMetaDataApplicationService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteFileMetaData(UUID token) {
+    public void deleteFileMetaData(@Nullable UUID token) {
+        Objects.requireNonNull(token, "token must not be null!");
         fileService.deleteFile(token);
         fileMetaDataRepository.deleteByFileToken(new FileToken(token));
         log.info("Successfully deleted file with token {}", token);

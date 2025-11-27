@@ -4,7 +4,6 @@ import at.fhtw.paperlessrest.application.FileMetaDataApplicationService;
 import at.fhtw.paperlessrest.application.commands.AddFullTextCommand;
 import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.FileToken;
 import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.TextExtracted;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +29,7 @@ public class RabbitMQOcrWorkerListenerTest {
     }
 
     @Test
-    void ensureReceiveTextExtractedEventWorksProperly() throws JsonProcessingException {
+    void ensureReceiveTextExtractedEventWorksProperly() {
         // Given
         String fullText = "Full Text";
 
