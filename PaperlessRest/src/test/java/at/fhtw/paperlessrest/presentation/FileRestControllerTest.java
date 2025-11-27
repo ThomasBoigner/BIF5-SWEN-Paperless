@@ -6,19 +6,19 @@ import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
 import at.fhtw.paperlessrest.domain.model.FileMetaData;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -43,13 +43,14 @@ public class FileRestControllerTest {
     @Mock
     private FileService fileService;
     private FileMetaDataDto fileMetaDataDto;
-    private ObjectMapper objectMapper;
+    private JsonMapper jsonMapper;
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(new FileRestController(fileMetaDataApplicationService, fileService)).build();
 
-        objectMapper = new ObjectMapper();
+        jsonMapper = JsonMapper.builder()
+                .build();
 
         fileMetaDataDto = new FileMetaDataDto(
                 FileMetaData.builder()
@@ -70,7 +71,7 @@ public class FileRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(objectMapper.writeValueAsString(List.of(fileMetaDataDto))));
+                .andExpect(content().string(jsonMapper.writeValueAsString(List.of(fileMetaDataDto))));
     }
 
     @Test
@@ -94,7 +95,7 @@ public class FileRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(objectMapper.writeValueAsString(fileMetaDataDto)));
+                .andExpect(content().string(jsonMapper.writeValueAsString(fileMetaDataDto)));
     }
 
     @Test
@@ -133,7 +134,7 @@ public class FileRestControllerTest {
                 "command",
                 "",
                 MediaType.APPLICATION_JSON_VALUE,
-                objectMapper.writeValueAsBytes(command)
+                jsonMapper.writeValueAsBytes(command)
         );
 
         when(fileMetaDataApplicationService.uploadFile(any(MultipartFile.class), eq(command))).thenReturn(fileMetaDataDto);
@@ -146,7 +147,7 @@ public class FileRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(objectMapper.writeValueAsString(fileMetaDataDto)));
+                .andExpect(content().string(jsonMapper.writeValueAsString(fileMetaDataDto)));
     }
 
     @Test
@@ -162,11 +163,11 @@ public class FileRestControllerTest {
         mockMvc.perform(put("/api/files/%s".formatted(fileMetaDataDto.fileToken()))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(command)))
+                        .content(jsonMapper.writeValueAsString(command)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(objectMapper.writeValueAsString(fileMetaDataDto)));
+                .andExpect(content().string(jsonMapper.writeValueAsString(fileMetaDataDto)));
     }
 
     @Test

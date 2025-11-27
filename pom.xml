@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.6</version>
+        <version>4.0.0</version>
         <relativePath/>
     </parent>
 
@@ -46,6 +46,8 @@
         <!-- testing -->
         <archunit-junit5.version>1.4.1</archunit-junit5.version>
         <testcontainers.version>2.0.2</testcontainers.version>
+        <testcontainers.postgresql.version>1.21.3</testcontainers.postgresql.version>
+        <testcontainers.junit-jupiter.version>1.21.3</testcontainers.junit-jupiter.version>
         <!-- other -->
         <lombok.version>1.18.42</lombok.version>
         <jspecify.version>1.0.0</jspecify.version>
@@ -134,6 +136,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-webmvc-test</artifactId>
+                <version>${spring-boot-starter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>com.tngtech.archunit</groupId>
                 <artifactId>archunit-junit5</artifactId>
                 <version>${archunit-junit5.version}</version>
@@ -148,13 +156,13 @@
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>junit-jupiter</artifactId>
-                <version>${testcontainers.version}</version>
+                <version>${testcontainers.junit-jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>${testcontainers.version}</version>
+                <version>${testcontainers.postgresql.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -162,7 +170,6 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <optional>true</optional>
                 <version>${lombok.version}</version>
             </dependency>
             <dependency>

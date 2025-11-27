@@ -1,6 +1,5 @@
 package at.fhtw.paperlessrest.infrastructure.persistence.jpa;
 
-import at.fhtw.paperlessrest.domain.model.FileMetaData;
 import at.fhtw.paperlessrest.domain.model.User;
 import at.fhtw.paperlessrest.domain.model.UserRepository;
 import at.fhtw.paperlessrest.domain.model.UserToken;
