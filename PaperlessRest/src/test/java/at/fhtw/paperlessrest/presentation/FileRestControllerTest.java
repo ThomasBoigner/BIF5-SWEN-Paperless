@@ -7,7 +7,6 @@ import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
 import at.fhtw.paperlessrest.domain.model.FileMetaData;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +49,7 @@ public class FileRestControllerTest {
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(new FileRestController(fileMetaDataApplicationService, fileService)).build();
 
-        objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        objectMapper = new ObjectMapper();
 
         fileMetaDataDto = new FileMetaDataDto(
                 FileMetaData.builder()

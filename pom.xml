@@ -34,7 +34,7 @@
         <maven.version>3.9.11</maven.version>
 
         <!-- dependency version -->
-        <spring-boot-starter.version>3.5.6</spring-boot-starter.version>
+        <spring-boot-starter.version>4.0.0</spring-boot-starter.version>
         <!-- database -->
         <postgresql.version>42.7.8</postgresql.version>
         <h2.version>2.4.240</h2.version>
@@ -45,15 +45,15 @@
         <pdfbox.version>3.0.6</pdfbox.version>
         <!-- testing -->
         <archunit-junit5.version>1.4.1</archunit-junit5.version>
-        <testcontainers.version>1.21.3</testcontainers.version>
+        <testcontainers.version>2.0.2</testcontainers.version>
         <!-- other -->
         <lombok.version>1.18.42</lombok.version>
         <jspecify.version>1.0.0</jspecify.version>
 
         <!-- plugin version-->
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
-        <error-prone-core.version>2.42.0</error-prone-core.version>
-        <nullaway.version>0.12.10</nullaway.version>
+        <error-prone-core.version>2.44.0</error-prone-core.version>
+        <nullaway.version>0.12.12</nullaway.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
         <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>

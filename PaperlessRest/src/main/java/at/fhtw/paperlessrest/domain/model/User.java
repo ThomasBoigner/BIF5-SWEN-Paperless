@@ -2,8 +2,6 @@ package at.fhtw.paperlessrest.domain.model;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
-import okio.FileMetadata;
 import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
 
@@ -18,7 +16,7 @@ public class User {
     private Long id;
     private UserToken userToken;
     private String username;
-    private List<FileMetadata> files;
+    private final List<FileMetaData> files;
 
     @Builder
     public User(@Nullable UserToken userToken, @Nullable String username) {
@@ -27,14 +25,14 @@ public class User {
         this.files = new ArrayList<>();
     }
 
-    public User(@Nullable Long id, UserToken userToken, String username, List<FileMetadata> files) {
+    public User(@Nullable Long id, UserToken userToken, String username, List<FileMetaData> files) {
         this.id = id;
         this.userToken = userToken;
         this.username = username;
         this.files = files;
     }
 
-    public List<FileMetadata> getFiles() {
+    public List<FileMetaData> getFiles() {
         return Collections.unmodifiableList(this.files);
     }
 
