@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
@@ -17,7 +16,6 @@ import java.util.Objects;
 
 @Slf4j
 @Getter
-@ToString
 public class FileMetaData {
     @Nullable
     private Long id;
@@ -105,12 +103,25 @@ public class FileMetaData {
         this.description = description;
     }
 
-    public void setFullText(@Nullable String fullText) {
+    private void setFullText(@Nullable String fullText) {
         this.fullText = fullText;
     }
 
-    public void setSummary(@Nullable String summary) {
+    private void setSummary(@Nullable String summary) {
         this.summary = summary;
+    }
+
+    @Override
+    public String toString() {
+        return "FileMetaData{" +
+                "fileToken=" + fileToken +
+                ", creationDate=" + creationDate +
+                ", fileName='" + fileName + '\'' +
+                ", fileSize=" + fileSize +
+                ", description='" + description + '\'' +
+                ", fullText='" + fullText + '\'' +
+                ", summary='" + summary + '\'' +
+                '}';
     }
 
     @Override
