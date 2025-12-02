@@ -7,9 +7,15 @@ import {
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
-import { AutoRefreshTokenService, provideKeycloak, UserActivityService } from 'keycloak-angular';
+import {
+    AutoRefreshTokenService,
+    INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+    includeBearerTokenInterceptor,
+    provideKeycloak,
+    UserActivityService,
+} from 'keycloak-angular';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -17,7 +23,16 @@ export const appConfig: ApplicationConfig = {
         provideBrowserGlobalErrorListeners(),
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(routes),
-        provideHttpClient(withFetch()),
+        provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
+        {
+            provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+            useValue: [
+                {
+                    urlPattern: /^(http:\/\/localhost:8081)(\/.*)?$/i,
+                    bearerPrefix: 'Bearer',
+                },
+            ],
+        },
         provideKeycloak({
             config: {
                 url: environment.keycloak.authority,

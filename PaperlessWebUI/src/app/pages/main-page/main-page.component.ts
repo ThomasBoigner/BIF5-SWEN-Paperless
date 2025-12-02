@@ -12,6 +12,7 @@ import { FileSizePipe } from '../../pipes/file-size-pipe';
 import { SmallFileButton } from '../../components/small-file-button/small-file-button.component';
 import { environment } from '../../../environments/environment';
 import { LoginMenuComponent } from '../../components/login-menu/login-menu.component';
+import Keycloak from 'keycloak-js';
 
 @Component({
     selector: 'main-page',
@@ -34,6 +35,7 @@ import { LoginMenuComponent } from '../../components/login-menu/login-menu.compo
 export class MainPageComponent {
     protected readonly environment;
 
+    jwtToken?: string;
     fileMetaData$: Observable<FileMetaData> | undefined;
     fileMetaDataList$: Observable<FileMetaData[]>;
 
@@ -46,6 +48,7 @@ export class MainPageComponent {
         private fileMetaDataService: FileMetaDataService,
         private route: ActivatedRoute,
         private router: Router,
+        private keycloak: Keycloak,
     ) {
         this.environment = environment;
         this.route.paramMap.subscribe((paramMap) => {
@@ -54,6 +57,7 @@ export class MainPageComponent {
                 this.fileMetaData$ = fileMetaDataService.getFileMetaData(fileToken);
             }
         });
+        this.jwtToken = keycloak.token;
         this.fileMetaDataList$ = this.fileMetaDataService.getAllFileMetaData();
     }
 
