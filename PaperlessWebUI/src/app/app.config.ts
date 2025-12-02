@@ -7,13 +7,14 @@ import {
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import {
     AutoRefreshTokenService,
-    INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG, includeBearerTokenInterceptor,
+    INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+    includeBearerTokenInterceptor,
     provideKeycloak,
-    UserActivityService
+    UserActivityService,
 } from 'keycloak-angular';
 import { environment } from '../environments/environment';
 
@@ -25,10 +26,12 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
         {
             provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
-            useValue: [{
-                urlPattern: /^(http:\/\/localhost:8081)(\/.*)?$/i,
-                bearerPrefix: 'Bearer'
-            }]
+            useValue: [
+                {
+                    urlPattern: /^(http:\/\/localhost:8081)(\/.*)?$/i,
+                    bearerPrefix: 'Bearer',
+                },
+            ],
         },
         provideKeycloak({
             config: {

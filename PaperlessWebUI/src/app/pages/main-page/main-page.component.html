@@ -104,9 +104,12 @@
                 @switch (mainContentMode) {
                     @case ('pdf') {
                         <pdf-viewer
-                            src="{{ environment.paperlessRestUrl }}/api/files/
-                                {{ fileMetaData.fileToken }}
-                                /download"
+                            [src]="{
+                                url: `${environment.paperlessRestUrl}/api/files/${fileMetaData.fileToken}/download`,
+                                httpHeaders: {
+                                    Authorization: `Bearer ${jwtToken}`,
+                                },
+                            }"
                             [render-text]="false"
                             [original-size]="false"
                             [zoom-scale]="'page-width'"
