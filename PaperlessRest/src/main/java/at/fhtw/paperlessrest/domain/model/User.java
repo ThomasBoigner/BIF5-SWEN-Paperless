@@ -18,11 +18,15 @@ public class User {
     private String username;
     private final List<FileMetaData> files;
 
+    private final List<FileUploaded> fileUploadedEvents;
+
     @Builder
     public User(@Nullable UserToken userToken, @Nullable String username) {
         this.setUserToken(userToken);
         this.setUsername(username);
         this.files = new ArrayList<>();
+
+        this.fileUploadedEvents = new ArrayList<>();
     }
 
     public User(@Nullable Long id, UserToken userToken, String username, List<FileMetaData> files) {
@@ -30,6 +34,24 @@ public class User {
         this.userToken = userToken;
         this.username = username;
         this.files = files;
+
+        this.fileUploadedEvents = new ArrayList<>();
+    }
+
+    public FileMetaData uploadFile(@Nullable String fileName, long fileSize, @Nullable String description) {
+        FileMetaData fileMetaData = FileMetaData.builder()
+                .fileName(fileName)
+                .fileSize(fileSize)
+                .description(description)
+                .build();
+
+        this.files.add(fileMetaData);
+
+        this.fileUploadedEvents.add(FileUploaded.builder()
+                .fileToken(fileMetaData.getFileToken())
+                .build());
+
+        return fileMetaData;
     }
 
     public List<FileMetaData> getFiles() {

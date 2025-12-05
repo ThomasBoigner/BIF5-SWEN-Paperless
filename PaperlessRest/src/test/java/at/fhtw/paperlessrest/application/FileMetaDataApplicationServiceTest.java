@@ -4,8 +4,7 @@ import at.fhtw.paperlessrest.application.commands.AddFullTextCommand;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
-import at.fhtw.paperlessrest.domain.model.FileMetaData;
-import at.fhtw.paperlessrest.domain.model.FileMetaDataRepository;
+import at.fhtw.paperlessrest.domain.model.*;
 import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,6 +30,8 @@ import static org.mockito.Mockito.*;
 public class FileMetaDataApplicationServiceTest {
     private FileMetaDataApplicationService fileMetaDataApplicationService;
     @Mock
+    private UserRepository userRepository;
+    @Mock
     private FileMetaDataRepository fileMetaDataRepository;
     @Mock
     private FileService fileService;
@@ -38,7 +40,7 @@ public class FileMetaDataApplicationServiceTest {
 
     @BeforeEach
     void setUp() {
-        fileMetaDataApplicationService = new FileMetaDataApplicationService(fileMetaDataRepository, fileMetaDataEventPublisher, fileService);
+        fileMetaDataApplicationService = new FileMetaDataApplicationService(fileMetaDataRepository, userRepository, fileMetaDataEventPublisher, fileService);
     }
 
     @Test
@@ -91,12 +93,20 @@ public class FileMetaDataApplicationServiceTest {
                 .description("test")
                 .build();
 
+        UUID userToken = UUID.randomUUID();
+
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        when(userRepository.findUserByUserToken(eq(new UserToken(userToken)))).thenReturn(Optional.of(user));
         when(file.getContentType()).thenReturn("application/pdf");
         when(file.getOriginalFilename()).thenReturn(fileName);
         when(file.getSize()).thenReturn(8L);
 
         // When
-        FileMetaDataDto result = fileMetaDataApplicationService.uploadFile(file, command);
+        FileMetaDataDto result = fileMetaDataApplicationService.uploadFile(userToken, file, command);
 
         // Then
         assertThat(result).isNotNull();
@@ -118,7 +128,27 @@ public class FileMetaDataApplicationServiceTest {
 
         // When
         assertThrows(IllegalArgumentException.class,
-                () -> fileMetaDataApplicationService.uploadFile(file, command));
+                () -> fileMetaDataApplicationService.uploadFile(UUID.randomUUID(), file, command));
+    }
+
+    @Test
+    void ensureUploadFileThrowsExceptionWhenUserCantBeFound() throws IOException {
+        // Given
+        String fileName = "test.pdf";
+
+        MultipartFile file = Mockito.mock(MultipartFile.class);
+
+        UploadFileCommand command = UploadFileCommand.builder()
+                .description("test")
+                .build();
+
+        UUID userToken = UUID.randomUUID();
+
+        when(userRepository.findUserByUserToken(eq(new UserToken(userToken)))).thenReturn(Optional.empty());
+
+        // When
+        assertThrows(IllegalArgumentException.class,
+                () -> fileMetaDataApplicationService.uploadFile(userToken, file, command));
     }
 
     @Test

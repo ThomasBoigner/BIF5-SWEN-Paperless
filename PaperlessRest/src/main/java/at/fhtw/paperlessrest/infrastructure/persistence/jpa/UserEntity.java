@@ -9,6 +9,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -40,7 +41,7 @@ public class UserEntity {
                 this.id,
                 new UserToken(this.userToken),
                 this.username,
-                this.files.stream().map(FileMetaDataEntity::toFileMetaData).toList()
+                this.files.stream().map(FileMetaDataEntity::toFileMetaData).collect(Collectors.toList())
         );
     }
 }

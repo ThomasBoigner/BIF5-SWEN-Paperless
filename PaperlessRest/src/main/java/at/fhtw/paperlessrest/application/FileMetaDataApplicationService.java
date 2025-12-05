@@ -4,9 +4,7 @@ import at.fhtw.paperlessrest.application.commands.AddFullTextCommand;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
-import at.fhtw.paperlessrest.domain.model.FileMetaData;
-import at.fhtw.paperlessrest.domain.model.FileMetaDataRepository;
-import at.fhtw.paperlessrest.domain.model.FileToken;
+import at.fhtw.paperlessrest.domain.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
@@ -26,6 +24,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class FileMetaDataApplicationService {
     private final FileMetaDataRepository fileMetaDataRepository;
+    private final UserRepository userRepository;
     private final FileMetaDataEventPublisher fileMetaDataEventPublisher;
     private final FileService fileService;
 
@@ -49,7 +48,8 @@ public class FileMetaDataApplicationService {
     }
 
     @Transactional(readOnly = false)
-    public FileMetaDataDto uploadFile(@Nullable MultipartFile file, @Nullable UploadFileCommand command) {
+    public FileMetaDataDto uploadFile(@Nullable UUID userToken, @Nullable MultipartFile file, @Nullable UploadFileCommand command) {
+        Objects.requireNonNull(userToken, "userToken must not be null!");
         Objects.requireNonNull(file, "file must not be null!");
         Objects.requireNonNull(command, "command must not be null!");
         log.debug("Trying to create file with file {} and command {}", file.getOriginalFilename(), command);
@@ -58,11 +58,21 @@ public class FileMetaDataApplicationService {
             throw new IllegalArgumentException("Invalid file content type! The file must be a pdf.");
         }
 
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName(file.getOriginalFilename())
-                .fileSize(file.getSize())
-                .description(command.description())
-                .build();
+        Optional<User> entity = userRepository.findUserByUserToken(new UserToken(userToken));
+
+        if (entity.isEmpty()) {
+            log.warn("User with token {} can not be found!", userToken);
+            throw new IllegalArgumentException(
+                    "User with token %s can not be found!".formatted(userToken));
+        }
+
+        User user = entity.get();
+
+        FileMetaData fileMetaData = user.uploadFile(
+                file.getOriginalFilename(),
+                file.getSize(),
+                command.description()
+        );
 
         fileService.uploadFile(fileMetaData.getFileToken().token(), file);
         fileMetaDataRepository.save(fileMetaData);

@@ -137,7 +137,7 @@ public class FileRestControllerTest {
                 jsonMapper.writeValueAsBytes(command)
         );
 
-        when(fileMetaDataApplicationService.uploadFile(any(MultipartFile.class), eq(command))).thenReturn(fileMetaDataDto);
+        when(fileMetaDataApplicationService.uploadFile(eq(null), any(MultipartFile.class), eq(command))).thenReturn(fileMetaDataDto);
 
         // Perform
         mockMvc.perform(multipart("/api/files")

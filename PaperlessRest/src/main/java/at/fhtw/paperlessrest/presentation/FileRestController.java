@@ -12,6 +12,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -62,10 +64,12 @@ public class FileRestController {
     }
 
     @PostMapping(value = {"", PATH_INDEX})
-    public HttpEntity<FileMetaDataDto> uploadFile(@Nullable @RequestPart("file") MultipartFile file,
-           @Nullable @RequestPart("command") UploadFileCommand command) {
+    public HttpEntity<FileMetaDataDto> uploadFile(@AuthenticationPrincipal Jwt jwt,
+                                                  @Nullable @RequestPart("file") MultipartFile file,
+                                                  @Nullable @RequestPart("command") UploadFileCommand command) {
         log.debug("Got Http POST request to upload file with file {} and command {}", file != null ? file.getOriginalFilename() : "[name not found]", command);
-        FileMetaDataDto fileMetaData = fileMetaDataApplicationService.uploadFile(file, command);
+        UUID userToken = UUID.fromString(jwt.getClaim("sub"));
+        FileMetaDataDto fileMetaData = fileMetaDataApplicationService.uploadFile(userToken, file, command);
         return ResponseEntity.created(createSelfLink(fileMetaData)).body(fileMetaData);
     }
 
