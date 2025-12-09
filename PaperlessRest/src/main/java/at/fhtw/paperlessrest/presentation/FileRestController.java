@@ -12,6 +12,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,18 +41,18 @@ public class FileRestController {
     public static final String ROUTE_DOWNLOAD = PATH_VAR_ID + "/download";
 
     @GetMapping({"", PATH_INDEX})
-    public HttpEntity<List<FileMetaDataDto>> getAllFileMetaData() {
+    public HttpEntity<List<FileMetaDataDto>> getAllFileMetaData(@AuthenticationPrincipal Jwt jwt) {
         log.debug("Got Http GET request to retrieve all file meta data");
-        List<FileMetaDataDto> fileMetaData = fileMetaDataApplicationService.getAllFileMetaData();
+        List<FileMetaDataDto> fileMetaData = fileMetaDataApplicationService.getAllFileMetaData(UUID.fromString(jwt.getClaim("sub")));
         return fileMetaData.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(fileMetaData);
     }
 
     @GetMapping({PATH_VAR_ID})
-    public HttpEntity<FileMetaDataDto> getFileMetaData(@PathVariable UUID token) {
+    public HttpEntity<FileMetaDataDto> getFileMetaData(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID token) {
         log.debug("Got Http GET request to retrieve specific file with token {} ", token);
-        return fileMetaDataApplicationService.getFileMetaData(token)
+        return fileMetaDataApplicationService.getFileMetaData(UUID.fromString(jwt.getClaim("sub")), token)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -62,10 +64,11 @@ public class FileRestController {
     }
 
     @PostMapping(value = {"", PATH_INDEX})
-    public HttpEntity<FileMetaDataDto> uploadFile(@Nullable @RequestPart("file") MultipartFile file,
-           @Nullable @RequestPart("command") UploadFileCommand command) {
+    public HttpEntity<FileMetaDataDto> uploadFile(@AuthenticationPrincipal Jwt jwt,
+                                                  @Nullable @RequestPart("file") MultipartFile file,
+                                                  @Nullable @RequestPart("command") UploadFileCommand command) {
         log.debug("Got Http POST request to upload file with file {} and command {}", file != null ? file.getOriginalFilename() : "[name not found]", command);
-        FileMetaDataDto fileMetaData = fileMetaDataApplicationService.uploadFile(file, command);
+        FileMetaDataDto fileMetaData = fileMetaDataApplicationService.uploadFile(UUID.fromString(jwt.getClaim("sub")), file, command);
         return ResponseEntity.created(createSelfLink(fileMetaData)).body(fileMetaData);
     }
 

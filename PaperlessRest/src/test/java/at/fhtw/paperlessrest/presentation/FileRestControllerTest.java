@@ -23,6 +23,7 @@ import tools.jackson.databind.json.JsonMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -47,7 +48,10 @@ public class FileRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new FileRestController(fileMetaDataApplicationService, fileService)).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(new FileRestController(fileMetaDataApplicationService, fileService))
+                .setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
+                .build();
 
         jsonMapper = JsonMapper.builder()
                 .build();
@@ -64,7 +68,7 @@ public class FileRestControllerTest {
     @Test
     void ensureGetAllFileMetaDataWorksProperly() throws Exception {
         // When
-        when(fileMetaDataApplicationService.getAllFileMetaData()).thenReturn(List.of(fileMetaDataDto));
+        when(fileMetaDataApplicationService.getAllFileMetaData(any(UUID.class))).thenReturn(List.of(fileMetaDataDto));
 
         // Perform
         mockMvc.perform(get("/api/files").accept(MediaType.APPLICATION_JSON))
@@ -77,7 +81,7 @@ public class FileRestControllerTest {
     @Test
     void ensureGetAllFileMetaDataReturnsNoContentIfDataCouldNotBeFound() throws Exception {
         // When
-        when(fileMetaDataApplicationService.getAllFileMetaData()).thenReturn(List.of());
+        when(fileMetaDataApplicationService.getAllFileMetaData(any(UUID.class))).thenReturn(List.of());
 
         // Perform
         mockMvc.perform(get("/api/files").accept(MediaType.APPLICATION_JSON))
@@ -88,7 +92,7 @@ public class FileRestControllerTest {
     @Test
     void ensureGetFileMetaDataWorksProperly() throws Exception {
         // When
-        when(fileMetaDataApplicationService.getFileMetaData(eq(fileMetaDataDto.fileToken()))).thenReturn(Optional.of(fileMetaDataDto));
+        when(fileMetaDataApplicationService.getFileMetaData(any(UUID.class), eq(fileMetaDataDto.fileToken()))).thenReturn(Optional.of(fileMetaDataDto));
 
         // Perform
         mockMvc.perform(get("/api/files/%s".formatted(fileMetaDataDto.fileToken())).accept(MediaType.APPLICATION_JSON))
@@ -101,7 +105,7 @@ public class FileRestControllerTest {
     @Test
     void ensureGetFileMetaDataReturnsNotFoundIfDataCouldNotBeFound() throws Exception {
         // When
-        when(fileMetaDataApplicationService.getFileMetaData(eq(fileMetaDataDto.fileToken()))).thenReturn(Optional.empty());
+        when(fileMetaDataApplicationService.getFileMetaData(any(UUID.class), eq(fileMetaDataDto.fileToken()))).thenReturn(Optional.empty());
 
         // Perform
         mockMvc.perform(get("/api/files/%s".formatted(fileMetaDataDto.fileToken())).accept(MediaType.APPLICATION_JSON))
@@ -137,7 +141,7 @@ public class FileRestControllerTest {
                 jsonMapper.writeValueAsBytes(command)
         );
 
-        when(fileMetaDataApplicationService.uploadFile(any(MultipartFile.class), eq(command))).thenReturn(fileMetaDataDto);
+        when(fileMetaDataApplicationService.uploadFile(any(UUID.class), any(MultipartFile.class), eq(command))).thenReturn(fileMetaDataDto);
 
         // Perform
         mockMvc.perform(multipart("/api/files")
