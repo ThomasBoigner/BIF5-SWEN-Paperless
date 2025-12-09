@@ -67,4 +67,21 @@ public class UserTest {
         assertThat(fileMetadata.getFileSize()).isEqualTo(filesize);
         assertThat(fileMetadata.getDescription()).isEqualTo(description);
     }
+
+    @Test
+    void ensureRemoveFileWorksProperly() {
+        // Given
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        // When
+        user.removeFile(fileMetaData.getFileToken());
+
+        // Then
+        assertThat(user.getFiles()).hasSize(0);
+    }
 }

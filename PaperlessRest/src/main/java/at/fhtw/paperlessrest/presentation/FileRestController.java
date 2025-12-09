@@ -67,7 +67,8 @@ public class FileRestController {
     @PostMapping(value = {"", PATH_INDEX})
     public HttpEntity<FileMetaDataDto> uploadFile(@AuthenticationPrincipal Jwt jwt,
                                                   @Nullable @RequestPart("file") MultipartFile file,
-                                                  @Nullable @RequestPart("command") UploadFileCommand command) {
+                                                  @Nullable @RequestPart("command") UploadFileCommand command
+    ) {
         log.debug("Got Http POST request to upload file with file {} and command {}", file != null ? file.getOriginalFilename() : "[name not found]", command);
         FileMetaDataDto fileMetaData = fileMetaDataApplicationService.uploadFile(UUID.fromString(jwt.getClaim("sub")), file, command);
         return ResponseEntity.created(createSelfLink(fileMetaData)).body(fileMetaData);
@@ -80,9 +81,11 @@ public class FileRestController {
     }
 
     @DeleteMapping(PATH_VAR_ID)
-    public HttpEntity<FileMetaDataDto> deleteFileMetaData(@PathVariable UUID token) {
+    public HttpEntity<FileMetaDataDto> deleteFileMetaData(@AuthenticationPrincipal Jwt jwt,
+                                                          @PathVariable UUID token
+    ) {
         log.debug("Got Http DELETE request to delete file with token {}", token);
-        fileMetaDataApplicationService.deleteFileMetaData(token);
+        fileMetaDataApplicationService.deleteFileMetaData(UUID.fromString(jwt.getClaim("sub")), token);
         return ResponseEntity.ok().build();
     }
 

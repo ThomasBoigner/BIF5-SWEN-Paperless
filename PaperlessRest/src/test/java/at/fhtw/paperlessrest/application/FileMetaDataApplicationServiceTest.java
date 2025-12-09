@@ -277,16 +277,16 @@ public class FileMetaDataApplicationServiceTest {
     @Test
     void ensureDeleteFileWorksProperly() {
         // Given
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
 
-        // When
-        fileMetaDataApplicationService.deleteFileMetaData(fileMetaData.getFileToken().token());
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
 
-        // Then
-        verify(fileMetaDataRepository).deleteByFileToken(eq(fileMetaData.getFileToken()));
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
+
+        // When
+        fileMetaDataApplicationService.deleteFileMetaData(user.getUserToken().token(), fileMetaData.getFileToken().token());
     }
 }

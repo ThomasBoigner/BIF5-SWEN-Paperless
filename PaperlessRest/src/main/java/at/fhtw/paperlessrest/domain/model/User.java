@@ -63,6 +63,10 @@ public class User {
         return fileMetaData;
     }
 
+    public void removeFile(FileToken fileToken) {
+        this.files.removeIf(f -> f.getFileToken().equals(fileToken));
+    }
+
     private void setUserToken(@Nullable UserToken userToken) {
         Objects.requireNonNull(userToken, "userToken must not be null!");
         this.userToken = userToken;

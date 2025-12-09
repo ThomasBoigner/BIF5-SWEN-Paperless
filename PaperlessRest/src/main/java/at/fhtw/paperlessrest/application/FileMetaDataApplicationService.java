@@ -162,10 +162,21 @@ public class FileMetaDataApplicationService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteFileMetaData(@Nullable UUID token) {
-        Objects.requireNonNull(token, "token must not be null!");
-        fileService.deleteFile(token);
-        fileMetaDataRepository.deleteByFileToken(new FileToken(token));
-        log.info("Successfully deleted file with token {}", token);
+    public void deleteFileMetaData(@Nullable UUID userToken, @Nullable UUID fileToken) {
+        Objects.requireNonNull(fileToken, "fileToken must not be null!");
+        Objects.requireNonNull(userToken, "userToken must not be null!");
+
+        Optional<User> entity = userRepository.findUserByUserToken(new UserToken(userToken));
+
+        if (entity.isEmpty()) {
+            return;
+        }
+
+        User user = entity.get();
+
+        fileService.deleteFile(fileToken);
+        user.removeFile(new FileToken(fileToken));
+        userRepository.save(user);
+        log.info("Successfully deleted file with token {}", fileToken);
     }
 }

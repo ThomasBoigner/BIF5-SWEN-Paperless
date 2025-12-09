@@ -20,7 +20,7 @@ public class UserEntity {
     private Long id;
     private UUID userToken;
     private String username;
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<FileMetaDataEntity> files;
 
     public UserEntity() {
