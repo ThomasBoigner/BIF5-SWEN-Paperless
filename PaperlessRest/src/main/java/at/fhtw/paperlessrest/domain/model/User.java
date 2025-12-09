@@ -5,10 +5,7 @@ import lombok.Getter;
 import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 public class User {
@@ -38,6 +35,14 @@ public class User {
         this.fileUploadedEvents = new ArrayList<>();
     }
 
+    public List<FileMetaData> getFiles() {
+        return Collections.unmodifiableList(this.files);
+    }
+
+    public Optional<FileMetaData> getFile(FileToken fileToken) {
+        return this.getFiles().stream().filter(f -> f.getFileToken().equals(fileToken)).findFirst();
+    }
+
     public FileMetaData uploadFile(@Nullable String fileName, long fileSize, @Nullable String description) {
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName(fileName)
@@ -52,10 +57,6 @@ public class User {
                 .build());
 
         return fileMetaData;
-    }
-
-    public List<FileMetaData> getFiles() {
-        return Collections.unmodifiableList(this.files);
     }
 
     private void setUserToken(@Nullable UserToken userToken) {

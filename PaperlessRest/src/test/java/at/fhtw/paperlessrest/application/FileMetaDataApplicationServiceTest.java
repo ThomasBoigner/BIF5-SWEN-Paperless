@@ -66,17 +66,17 @@ public class FileMetaDataApplicationServiceTest {
     @Test
     void ensureGetFileByTokenWorksProperly() {
         // Given
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
 
-        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
-                .thenReturn(Optional.of(fileMetaData));
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
 
         // When
-        Optional<FileMetaDataDto> result = fileMetaDataApplicationService.getFileMetaData(fileMetaData.getFileToken().token());
+        Optional<FileMetaDataDto> result = fileMetaDataApplicationService.getFileMetaData(user.getUserToken().token(), fileMetaData.getFileToken().token());
 
         // Then
         assertThat(result).isPresent();
@@ -135,8 +135,6 @@ public class FileMetaDataApplicationServiceTest {
     @Test
     void ensureUploadFileThrowsExceptionWhenUserCantBeFound() throws IOException {
         // Given
-        String fileName = "test.pdf";
-
         MultipartFile file = Mockito.mock(MultipartFile.class);
 
         UploadFileCommand command = UploadFileCommand.builder()

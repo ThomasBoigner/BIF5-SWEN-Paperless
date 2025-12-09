@@ -3,12 +3,31 @@ package at.fhtw.paperlessrest.domain.model;
 import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @NullUnmarked
 public class UserTest {
+    @Test
+    void ensureGetFileWorksProperly() {
+        // Given
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        // When
+        Optional<FileMetaData> result = user.getFile(fileMetaData.getFileToken());
+
+        // Then
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(fileMetaData);
+    }
+
     @Test
     void ensureUploadFileWorksProperly() {
         // Given

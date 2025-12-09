@@ -48,15 +48,26 @@ public class FileMetaDataApplicationService {
     }
 
     @Transactional(readOnly = false)
-    public Optional<FileMetaDataDto> getFileMetaData(@Nullable UUID token) {
-        Objects.requireNonNull(token, "token must not be null!");
-        log.debug("Trying to retrieve file metadata with token {}", token);
+    public Optional<FileMetaDataDto> getFileMetaData(@Nullable UUID userToken, @Nullable UUID fileToken) {
+        Objects.requireNonNull(fileToken, "token must not be null!");
+        Objects.requireNonNull(userToken, "userToken must not be null!");
+        log.debug("Trying to retrieve file metadata with token {} of user with token {}", fileToken, userToken);
 
-        Optional<FileMetaDataDto> fileMetaData = fileMetaDataRepository.findFileMetaDataByFileToken(new FileToken(token)).map(FileMetaDataDto::new);
+        Optional<User> entity = userRepository.findUserByUserToken(new UserToken(userToken));
+
+        if (entity.isEmpty()) {
+            log.warn("User with token {} can not be found!", userToken);
+            throw new IllegalArgumentException(
+                    "User with token %s can not be found!".formatted(userToken));
+        }
+
+        User user = entity.get();
+
+        Optional<FileMetaDataDto> fileMetaData = user.getFile(new FileToken(fileToken)).map(FileMetaDataDto::new);
 
         fileMetaData.ifPresentOrElse(
-                fmd -> log.debug("Found file meta data {} with token {}", fmd, token),
-                () -> log.debug("No file meta data with id {} found", token));
+                fmd -> log.debug("Found file meta data {} with token {}", fmd, fileToken),
+                () -> log.debug("No file meta data with id {} found", fileToken));
         return fileMetaData;
     }
 

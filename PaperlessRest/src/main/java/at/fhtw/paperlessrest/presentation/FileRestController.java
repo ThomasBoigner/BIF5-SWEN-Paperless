@@ -50,9 +50,9 @@ public class FileRestController {
     }
 
     @GetMapping({PATH_VAR_ID})
-    public HttpEntity<FileMetaDataDto> getFileMetaData(@PathVariable UUID token) {
+    public HttpEntity<FileMetaDataDto> getFileMetaData(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID token) {
         log.debug("Got Http GET request to retrieve specific file with token {} ", token);
-        return fileMetaDataApplicationService.getFileMetaData(token)
+        return fileMetaDataApplicationService.getFileMetaData(UUID.fromString(jwt.getClaim("sub")), token)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
