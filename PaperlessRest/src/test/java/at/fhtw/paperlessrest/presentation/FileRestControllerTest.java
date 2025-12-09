@@ -68,7 +68,7 @@ public class FileRestControllerTest {
     @Test
     void ensureGetAllFileMetaDataWorksProperly() throws Exception {
         // When
-        when(fileMetaDataApplicationService.getAllFileMetaData()).thenReturn(List.of(fileMetaDataDto));
+        when(fileMetaDataApplicationService.getAllFileMetaData(any(UUID.class))).thenReturn(List.of(fileMetaDataDto));
 
         // Perform
         mockMvc.perform(get("/api/files").accept(MediaType.APPLICATION_JSON))
@@ -81,7 +81,7 @@ public class FileRestControllerTest {
     @Test
     void ensureGetAllFileMetaDataReturnsNoContentIfDataCouldNotBeFound() throws Exception {
         // When
-        when(fileMetaDataApplicationService.getAllFileMetaData()).thenReturn(List.of());
+        when(fileMetaDataApplicationService.getAllFileMetaData(any(UUID.class))).thenReturn(List.of());
 
         // Perform
         mockMvc.perform(get("/api/files").accept(MediaType.APPLICATION_JSON))

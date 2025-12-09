@@ -46,16 +46,17 @@ public class FileMetaDataApplicationServiceTest {
     @Test
     void ensureGetAllFileMetaDataWorksProperly() {
         // Given
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
 
-        when(fileMetaDataRepository.findAll()).thenReturn(List.of(fileMetaData));
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
 
         // When
-        List<FileMetaDataDto> result = fileMetaDataApplicationService.getAllFileMetaData();
+        List<FileMetaDataDto> result = fileMetaDataApplicationService.getAllFileMetaData(user.getUserToken().token());
 
         // Then
         assertThat(result).hasSize(1);

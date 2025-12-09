@@ -28,8 +28,21 @@ public class FileMetaDataApplicationService {
     private final FileMetaDataEventPublisher fileMetaDataEventPublisher;
     private final FileService fileService;
 
-    public List<FileMetaDataDto> getAllFileMetaData() {
-        List<FileMetaDataDto> fileMetaDataList = fileMetaDataRepository.findAll().stream().map(FileMetaDataDto::new).toList();
+    public List<FileMetaDataDto> getAllFileMetaData(@Nullable UUID userToken) {
+        Objects.requireNonNull(userToken, "userToken must not be null!");
+        log.debug("Trying to get all file of user with token {}", userToken);
+
+        Optional<User> entity = userRepository.findUserByUserToken(new UserToken(userToken));
+
+        if (entity.isEmpty()) {
+            log.warn("User with token {} can not be found!", userToken);
+            throw new IllegalArgumentException(
+                    "User with token %s can not be found!".formatted(userToken));
+        }
+
+        User user = entity.get();
+
+        List<FileMetaDataDto> fileMetaDataList = user.getFiles().stream().map(FileMetaDataDto::new).toList();
         log.debug("Retrieved all ({}) file meta data", fileMetaDataList.size());
         return fileMetaDataList;
     }
