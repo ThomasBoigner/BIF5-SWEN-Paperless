@@ -43,6 +43,10 @@ public class User {
         return this.getFiles().stream().filter(f -> f.getFileToken().equals(fileToken)).findFirst();
     }
 
+    public boolean hasFile(FileToken fileToken) {
+        return this.getFiles().stream().anyMatch(f -> f.getFileToken().equals(fileToken));
+    }
+
     public FileMetaData uploadFile(@Nullable String fileName, long fileSize, @Nullable String description) {
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName(fileName)

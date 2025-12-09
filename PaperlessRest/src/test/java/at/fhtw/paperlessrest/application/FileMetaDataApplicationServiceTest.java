@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -81,6 +83,29 @@ public class FileMetaDataApplicationServiceTest {
         // Then
         assertThat(result).isPresent();
         assertThat(result).isEqualTo(Optional.of(new FileMetaDataDto(fileMetaData)));
+    }
+
+    @Test
+    void ensureDownloadFileWorksProperly() {
+        // Given
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        InputStreamResource inputStreamResource = mock(InputStreamResource.class);
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
+        when(fileService.downloadFile(eq(fileMetaData.getFileToken().token()))).thenReturn(inputStreamResource);
+
+        // When
+        Optional<InputStreamResource> result = fileMetaDataApplicationService.downloadFile(user.getUserToken().token(), fileMetaData.getFileToken().token());
+
+        // Then
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(inputStreamResource);
     }
 
     @Test

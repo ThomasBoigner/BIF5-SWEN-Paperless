@@ -32,7 +32,6 @@ import java.util.UUID;
 public class FileRestController {
 
     private final FileMetaDataApplicationService fileMetaDataApplicationService;
-    private final FileService fileService;
 
     public static final String BASE_URL = "/api/files";
     public static final String PATH_INDEX = "/";
@@ -58,9 +57,11 @@ public class FileRestController {
     }
 
     @GetMapping(value = {ROUTE_DOWNLOAD}, produces = MediaType.APPLICATION_PDF_VALUE)
-    public HttpEntity<InputStreamResource> getFileContent(@PathVariable UUID token) {
+    public HttpEntity<InputStreamResource> getFileContent(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID token) {
         log.debug("Got Http GET request to retrieve file content of file with token {} ", token);
-        return ResponseEntity.ok(fileService.downloadFile(token));
+        return fileMetaDataApplicationService.downloadFile(UUID.fromString(jwt.getClaim("sub")), token)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping(value = {"", PATH_INDEX})

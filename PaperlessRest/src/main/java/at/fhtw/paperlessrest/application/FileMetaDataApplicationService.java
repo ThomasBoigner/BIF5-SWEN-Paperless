@@ -8,6 +8,7 @@ import at.fhtw.paperlessrest.domain.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,9 +36,7 @@ public class FileMetaDataApplicationService {
         Optional<User> entity = userRepository.findUserByUserToken(new UserToken(userToken));
 
         if (entity.isEmpty()) {
-            log.warn("User with token {} can not be found!", userToken);
-            throw new IllegalArgumentException(
-                    "User with token %s can not be found!".formatted(userToken));
+            return List.of();
         }
 
         User user = entity.get();
@@ -47,18 +46,15 @@ public class FileMetaDataApplicationService {
         return fileMetaDataList;
     }
 
-    @Transactional(readOnly = false)
     public Optional<FileMetaDataDto> getFileMetaData(@Nullable UUID userToken, @Nullable UUID fileToken) {
-        Objects.requireNonNull(fileToken, "token must not be null!");
+        Objects.requireNonNull(fileToken, "fileToken must not be null!");
         Objects.requireNonNull(userToken, "userToken must not be null!");
         log.debug("Trying to retrieve file metadata with token {} of user with token {}", fileToken, userToken);
 
         Optional<User> entity = userRepository.findUserByUserToken(new UserToken(userToken));
 
         if (entity.isEmpty()) {
-            log.warn("User with token {} can not be found!", userToken);
-            throw new IllegalArgumentException(
-                    "User with token %s can not be found!".formatted(userToken));
+            return Optional.empty();
         }
 
         User user = entity.get();
@@ -69,6 +65,24 @@ public class FileMetaDataApplicationService {
                 fmd -> log.debug("Found file meta data {} with token {}", fmd, fileToken),
                 () -> log.debug("No file meta data with id {} found", fileToken));
         return fileMetaData;
+    }
+
+    public Optional<InputStreamResource> downloadFile(@Nullable UUID userToken, @Nullable UUID fileToken) {
+        Objects.requireNonNull(fileToken, "fileToken must not be null!");
+        Objects.requireNonNull(userToken, "userToken must not be null!");
+        log.debug("Trying to retrieve file with token {} of user with token {}", fileToken, userToken);
+
+        Optional<User> entity = userRepository.findUserByUserToken(new UserToken(userToken));
+
+        if (entity.isEmpty()) {
+            return Optional.empty();
+        }
+
+        User user = entity.get();
+
+        return user.hasFile(new FileToken(fileToken))
+                ? Optional.of(fileService.downloadFile(fileToken))
+                : Optional.empty();
     }
 
     @Transactional(readOnly = false)

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -49,7 +51,7 @@ public class FileRestControllerTest {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new FileRestController(fileMetaDataApplicationService, fileService))
+                .standaloneSetup(new FileRestController(fileMetaDataApplicationService))
                 .setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
                 .build();
 
@@ -115,6 +117,9 @@ public class FileRestControllerTest {
 
     @Test
     void ensureGetFileContentWorksProperly() throws Exception {
+        // When
+        when(fileMetaDataApplicationService.downloadFile(any(UUID.class), eq(fileMetaDataDto.fileToken()))).thenReturn(Optional.of(mock(InputStreamResource.class)));
+
         // Perform
         mockMvc.perform(get("/api/files/%s/download".formatted(fileMetaDataDto.fileToken())).accept(MediaType.APPLICATION_PDF_VALUE))
                 .andDo(print())

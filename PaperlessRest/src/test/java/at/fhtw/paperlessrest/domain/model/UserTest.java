@@ -29,6 +29,23 @@ public class UserTest {
     }
 
     @Test
+    void ensureHasFileWorksProperly() {
+        // Given
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        // When
+        boolean result = user.hasFile(fileMetaData.getFileToken());
+
+        // Then
+        assertThat(result).isTrue();
+    }
+
+    @Test
     void ensureUploadFileWorksProperly() {
         // Given
         User user = User.builder()
