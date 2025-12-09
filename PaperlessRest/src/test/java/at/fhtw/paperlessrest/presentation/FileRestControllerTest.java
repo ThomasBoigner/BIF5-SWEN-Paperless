@@ -23,6 +23,7 @@ import tools.jackson.databind.json.JsonMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -47,7 +48,10 @@ public class FileRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new FileRestController(fileMetaDataApplicationService, fileService)).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(new FileRestController(fileMetaDataApplicationService, fileService))
+                .setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
+                .build();
 
         jsonMapper = JsonMapper.builder()
                 .build();
@@ -137,7 +141,7 @@ public class FileRestControllerTest {
                 jsonMapper.writeValueAsBytes(command)
         );
 
-        when(fileMetaDataApplicationService.uploadFile(eq(null), any(MultipartFile.class), eq(command))).thenReturn(fileMetaDataDto);
+        when(fileMetaDataApplicationService.uploadFile(any(UUID.class), any(MultipartFile.class), eq(command))).thenReturn(fileMetaDataDto);
 
         // Perform
         mockMvc.perform(multipart("/api/files")

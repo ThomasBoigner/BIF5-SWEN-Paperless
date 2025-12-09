@@ -75,7 +75,7 @@ public class FileMetaDataApplicationService {
         );
 
         fileService.uploadFile(fileMetaData.getFileToken().token(), file);
-        fileMetaDataRepository.save(fileMetaData);
+        userRepository.save(user);
         fileMetaDataEventPublisher.publishEvents(fileMetaData);
         log.info("Uploaded file {}", fileMetaData);
         return new FileMetaDataDto(fileMetaData);

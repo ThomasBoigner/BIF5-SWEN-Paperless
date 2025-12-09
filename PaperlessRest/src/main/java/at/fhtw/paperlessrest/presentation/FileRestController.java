@@ -68,8 +68,7 @@ public class FileRestController {
                                                   @Nullable @RequestPart("file") MultipartFile file,
                                                   @Nullable @RequestPart("command") UploadFileCommand command) {
         log.debug("Got Http POST request to upload file with file {} and command {}", file != null ? file.getOriginalFilename() : "[name not found]", command);
-        UUID userToken = UUID.fromString(jwt.getClaim("sub"));
-        FileMetaDataDto fileMetaData = fileMetaDataApplicationService.uploadFile(userToken, file, command);
+        FileMetaDataDto fileMetaData = fileMetaDataApplicationService.uploadFile(UUID.fromString(jwt.getClaim("sub")), file, command);
         return ResponseEntity.created(createSelfLink(fileMetaData)).body(fileMetaData);
     }
 
