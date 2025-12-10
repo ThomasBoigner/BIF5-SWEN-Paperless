@@ -5,5 +5,5 @@ import lombok.Builder;
 import java.util.UUID;
 
 @Builder
-public record ExtractTextCommand(UUID fileToken) {
+public record ExtractTextCommand(UUID userToken, UUID fileToken) {
 }

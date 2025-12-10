@@ -124,18 +124,18 @@ public class FileMetaDataApplicationService {
         Objects.requireNonNull(command, "command must not be null!");
         log.debug("Trying to add full text with command {}", command);
 
-        Optional<FileMetaData> entity = fileMetaDataRepository.findFileMetaDataByFileToken(new FileToken(command.fileToken()));
+        Optional<User> entity = userRepository.findUserByUserToken(new UserToken(command.userToken()));
 
         if (entity.isEmpty()) {
-            log.warn("File with token {} can not be found!", command.fileToken());
+            log.warn("User with token {} can not be found!", command.fileToken());
             return;
         }
 
-        FileMetaData fileMetaData = entity.get();
-        fileMetaData.addFullText(command.FullText());
+        User user = entity.get();
 
-        fileMetaDataEventPublisher.publishEvents(fileMetaData);
-        fileMetaDataRepository.save(fileMetaData);
+        user.addFullTextToFile(new FileToken(command.fileToken()), command.fullText());
+
+        userRepository.save(user);
     }
 
     @Transactional(readOnly = false)

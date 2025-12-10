@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -180,19 +179,20 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         String fullText = "Full Text";
 
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
 
         AddFullTextCommand command = AddFullTextCommand.builder()
-                .FullText(fullText)
+                .fullText(fullText)
+                .userToken(user.getUserToken().token())
                 .fileToken(fileMetaData.getFileToken().token())
                 .build();
-
-        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
-                .thenReturn(Optional.of(fileMetaData));
 
         // When
         fileMetaDataApplicationService.addFullText(command);
@@ -206,19 +206,20 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         String fullText = "Full Text";
 
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.empty());
 
         AddFullTextCommand command = AddFullTextCommand.builder()
-                .FullText(fullText)
+                .fullText(fullText)
+                .userToken(user.getUserToken().token())
                 .fileToken(fileMetaData.getFileToken().token())
                 .build();
-
-        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
-                .thenReturn(Optional.empty());
 
         // When
         fileMetaDataApplicationService.addFullText(command);

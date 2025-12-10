@@ -57,10 +57,21 @@ public class User {
         this.files.add(fileMetaData);
 
         this.fileUploadedEvents.add(FileUploaded.builder()
+                .userToken(this.userToken)
                 .fileToken(fileMetaData.getFileToken())
                 .build());
 
         return fileMetaData;
+    }
+
+    public void addFullTextToFile(FileToken fileToken, String fullText) {
+        Optional<FileMetaData> file = getFile(fileToken);
+
+        if (file.isEmpty()) {
+            return;
+        }
+
+        file.get().addFullText(fullText, this.userToken);
     }
 
     public void removeFile(FileToken fileToken) {

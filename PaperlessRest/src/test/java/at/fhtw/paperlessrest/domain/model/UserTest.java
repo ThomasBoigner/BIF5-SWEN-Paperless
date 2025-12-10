@@ -69,6 +69,25 @@ public class UserTest {
     }
 
     @Test
+    void ensureAddFullTextToFileWorksProperly() {
+        // Given
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        String fullText = "full text";
+
+        // When
+        user.addFullTextToFile(fileMetaData.getFileToken(), fullText);
+
+        // Then
+        assertThat(fileMetaData.getFullText()).isEqualTo(fullText);
+    }
+
+    @Test
     void ensureRemoveFileWorksProperly() {
         // Given
         User user = User.builder()

@@ -71,10 +71,11 @@ public class FileMetaData {
         this.fullTextAddedEvents = new ArrayList<>();
     }
 
-    public void addFullText(String fullText) {
+    void addFullText(String fullText, UserToken userToken) {
         this.setFullText(fullText);
         this.fullTextAddedEvents.add(FullTextAdded.builder()
                 .fullText(fullText)
+                .userToken(userToken)
                 .fileToken(this.fileToken)
                 .build()
         );

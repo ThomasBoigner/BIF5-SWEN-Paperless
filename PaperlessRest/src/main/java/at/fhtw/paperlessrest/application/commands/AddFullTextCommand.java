@@ -5,5 +5,5 @@ import lombok.Builder;
 import java.util.UUID;
 
 @Builder
-public record AddFullTextCommand(String FullText, UUID fileToken) {
+public record AddFullTextCommand(String fullText, UUID userToken, UUID fileToken) {
 }

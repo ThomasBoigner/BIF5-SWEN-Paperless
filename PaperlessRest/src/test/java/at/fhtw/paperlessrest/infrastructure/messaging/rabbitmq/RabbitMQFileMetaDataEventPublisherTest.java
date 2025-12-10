@@ -1,6 +1,8 @@
 package at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq;
 
 import at.fhtw.paperlessrest.domain.model.FileMetaData;
+import at.fhtw.paperlessrest.domain.model.User;
+import at.fhtw.paperlessrest.domain.model.UserToken;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
@@ -50,12 +54,14 @@ public class RabbitMQFileMetaDataEventPublisherTest {
     @Test
     void ensurePublishFullTextAddedEventsWorksProperly() throws JsonProcessingException {
         // Given
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
-        fileMetaData.addFullText("Full Text");
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        user.addFullTextToFile(fileMetaData.getFileToken(), "full text");
 
         // When
         publisher.publishEvents(fileMetaData);

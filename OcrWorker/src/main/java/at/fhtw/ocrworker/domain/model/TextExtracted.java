@@ -6,11 +6,12 @@ import java.time.LocalDateTime;
 
 public record TextExtracted(
         String fullText,
+        UserToken userToken,
         FileToken fileToken,
         LocalDateTime occurredOn
 ) {
     @Builder
-    public TextExtracted(String fullText, FileToken fileToken) {
-        this(fullText, fileToken, LocalDateTime.now());
+    public TextExtracted(String fullText, UserToken userToken, FileToken fileToken) {
+        this(fullText, userToken, fileToken, LocalDateTime.now());
     }
 }
