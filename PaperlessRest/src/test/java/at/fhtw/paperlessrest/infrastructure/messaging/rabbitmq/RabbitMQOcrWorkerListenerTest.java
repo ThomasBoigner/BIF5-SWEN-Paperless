@@ -2,6 +2,7 @@ package at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq;
 
 import at.fhtw.paperlessrest.application.FileMetaDataApplicationService;
 import at.fhtw.paperlessrest.application.commands.AddFullTextCommand;
+import at.fhtw.paperlessrest.domain.model.UserToken;
 import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.FileToken;
 import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.TextExtracted;
 import org.jspecify.annotations.NullUnmarked;
@@ -32,10 +33,11 @@ public class RabbitMQOcrWorkerListenerTest {
     void ensureReceiveTextExtractedEventWorksProperly() {
         // Given
         String fullText = "Full Text";
-
+        UUID userToken = UUID.randomUUID();
         UUID fileToken = UUID.randomUUID();
 
         TextExtracted event = TextExtracted.builder()
+                .userToken(new UserToken(userToken))
                 .fileToken(new FileToken(fileToken))
                 .fullText(fullText)
                 .build();
@@ -46,7 +48,8 @@ public class RabbitMQOcrWorkerListenerTest {
         // Then
         verify(fileMetaDataApplicationService).addFullText(eq(AddFullTextCommand.builder()
                 .fileToken(fileToken)
-                .FullText(fullText)
+                .fullText(fullText)
+                .userToken(userToken)
                 .build())
         );
     }

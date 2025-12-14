@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 
@@ -34,5 +35,14 @@ public class UserApplicationService {
         userRepository.save(user);
         log.info("User {} registered successfully!", user);
         return new UserDto(user);
+    }
+
+    @Transactional(readOnly = false)
+    public void deleteUser(@Nullable UUID userToken) {
+        Objects.requireNonNull(userToken, "userToken must not be null!");
+        log.debug("Trying to delete user with userToken {}", userToken);
+
+        userRepository.deleteUserByUserToken(new UserToken(userToken));
+        log.info("Successfully deleted user with userToken {}", userToken);
     }
 }

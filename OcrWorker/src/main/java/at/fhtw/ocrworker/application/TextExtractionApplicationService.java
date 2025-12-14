@@ -3,6 +3,7 @@ package at.fhtw.ocrworker.application;
 import at.fhtw.ocrworker.application.commands.ExtractTextCommand;
 import at.fhtw.ocrworker.domain.model.FileToken;
 import at.fhtw.ocrworker.domain.model.TextExtracted;
+import at.fhtw.ocrworker.domain.model.UserToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
@@ -28,6 +29,7 @@ public class TextExtractionApplicationService {
 
         TextExtracted textExtracted = TextExtracted.builder()
                 .fullText(fullText)
+                .userToken(new UserToken(command.userToken()))
                 .fileToken(new FileToken(command.fileToken()))
                 .build();
 

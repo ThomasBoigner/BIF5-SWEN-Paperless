@@ -4,6 +4,7 @@ import at.fhtw.ocrworker.application.TextExtractionApplicationService;
 import at.fhtw.ocrworker.application.commands.ExtractTextCommand;
 import at.fhtw.ocrworker.infrastructure.messaging.rabbitmq.events.FileToken;
 import at.fhtw.ocrworker.infrastructure.messaging.rabbitmq.events.FileUploaded;
+import at.fhtw.ocrworker.infrastructure.messaging.rabbitmq.events.UserToken;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,9 +34,11 @@ public class RabbitMQFilePaperlessRestListenerTest {
     void ensureReceiveFileUploadedEvent() throws JsonProcessingException {
         // Given
         UUID fileToken = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
 
         FileUploaded event = FileUploaded.builder()
                 .fileToken(new FileToken(fileToken))
+                .userToken(new UserToken(userId))
                 .build();
 
         // When

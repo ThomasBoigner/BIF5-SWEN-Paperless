@@ -1,7 +1,6 @@
 package at.fhtw.paperlessrest.presentation;
 
 import at.fhtw.paperlessrest.application.FileMetaDataApplicationService;
-import at.fhtw.paperlessrest.application.FileService;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
@@ -13,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +27,7 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -41,15 +42,13 @@ public class FileRestControllerTest {
 
     @Mock
     private FileMetaDataApplicationService fileMetaDataApplicationService;
-    @Mock
-    private FileService fileService;
     private FileMetaDataDto fileMetaDataDto;
     private JsonMapper jsonMapper;
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new FileRestController(fileMetaDataApplicationService, fileService))
+                .standaloneSetup(new FileRestController(fileMetaDataApplicationService))
                 .setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
                 .build();
 
@@ -115,6 +114,9 @@ public class FileRestControllerTest {
 
     @Test
     void ensureGetFileContentWorksProperly() throws Exception {
+        // When
+        when(fileMetaDataApplicationService.downloadFile(any(UUID.class), eq(fileMetaDataDto.fileToken()))).thenReturn(Optional.of(mock(InputStreamResource.class)));
+
         // Perform
         mockMvc.perform(get("/api/files/%s/download".formatted(fileMetaDataDto.fileToken())).accept(MediaType.APPLICATION_PDF_VALUE))
                 .andDo(print())
@@ -161,7 +163,7 @@ public class FileRestControllerTest {
                 .description("test")
                 .build();
 
-        when(fileMetaDataApplicationService.updateFileMetaData(eq(fileMetaDataDto.fileToken()), eq(command))).thenReturn(fileMetaDataDto);
+        when(fileMetaDataApplicationService.updateFileMetaData(any(UUID.class), eq(fileMetaDataDto.fileToken()), eq(command))).thenReturn(fileMetaDataDto);
 
         // Perform
         mockMvc.perform(put("/api/files/%s".formatted(fileMetaDataDto.fileToken()))

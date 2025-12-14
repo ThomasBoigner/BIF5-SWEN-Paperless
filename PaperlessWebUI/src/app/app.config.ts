@@ -28,7 +28,7 @@ export const appConfig: ApplicationConfig = {
             provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
             useValue: [
                 {
-                    urlPattern: /^(http:\/\/localhost:8081)(\/.*)?$/i,
+                    urlPattern: environment.keycloak.urlPattern,
                     bearerPrefix: 'Bearer',
                 },
             ],

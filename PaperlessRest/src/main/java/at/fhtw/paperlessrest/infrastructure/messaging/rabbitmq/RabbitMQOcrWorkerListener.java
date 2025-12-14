@@ -26,7 +26,8 @@ public class RabbitMQOcrWorkerListener {
         }
         log.trace("Received text extracted event: {}", event);
         fileMetaDataApplicationService.addFullText(AddFullTextCommand.builder()
-                .FullText(event.fullText())
+                .fullText(event.fullText())
+                .userToken(event.userToken().token())
                 .fileToken(event.fileToken().token())
                 .build());
     }

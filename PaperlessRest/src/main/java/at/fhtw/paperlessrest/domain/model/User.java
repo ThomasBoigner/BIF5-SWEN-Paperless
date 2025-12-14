@@ -43,6 +43,10 @@ public class User {
         return this.getFiles().stream().filter(f -> f.getFileToken().equals(fileToken)).findFirst();
     }
 
+    public boolean hasFile(FileToken fileToken) {
+        return this.getFiles().stream().anyMatch(f -> f.getFileToken().equals(fileToken));
+    }
+
     public FileMetaData uploadFile(@Nullable String fileName, long fileSize, @Nullable String description) {
         FileMetaData fileMetaData = FileMetaData.builder()
                 .fileName(fileName)
@@ -53,10 +57,38 @@ public class User {
         this.files.add(fileMetaData);
 
         this.fileUploadedEvents.add(FileUploaded.builder()
+                .userToken(this.userToken)
                 .fileToken(fileMetaData.getFileToken())
                 .build());
 
         return fileMetaData;
+    }
+
+    public void addFullTextToFile(FileToken fileToken, String fullText) {
+        Optional<FileMetaData> file = getFile(fileToken);
+
+        if (file.isEmpty()) {
+            return;
+        }
+
+        file.get().addFullText(fullText, this.userToken);
+    }
+
+    public FileMetaData updateFile(FileToken fileToken, @Nullable String description) {
+        Optional<FileMetaData> fileOptional = getFile(fileToken);
+
+        if (fileOptional.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "File with token %s can not be found!".formatted(fileToken));
+        }
+
+        FileMetaData fileMetaData = fileOptional.get();
+        fileMetaData.setDescription(description);
+        return fileMetaData;
+    }
+
+    public void removeFile(FileToken fileToken) {
+        this.files.removeIf(f -> f.getFileToken().equals(fileToken));
     }
 
     private void setUserToken(@Nullable UserToken userToken) {

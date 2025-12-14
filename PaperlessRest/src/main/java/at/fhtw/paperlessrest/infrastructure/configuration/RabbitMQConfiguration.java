@@ -43,8 +43,18 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
+    public Queue userDeletedQueue() {
+        return QueueBuilder.durable("KK.EVENT.CLIENT.paperless.SUCCESS.*.DELETE_ACCOUNT").build();
+    }
+
+    @Bean
     public Binding userRegisteredBinding() {
         return BindingBuilder.bind(userRegisteredQueue()).to(keycloakTopic()).with("KK.EVENT.CLIENT.paperless.SUCCESS.*.REGISTER");
+    }
+
+    @Bean
+    public Binding userDeletedBinding() {
+        return BindingBuilder.bind(userDeletedQueue()).to(keycloakTopic()).with("KK.EVENT.CLIENT.paperless.SUCCESS.*.DELETE_ACCOUNT");
     }
 
     @Bean

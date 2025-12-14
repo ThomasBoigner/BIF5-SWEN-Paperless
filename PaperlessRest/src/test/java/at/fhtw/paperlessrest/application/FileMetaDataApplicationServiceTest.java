@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -32,15 +33,13 @@ public class FileMetaDataApplicationServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private FileMetaDataRepository fileMetaDataRepository;
-    @Mock
     private FileService fileService;
     @Mock
-    private FileMetaDataEventPublisher fileMetaDataEventPublisher;
+    private UserEventPublisher userEventPublisher;
 
     @BeforeEach
     void setUp() {
-        fileMetaDataApplicationService = new FileMetaDataApplicationService(fileMetaDataRepository, userRepository, fileMetaDataEventPublisher, fileService);
+        fileMetaDataApplicationService = new FileMetaDataApplicationService(userRepository, userEventPublisher, fileService);
     }
 
     @Test
@@ -81,6 +80,29 @@ public class FileMetaDataApplicationServiceTest {
         // Then
         assertThat(result).isPresent();
         assertThat(result).isEqualTo(Optional.of(new FileMetaDataDto(fileMetaData)));
+    }
+
+    @Test
+    void ensureDownloadFileWorksProperly() {
+        // Given
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        InputStreamResource inputStreamResource = mock(InputStreamResource.class);
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
+        when(fileService.downloadFile(eq(fileMetaData.getFileToken().token()))).thenReturn(inputStreamResource);
+
+        // When
+        Optional<InputStreamResource> result = fileMetaDataApplicationService.downloadFile(user.getUserToken().token(), fileMetaData.getFileToken().token());
+
+        // Then
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(inputStreamResource);
     }
 
     @Test
@@ -155,19 +177,20 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         String fullText = "Full Text";
 
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
 
         AddFullTextCommand command = AddFullTextCommand.builder()
-                .FullText(fullText)
+                .fullText(fullText)
+                .userToken(user.getUserToken().token())
                 .fileToken(fileMetaData.getFileToken().token())
                 .build();
-
-        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
-                .thenReturn(Optional.of(fileMetaData));
 
         // When
         fileMetaDataApplicationService.addFullText(command);
@@ -181,19 +204,20 @@ public class FileMetaDataApplicationServiceTest {
         // Given
         String fullText = "Full Text";
 
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.empty());
 
         AddFullTextCommand command = AddFullTextCommand.builder()
-                .FullText(fullText)
+                .fullText(fullText)
+                .userToken(user.getUserToken().token())
                 .fileToken(fileMetaData.getFileToken().token())
                 .build();
-
-        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
-                .thenReturn(Optional.empty());
 
         // When
         fileMetaDataApplicationService.addFullText(command);
@@ -205,23 +229,23 @@ public class FileMetaDataApplicationServiceTest {
     @Test
     void ensureUpdateFileWorksProperly() {
         // Given
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
 
         UpdateFileCommand command = UpdateFileCommand.builder()
                 .description("updated")
                 .build();
 
-        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
-                .thenReturn(Optional.of(fileMetaData));
-        when(fileMetaDataRepository.save(any(FileMetaData.class)))
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
         // When
-        FileMetaDataDto result = fileMetaDataApplicationService.updateFileMetaData(fileMetaData.getFileToken().token(), command);
+        FileMetaDataDto result = fileMetaDataApplicationService.updateFileMetaData(user.getUserToken().token(), fileMetaData.getFileToken().token(), command);
 
         // then
         assertThat(result).isNotNull();
@@ -229,39 +253,39 @@ public class FileMetaDataApplicationServiceTest {
     }
 
     @Test
-    void ensureUpdateFileThrowsExceptionWhenFileCanNotBeFound() {
+    void ensureUpdateFileThrowsExceptionWhenUserCanNotBeFound() {
         // Given
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
 
         UpdateFileCommand command = UpdateFileCommand.builder()
                 .description("updated")
                 .build();
 
-        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
-                .thenReturn(Optional.empty());
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.empty());
 
         // When
         assertThrows(IllegalArgumentException.class,
-                () -> fileMetaDataApplicationService.updateFileMetaData(fileMetaData.getFileToken().token(), command));
+                () -> fileMetaDataApplicationService.updateFileMetaData(user.getUserToken().token(), fileMetaData.getFileToken().token(), command));
     }
 
     @Test
     void ensureDeleteFileWorksProperly() {
         // Given
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
 
-        // When
-        fileMetaDataApplicationService.deleteFileMetaData(fileMetaData.getFileToken().token());
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
 
-        // Then
-        verify(fileMetaDataRepository).deleteByFileToken(eq(fileMetaData.getFileToken()));
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
+
+        // When
+        fileMetaDataApplicationService.deleteFileMetaData(user.getUserToken().token(), fileMetaData.getFileToken().token());
     }
 }

@@ -25,4 +25,9 @@ public class JpaUserRepository implements UserRepository {
     public Optional<User> findUserByUserToken(UserToken token) {
         return userEntityRepository.findUserEntityByUserToken(token.token()).map(UserEntity::toUser);
     }
+
+    @Override
+    public void deleteUserByUserToken(UserToken token) {
+        userEntityRepository.deleteUserEntityByUserToken(token.token());
+    }
 }
