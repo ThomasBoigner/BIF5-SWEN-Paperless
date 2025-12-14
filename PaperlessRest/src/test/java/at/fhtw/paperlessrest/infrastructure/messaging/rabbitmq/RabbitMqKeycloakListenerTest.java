@@ -2,6 +2,7 @@ package at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq;
 
 import at.fhtw.paperlessrest.application.UserApplicationService;
 import at.fhtw.paperlessrest.application.commands.RegisterUserCommand;
+import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.UserDeleted;
 import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.UserRegistered;
 import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.UserRegisteredDetails;
 import org.jspecify.annotations.NullUnmarked;
@@ -50,5 +51,21 @@ public class RabbitMqKeycloakListenerTest {
                 .username(username)
                 .build())
         );
+    }
+
+    @Test
+    void ensureReceiveUserDeletedEventWorksProperly() {
+        // Given
+        UUID userId =  UUID.randomUUID();
+
+        UserDeleted event = UserDeleted.builder()
+                .userId(userId)
+                .build();
+
+        // When
+        listener.receiveUserDeletedEvent(event);
+
+        // Then
+        verify(userApplicationService).deleteUser(eq(userId));
     }
 }

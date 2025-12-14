@@ -43,8 +43,6 @@ public class FileRestControllerTest {
 
     @Mock
     private FileMetaDataApplicationService fileMetaDataApplicationService;
-    @Mock
-    private FileService fileService;
     private FileMetaDataDto fileMetaDataDto;
     private JsonMapper jsonMapper;
 

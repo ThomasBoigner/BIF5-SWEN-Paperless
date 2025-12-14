@@ -2,6 +2,7 @@ package at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq;
 
 import at.fhtw.paperlessrest.application.UserApplicationService;
 import at.fhtw.paperlessrest.application.commands.RegisterUserCommand;
+import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.UserDeleted;
 import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.UserRegistered;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,5 +30,15 @@ public class RabbitMQKeycloakListener {
                         .token(event.userId())
                         .username(event.details().username())
                 .build());
+    }
+
+    @RabbitListener(queues = "KK.EVENT.CLIENT.paperless.SUCCESS.*.DELETE_ACCOUNT")
+    public void receiveUserDeletedEvent(@Nullable UserDeleted event) {
+        if (Objects.isNull(event)) {
+            log.warn("Received event was null!");
+            return;
+        }
+        log.trace("Received user deleted event: {}", event);
+        userApplicationService.deleteUser(event.userId());
     }
 }

@@ -39,7 +39,7 @@ public class RabbitMQFileMetaDataEventPublisherTest {
                 .userToken(new UserToken(UUID.randomUUID()))
                 .build();
 
-        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+        user.uploadFile("test.txt", 100, "test");
 
         // When
         publisher.publishEvents(user);

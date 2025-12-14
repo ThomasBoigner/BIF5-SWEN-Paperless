@@ -2,8 +2,6 @@ package at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq;
 
 import at.fhtw.paperlessrest.application.FileMetaDataApplicationService;
 import at.fhtw.paperlessrest.application.commands.AddFullTextCommand;
-import at.fhtw.paperlessrest.domain.model.FileMetaData;
-import at.fhtw.paperlessrest.domain.model.User;
 import at.fhtw.paperlessrest.domain.model.UserToken;
 import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.FileToken;
 import at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq.events.TextExtracted;

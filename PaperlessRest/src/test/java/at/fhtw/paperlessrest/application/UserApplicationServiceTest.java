@@ -45,4 +45,13 @@ public class UserApplicationServiceTest {
         assertThat(userDto.username()).isEqualTo(username);
         assertThat(userDto.token()).isEqualTo(userToken);
     }
+
+    @Test
+    void ensureDeleteUserWorksProperly() {
+        // Given
+        UUID userToken = UUID.randomUUID();
+
+        // When
+        userApplicationService.deleteUser(userToken);
+    }
 }

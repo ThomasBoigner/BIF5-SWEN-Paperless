@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findUserEntityByUserToken(UUID userToken);
+    void deleteUserEntityByUserToken(UUID userToken);
 }

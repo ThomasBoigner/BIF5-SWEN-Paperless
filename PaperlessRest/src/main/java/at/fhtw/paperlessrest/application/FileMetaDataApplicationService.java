@@ -142,6 +142,7 @@ public class FileMetaDataApplicationService {
         Objects.requireNonNull(userToken, "userToken must not be null!");
         Objects.requireNonNull(fileToken, "fileToken must not be null!");
         Objects.requireNonNull(command, "command must not be null!");
+        log.debug("Trying to update file metadata with fileToken {} of user with userToken {}", fileToken, userToken);
 
         Optional<User> entity = userRepository.findUserByUserToken(new UserToken(userToken));
 
@@ -165,6 +166,7 @@ public class FileMetaDataApplicationService {
     public void deleteFileMetaData(@Nullable UUID userToken, @Nullable UUID fileToken) {
         Objects.requireNonNull(fileToken, "fileToken must not be null!");
         Objects.requireNonNull(userToken, "userToken must not be null!");
+        log.debug("Trying to delete file meta data with fileToken {}", fileToken);
 
         Optional<User> entity = userRepository.findUserByUserToken(new UserToken(userToken));
 
