@@ -24,7 +24,6 @@ import java.util.UUID;
 @Slf4j
 @Transactional(readOnly = true)
 public class FileMetaDataApplicationService {
-    private final FileMetaDataRepository fileMetaDataRepository;
     private final UserRepository userRepository;
     private final UserEventPublisher userEventPublisher;
     private final FileService fileService;

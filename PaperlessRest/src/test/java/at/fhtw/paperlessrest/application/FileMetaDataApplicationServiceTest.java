@@ -33,15 +33,13 @@ public class FileMetaDataApplicationServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private FileMetaDataRepository fileMetaDataRepository;
-    @Mock
     private FileService fileService;
     @Mock
     private UserEventPublisher userEventPublisher;
 
     @BeforeEach
     void setUp() {
-        fileMetaDataApplicationService = new FileMetaDataApplicationService(fileMetaDataRepository, userRepository, userEventPublisher, fileService);
+        fileMetaDataApplicationService = new FileMetaDataApplicationService(userRepository, userEventPublisher, fileService);
     }
 
     @Test
