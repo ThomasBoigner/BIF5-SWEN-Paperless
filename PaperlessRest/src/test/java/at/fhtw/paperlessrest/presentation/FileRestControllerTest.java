@@ -1,7 +1,6 @@
 package at.fhtw.paperlessrest.presentation;
 
 import at.fhtw.paperlessrest.application.FileMetaDataApplicationService;
-import at.fhtw.paperlessrest.application.FileService;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
