@@ -21,33 +21,34 @@ import static org.mockito.Mockito.verify;
 @NullUnmarked
 @ExtendWith(MockitoExtension.class)
 public class RabbitMQFileMetaDataEventPublisherTest {
-    private RabbitMQFileMetaDataEventPublisher publisher;
+    private RabbitMQUserEventPublisher publisher;
     @Mock
     private RabbitTemplate rabbitTemplate;
 
     @BeforeEach
     void setUp() {
         TopicExchange topicExchange = new TopicExchange("at.fhtw.paperlessrest", true, false);
-        publisher = new RabbitMQFileMetaDataEventPublisher(rabbitTemplate, topicExchange);
+        publisher = new RabbitMQUserEventPublisher(rabbitTemplate, topicExchange);
     }
 
     @Test
     void ensurePublishFileUploadedEventsWorksProperly() throws JsonProcessingException {
         // Given
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
 
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
         // When
-        publisher.publishEvents(fileMetaData);
+        publisher.publishEvents(user);
 
         // Then
         verify(rabbitTemplate).convertAndSend(
                 eq("at.fhtw.paperlessrest"),
                 eq("at.fhtw.paperlessrest.domain.model.fileuploaded"),
-                eq(fileMetaData.getFileUploadedEvents().getFirst())
+                eq(user.getFileUploadedEvents().getFirst())
         );
     }
 
@@ -64,7 +65,7 @@ public class RabbitMQFileMetaDataEventPublisherTest {
         user.addFullTextToFile(fileMetaData.getFileToken(), "full text");
 
         // When
-        publisher.publishEvents(fileMetaData);
+        publisher.publishEvents(user);
 
         // Then
         verify(rabbitTemplate).convertAndSend(

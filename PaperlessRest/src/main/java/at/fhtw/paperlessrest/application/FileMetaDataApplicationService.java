@@ -26,7 +26,7 @@ import java.util.UUID;
 public class FileMetaDataApplicationService {
     private final FileMetaDataRepository fileMetaDataRepository;
     private final UserRepository userRepository;
-    private final FileMetaDataEventPublisher fileMetaDataEventPublisher;
+    private final UserEventPublisher userEventPublisher;
     private final FileService fileService;
 
     public List<FileMetaDataDto> getAllFileMetaData(@Nullable UUID userToken) {
@@ -114,7 +114,7 @@ public class FileMetaDataApplicationService {
 
         fileService.uploadFile(fileMetaData.getFileToken().token(), file);
         userRepository.save(user);
-        fileMetaDataEventPublisher.publishEvents(fileMetaData);
+        userEventPublisher.publishEvents(user);
         log.info("Uploaded file {}", fileMetaData);
         return new FileMetaDataDto(fileMetaData);
     }
@@ -157,7 +157,7 @@ public class FileMetaDataApplicationService {
 
         log.info("Successfully updated file meta data {}", fileMetaData);
         fileMetaDataRepository.save(fileMetaData);
-        fileMetaDataEventPublisher.publishEvents(fileMetaData);
+        // fileMetaDataEventPublisher.publishEvents(fileMetaData);
         return new FileMetaDataDto(fileMetaData);
     }
 

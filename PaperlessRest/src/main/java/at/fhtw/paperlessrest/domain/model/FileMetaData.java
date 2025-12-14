@@ -32,7 +32,6 @@ public class FileMetaData {
     @Nullable
     private String summary;
 
-    private final List<FileUploaded> fileUploadedEvents;
     private final List<FullTextAdded> fullTextAddedEvents;
 
     @Builder
@@ -42,12 +41,8 @@ public class FileMetaData {
         this.setFileName(fileName);
         this.setFileSize(fileSize);
         this.setDescription(description);
-        this.fileUploadedEvents = new ArrayList<>();
         this.fullTextAddedEvents = new ArrayList<>();
         log.debug("FileMetaData {} created", this);
-        this.fileUploadedEvents.add(FileUploaded.builder()
-                        .fileToken(fileToken)
-                .build());
     }
 
     public FileMetaData(@Nullable Long id,
@@ -67,7 +62,6 @@ public class FileMetaData {
         this.setDescription(description);
         this.setFullText(fullText);
         this.setSummary(summary);
-        this.fileUploadedEvents = new ArrayList<>();
         this.fullTextAddedEvents = new ArrayList<>();
     }
 

@@ -27,6 +27,7 @@ public class RabbitMQFilePaperlessRestListener {
         log.trace("Received file uploaded event: {}", event);
         textExtractionApplicationService.extractText(ExtractTextCommand.builder()
                         .fileToken(event.fileToken().token())
+                        .userToken(event.userToken().token())
                 .build());
     }
 }
