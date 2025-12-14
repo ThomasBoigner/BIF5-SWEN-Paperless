@@ -74,6 +74,19 @@ public class User {
         file.get().addFullText(fullText, this.userToken);
     }
 
+    public FileMetaData updateFile(FileToken fileToken, @Nullable String description) {
+        Optional<FileMetaData> fileOptional = getFile(fileToken);
+
+        if (fileOptional.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "File with token %s can not be found!".formatted(fileToken));
+        }
+
+        FileMetaData fileMetaData = fileOptional.get();
+        fileMetaData.setDescription(description);
+        return fileMetaData;
+    }
+
     public void removeFile(FileToken fileToken) {
         this.files.removeIf(f -> f.getFileToken().equals(fileToken));
     }

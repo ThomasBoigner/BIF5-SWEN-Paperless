@@ -166,7 +166,7 @@ public class FileRestControllerTest {
                 .description("test")
                 .build();
 
-        when(fileMetaDataApplicationService.updateFileMetaData(eq(fileMetaDataDto.fileToken()), eq(command))).thenReturn(fileMetaDataDto);
+        when(fileMetaDataApplicationService.updateFileMetaData(any(UUID.class), eq(fileMetaDataDto.fileToken()), eq(command))).thenReturn(fileMetaDataDto);
 
         // Perform
         mockMvc.perform(put("/api/files/%s".formatted(fileMetaDataDto.fileToken()))

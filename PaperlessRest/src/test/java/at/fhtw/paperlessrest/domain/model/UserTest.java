@@ -88,6 +88,27 @@ public class UserTest {
     }
 
     @Test
+    void ensureUpdateFileWorksProperly() {
+        // Given
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        String newDescription = "new description";
+
+        // When
+        FileMetaData result = user.updateFile(fileMetaData.getFileToken(), newDescription);
+
+        // Then
+        assertThat(result.getDescription()).isEqualTo(newDescription);
+        assertThat(fileMetaData.getDescription()).isEqualTo(newDescription);
+        assertThat(fileMetaData).isEqualTo(result);
+    }
+
+    @Test
     void ensureRemoveFileWorksProperly() {
         // Given
         User user = User.builder()

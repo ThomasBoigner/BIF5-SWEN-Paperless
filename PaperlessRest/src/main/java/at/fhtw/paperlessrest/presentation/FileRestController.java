@@ -75,9 +75,11 @@ public class FileRestController {
     }
 
     @PutMapping(PATH_VAR_ID)
-    public HttpEntity<FileMetaDataDto> updateFileMetaData(@PathVariable UUID token, @RequestBody UpdateFileCommand command) {
+    public HttpEntity<FileMetaDataDto> updateFileMetaData(@AuthenticationPrincipal Jwt jwt,
+                                                          @PathVariable UUID token,
+                                                          @RequestBody UpdateFileCommand command) {
         log.debug("Got Http PUT request for token {} with file update command {}", token, command);
-        return ResponseEntity.ok(fileMetaDataApplicationService.updateFileMetaData(token, command));
+        return ResponseEntity.ok(fileMetaDataApplicationService.updateFileMetaData(UUID.fromString(jwt.getClaim("sub")), token, command));
     }
 
     @DeleteMapping(PATH_VAR_ID)

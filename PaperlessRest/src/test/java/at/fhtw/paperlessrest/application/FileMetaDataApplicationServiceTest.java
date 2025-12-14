@@ -231,23 +231,23 @@ public class FileMetaDataApplicationServiceTest {
     @Test
     void ensureUpdateFileWorksProperly() {
         // Given
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
 
         UpdateFileCommand command = UpdateFileCommand.builder()
                 .description("updated")
                 .build();
 
-        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
-                .thenReturn(Optional.of(fileMetaData));
-        when(fileMetaDataRepository.save(any(FileMetaData.class)))
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
         // When
-        FileMetaDataDto result = fileMetaDataApplicationService.updateFileMetaData(fileMetaData.getFileToken().token(), command);
+        FileMetaDataDto result = fileMetaDataApplicationService.updateFileMetaData(user.getUserToken().token(), fileMetaData.getFileToken().token(), command);
 
         // then
         assertThat(result).isNotNull();
@@ -255,24 +255,24 @@ public class FileMetaDataApplicationServiceTest {
     }
 
     @Test
-    void ensureUpdateFileThrowsExceptionWhenFileCanNotBeFound() {
+    void ensureUpdateFileThrowsExceptionWhenUserCanNotBeFound() {
         // Given
-        FileMetaData fileMetaData = FileMetaData.builder()
-                .fileName("test.txt")
-                .fileSize(100)
-                .description("test")
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
                 .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
 
         UpdateFileCommand command = UpdateFileCommand.builder()
                 .description("updated")
                 .build();
 
-        when(fileMetaDataRepository.findFileMetaDataByFileToken(eq(fileMetaData.getFileToken())))
-                .thenReturn(Optional.empty());
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.empty());
 
         // When
         assertThrows(IllegalArgumentException.class,
-                () -> fileMetaDataApplicationService.updateFileMetaData(fileMetaData.getFileToken().token(), command));
+                () -> fileMetaDataApplicationService.updateFileMetaData(user.getUserToken().token(), fileMetaData.getFileToken().token(), command));
     }
 
     @Test
