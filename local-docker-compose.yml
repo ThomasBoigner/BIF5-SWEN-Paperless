@@ -91,12 +91,42 @@ services:
     networks:
       - paperless
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.2.2
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - paperless
+
+  kibana:
+    image: kibana:9.2.2
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+    ports:
+      - "9092:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - paperless
+
 volumes:
   paperless-database: {}
   paperless-pgadmin: {}
   paperless-minio: {}
   paperless-rabbitmq: {}
   paperless-keycloak-database: {}
+  elasticsearch-data: {}
 
 networks:
   paperless:
