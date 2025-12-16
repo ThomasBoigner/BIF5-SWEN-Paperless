@@ -46,6 +46,26 @@ public class FileMetaDataApplicationService {
         return fileMetaDataList;
     }
 
+    public List<FileMetaDataDto> queryFileMetaDta(@Nullable UUID userToken, String query) {
+        Objects.requireNonNull(userToken, "userToken must not be null!");
+        log.debug("Trying to get all file of user with token {} with query {}", userToken, query);
+
+        List<UUID> fileTokens = searchService.queryFileMetaData(userToken, query);
+
+        Optional<User> entity = userRepository.findUserByUserToken(new UserToken(userToken));
+
+        if (entity.isEmpty()) {
+            return List.of();
+        }
+
+        User user = entity.get();
+
+        List<FileMetaDataDto> fileMetaDataList = user.getFilesWithFileTokens(fileTokens.stream().map(FileToken::new).toList())
+                .stream().map(FileMetaDataDto::new).toList();
+        log.debug("Retrieved all ({}) file meta data that matches query {}", fileMetaDataList.size(), query);
+        return fileMetaDataList;
+    }
+
     public Optional<FileMetaDataDto> getFileMetaData(@Nullable UUID userToken, @Nullable UUID fileToken) {
         Objects.requireNonNull(fileToken, "fileToken must not be null!");
         Objects.requireNonNull(userToken, "userToken must not be null!");

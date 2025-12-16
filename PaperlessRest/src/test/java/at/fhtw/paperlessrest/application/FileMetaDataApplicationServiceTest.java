@@ -36,10 +36,12 @@ public class FileMetaDataApplicationServiceTest {
     private FileService fileService;
     @Mock
     private UserEventPublisher userEventPublisher;
+    @Mock
+    private SearchService searchService;
 
     @BeforeEach
     void setUp() {
-        fileMetaDataApplicationService = new FileMetaDataApplicationService(userRepository, userEventPublisher, fileService);
+        fileMetaDataApplicationService = new FileMetaDataApplicationService(userRepository, userEventPublisher, fileService, searchService);
     }
 
     @Test
@@ -60,6 +62,31 @@ public class FileMetaDataApplicationServiceTest {
         // Then
         assertThat(result).hasSize(1);
         assertThat(result).contains(new FileMetaDataDto(fileMetaData));
+    }
+
+    @Test
+    void ensureQueryFileMetaDataWorksProperly() {
+        // Given
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData1 = user.uploadFile("test1.txt", 100, "test1");
+        FileMetaData fileMetaData2 = user.uploadFile("test2.txt", 200, "test2");
+
+        String query = "query";
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
+        when(searchService.queryFileMetaData(eq(user.getUserToken().token()), eq(query))).thenReturn(List.of(fileMetaData1.getFileToken().token()));
+
+        // When
+        List<FileMetaDataDto> results = fileMetaDataApplicationService.queryFileMetaDta(user.getUserToken().token(), query);
+
+        // Then
+        assertThat(results).hasSize(1);
+        assertThat(results).contains(new FileMetaDataDto(fileMetaData1));
+        assertThat(results).doesNotContain(new FileMetaDataDto(fileMetaData2));
     }
 
     @Test

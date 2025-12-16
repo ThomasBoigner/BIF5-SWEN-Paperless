@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -27,5 +28,10 @@ public class ElasticsearchSearchService implements SearchService {
             log.error("Could not delete full text with token {}, message: {}", fileToken, e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<UUID> queryFileMetaData(UUID userToken, String query) {
+        return List.of();
     }
 }

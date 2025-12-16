@@ -39,6 +39,10 @@ public class User {
         return Collections.unmodifiableList(this.files);
     }
 
+    public List<FileMetaData> getFilesWithFileTokens(List<FileToken> fileTokens) {
+        return this.getFiles().stream().filter(fileMetaData -> fileTokens.contains(fileMetaData.getFileToken())).toList();
+    }
+
     public Optional<FileMetaData> getFile(FileToken fileToken) {
         return this.getFiles().stream().filter(f -> f.getFileToken().equals(fileToken)).findFirst();
     }
@@ -113,9 +117,8 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(userToken, user.userToken);
+        if (!(o instanceof User that)) return false;
+        return Objects.equals(userToken, that.userToken);
     }
 
     @Override

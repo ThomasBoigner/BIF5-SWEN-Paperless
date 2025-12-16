@@ -22,6 +22,7 @@ public class ArchitectureTest {
     private static final String PKG_ADAPTER_CONFIGURATION = "..infrastructure.configuration..";
     private static final String PKG_ADAPTER_FILESTORAGE = "..infrastructure.filestorage..";
     private static final String PKG_ADAPTER_MESSAGING = "..infrastructure.messaging..";
+    private static final String PKG_ADAPTER_SEARCH = "..infrastructure.search..";
     private static final String PKG_ADAPTER_REST = "..presentation..";
 
     @ArchTest
@@ -33,6 +34,7 @@ public class ArchitectureTest {
             .adapter("configuration", PKG_ADAPTER_CONFIGURATION)
             .adapter("filestorage", PKG_ADAPTER_FILESTORAGE)
             .adapter("messaging", PKG_ADAPTER_MESSAGING)
+            .adapter("search", PKG_ADAPTER_SEARCH)
             .adapter("rest", PKG_ADAPTER_REST)
             .allowEmptyShould(true);
 
