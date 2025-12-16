@@ -178,7 +178,7 @@ public class FileMetaDataApplicationService {
         User user = entity.get();
 
         fileService.deleteFile(fileToken);
-        searchService.deleteFullText(fileToken);
+        searchService.deleteFullText(userToken, fileToken);
         user.removeFile(new FileToken(fileToken));
         userRepository.save(user);
         log.info("Successfully deleted file with token {}", fileToken);

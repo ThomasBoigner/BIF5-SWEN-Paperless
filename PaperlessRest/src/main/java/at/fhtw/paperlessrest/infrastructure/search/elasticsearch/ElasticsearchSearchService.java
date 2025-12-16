@@ -17,10 +17,10 @@ public class ElasticsearchSearchService implements SearchService {
     private final ElasticsearchClient elasticsearchClient;
 
     @Override
-    public void deleteFullText(UUID fileToken) {
+    public void deleteFullText(UUID userToken, UUID fileToken) {
         try {
             elasticsearchClient.delete(i -> i
-                    .index("paperless-documents")
+                    .index("paperless-documents-%s".formatted(userToken))
                     .id(fileToken.toString())
             );
         } catch (IOException e) {

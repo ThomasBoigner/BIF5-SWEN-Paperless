@@ -34,7 +34,7 @@ public class TextExtractionApplicationService {
                 .fileToken(new FileToken(command.fileToken()))
                 .build();
 
-        searchService.saveFullText(command.fileToken(), command.fileName(), fullText);
+        searchService.saveFullText(command.userToken(), command.fileToken(), command.fileName(), fullText);
         textExtractedEventPublisher.publishEvent(textExtracted);
     }
 }

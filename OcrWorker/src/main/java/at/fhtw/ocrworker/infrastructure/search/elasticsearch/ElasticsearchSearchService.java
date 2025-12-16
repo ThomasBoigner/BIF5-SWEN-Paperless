@@ -17,10 +17,10 @@ public class ElasticsearchSearchService implements SearchService {
     private final ElasticsearchClient elasticsearchClient;
 
     @Override
-    public void saveFullText(UUID fileToken, String fileName, String fulltext) {
+    public void saveFullText(UUID userToken, UUID fileToken, String fileName, String fulltext) {
         try {
             elasticsearchClient.index(i -> i
-                    .index("paperless-documents")
+                    .index("paperless-documents-%s".formatted(userToken))
                     .id(fileToken.toString())
                     .document(FullTextDocument.builder()
                             .fileToken(fileToken)
