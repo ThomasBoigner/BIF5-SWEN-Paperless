@@ -1,0 +1,31 @@
+package at.fhtw.paperlessrest.infrastructure.search.elasticsearch;
+
+import at.fhtw.paperlessrest.application.SearchService;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.UUID;
+
+@RequiredArgsConstructor
+
+@Slf4j
+@Service
+public class ElasticsearchSearchService implements SearchService {
+    private final ElasticsearchClient elasticsearchClient;
+
+    @Override
+    public void deleteFullText(UUID fileToken) {
+        try {
+            elasticsearchClient.delete(i -> i
+                    .index("paperless-documents")
+                    .id(fileToken.toString())
+            );
+        } catch (IOException e) {
+            log.error("Could not delete full text with token {}, message: {}", fileToken, e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+}

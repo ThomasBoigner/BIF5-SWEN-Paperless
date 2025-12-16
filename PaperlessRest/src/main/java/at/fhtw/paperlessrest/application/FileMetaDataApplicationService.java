@@ -27,6 +27,7 @@ public class FileMetaDataApplicationService {
     private final UserRepository userRepository;
     private final UserEventPublisher userEventPublisher;
     private final FileService fileService;
+    private final SearchService searchService;
 
     public List<FileMetaDataDto> getAllFileMetaData(@Nullable UUID userToken) {
         Objects.requireNonNull(userToken, "userToken must not be null!");
@@ -177,6 +178,7 @@ public class FileMetaDataApplicationService {
         User user = entity.get();
 
         fileService.deleteFile(fileToken);
+        searchService.deleteFullText(fileToken);
         user.removeFile(new FileToken(fileToken));
         userRepository.save(user);
         log.info("Successfully deleted file with token {}", fileToken);
