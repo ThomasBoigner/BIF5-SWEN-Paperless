@@ -59,6 +59,7 @@ public class User {
         this.fileUploadedEvents.add(FileUploaded.builder()
                 .userToken(this.userToken)
                 .fileToken(fileMetaData.getFileToken())
+                .fileName(fileMetaData.getFileName())
                 .build());
 
         return fileMetaData;

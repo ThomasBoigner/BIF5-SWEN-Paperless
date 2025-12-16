@@ -7,10 +7,11 @@ import java.time.LocalDateTime;
 public record FileUploaded(
         UserToken userToken,
         FileToken fileToken,
+        String fileName,
         LocalDateTime occurredOn
 ) {
     @Builder
-    public FileUploaded(UserToken userToken, FileToken fileToken) {
-        this(userToken, fileToken, LocalDateTime.now());
+    public FileUploaded(UserToken userToken, FileToken fileToken, String fileName) {
+        this(userToken, fileToken, fileName, LocalDateTime.now());
     }
 }
