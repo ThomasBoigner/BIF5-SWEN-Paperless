@@ -37,10 +37,17 @@ services:
     build:
       context: GenAiWorker
       dockerfile: src/main/docker/Dockerfile
+    environment:
+      - SPRING_AI_GOOGLE_PROJECT_ID=${GOOGLE_PROJECT_ID}
+      - SPRING_AI_GOOGLE_GENAI_API_KEY=${GEMINI_API_KEY}
+      - SPRING_AI_GOOGLE_GENAI_CHAT_OPTIONS_MODEL=gemini-1.5-flash
+      - SPRING_AI_GOOGLE_GENAI_CHAT_OPTIONS_MAX_OUTPUT_TOKENS=300
     volumes:
       - paperless-gen-ai-worker-log4j2:/target/log4j-logs
     networks:
       - paperless
+    env_file:
+      - .env
 
   paperless-database:
     image: 'postgres:17.5'
