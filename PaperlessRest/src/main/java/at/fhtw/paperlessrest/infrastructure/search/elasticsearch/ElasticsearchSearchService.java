@@ -2,12 +2,15 @@ package at.fhtw.paperlessrest.infrastructure.search.elasticsearch;
 
 import at.fhtw.paperlessrest.application.SearchService;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -32,6 +35,25 @@ public class ElasticsearchSearchService implements SearchService {
 
     @Override
     public List<UUID> queryFileMetaData(UUID userToken, String query) {
-        return List.of();
+        SearchResponse<FullTextDocument> searchResponse = null;
+        try {
+            searchResponse = elasticsearchClient.search(s -> s
+                    .index("paperless-documents-%s".formatted(userToken))
+                    .query(q -> q
+                            .match(t -> t
+                                    .query(query)
+                            )
+                    ),
+                    FullTextDocument.class
+            );
+        } catch (IOException e) {
+            log.error("Could not get full text with user token {} and query {}, message: {}", userToken, query, e.getMessage());
+            throw new RuntimeException(e);
+        }
+        return searchResponse.hits().hits().stream()
+                .map(Hit::source)
+                .filter(Objects::nonNull)
+                .map(FullTextDocument::fileToken)
+                .toList();
     }
 }
