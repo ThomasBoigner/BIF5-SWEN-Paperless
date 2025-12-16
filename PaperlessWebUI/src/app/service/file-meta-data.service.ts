@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { FileMetaData } from '../model/file-meta-data';
