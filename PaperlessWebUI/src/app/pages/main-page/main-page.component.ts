@@ -39,6 +39,8 @@ export class MainPageComponent {
     fileMetaData$: Observable<FileMetaData> | undefined;
     fileMetaDataList$: Observable<FileMetaData[]>;
 
+    searchInput = '';
+
     mainContentMode: 'pdf' | 'text' | 'summary' = 'pdf';
 
     leftSidebar = true;
@@ -59,6 +61,10 @@ export class MainPageComponent {
         });
         this.jwtToken = keycloak.token;
         this.fileMetaDataList$ = this.fileMetaDataService.getAllFileMetaData();
+    }
+
+    searchFileMetaData() {
+        this.fileMetaDataList$ = this.fileMetaDataService.getAllFileMetaData(this.searchInput);
     }
 
     setLeftSidebar(leftSidebar: boolean) {

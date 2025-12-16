@@ -35,25 +35,38 @@ public class ElasticsearchSearchService implements SearchService {
 
     @Override
     public List<UUID> queryFileMetaData(UUID userToken, String query) {
-        SearchResponse<FullTextDocument> searchResponse = null;
+        String wildCardQuery = "*".concat(query).concat("*");
+
         try {
-            searchResponse = elasticsearchClient.search(s -> s
+            SearchResponse<FullTextDocument> searchResponse = elasticsearchClient.search(s -> s
                     .index("paperless-documents-%s".formatted(userToken))
                     .query(q -> q
-                            .match(t -> t
-                                    .query(query)
+                            .bool(b -> b
+                                    .should(sh -> sh
+                                            .wildcard(t -> t
+                                                    .field("fileName.keyword")
+                                                    .value(wildCardQuery)
+                                            )
+                                    )
+                                    .should(sh -> sh
+                                            .match(t -> t
+                                                    .field("fullText")
+                                                    .query(query)
+                                            )
+                                    )
                             )
                     ),
                     FullTextDocument.class
             );
+
+            return searchResponse.hits().hits().stream()
+                    .map(Hit::source)
+                    .filter(Objects::nonNull)
+                    .map(FullTextDocument::fileToken)
+                    .toList();
         } catch (IOException e) {
             log.error("Could not get full text with user token {} and query {}, message: {}", userToken, query, e.getMessage());
             throw new RuntimeException(e);
         }
-        return searchResponse.hits().hits().stream()
-                .map(Hit::source)
-                .filter(Objects::nonNull)
-                .map(FullTextDocument::fileToken)
-                .toList();
     }
 }

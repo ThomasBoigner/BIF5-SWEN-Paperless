@@ -42,9 +42,9 @@ public class FileRestController {
     public HttpEntity<List<FileMetaDataDto>> getAllFileMetaData(@AuthenticationPrincipal Jwt jwt, @Nullable @RequestParam(required = false) String query) {
         log.debug("Got Http GET request to retrieve all file meta data");
         UUID userToken = UUID.fromString(jwt.getClaim("sub"));
-        List<FileMetaDataDto> fileMetaData = query != null
-                ? fileMetaDataApplicationService.queryFileMetaDta(userToken, query)
-                : fileMetaDataApplicationService.getAllFileMetaData(userToken);
+        List<FileMetaDataDto> fileMetaData = (query == null || query.isBlank())
+                ? fileMetaDataApplicationService.getAllFileMetaData(userToken)
+                : fileMetaDataApplicationService.queryFileMetaDta(userToken, query);
         return fileMetaData.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(fileMetaData);

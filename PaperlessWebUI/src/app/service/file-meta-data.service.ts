@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { FileMetaData } from '../model/file-meta-data';
@@ -18,9 +18,13 @@ export class FileMetaDataService {
         this.fileMetaDataUrl = `${environment.paperlessRestUrl}/api/files`;
     }
 
-    public getAllFileMetaData(): Observable<FileMetaData[]> {
+    public getAllFileMetaData(query?: string): Observable<FileMetaData[]> {
         this.logger.debug(`Trying to get all file meta data from endpoint ${this.fileMetaDataUrl}`);
-        return this.http.get<FileMetaData[]>(this.fileMetaDataUrl);
+        const httpParams = new HttpParams();
+
+        return this.http.get<FileMetaData[]>(this.fileMetaDataUrl, {
+            params: httpParams.set('query', query ?? ''),
+        });
     }
 
     public getFileMetaData(token: string): Observable<FileMetaData> {
