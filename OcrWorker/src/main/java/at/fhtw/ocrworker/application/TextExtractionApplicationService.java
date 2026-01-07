@@ -35,4 +35,5 @@ public class TextExtractionApplicationService {
 
         textExtractedEventPublisher.publishEvent(textExtracted);
     }
+
 }
