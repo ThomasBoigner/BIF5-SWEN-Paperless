@@ -31,7 +31,11 @@
                 }"
                 routerLink="/file/upload"
             ></file-button>
-            <search-bar placeholder="Search for file"></search-bar>
+            <search-bar
+                placeholder="Search for file"
+                [(value)]="searchInput"
+                (valueChange)="searchFileMetaData()"
+            ></search-bar>
             <div class="file-list">
                 @if (fileMetaDataList$ | async; as fileMetaDataList) {
                     @for (

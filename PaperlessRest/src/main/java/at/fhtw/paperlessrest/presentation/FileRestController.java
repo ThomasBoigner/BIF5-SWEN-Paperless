@@ -39,9 +39,12 @@ public class FileRestController {
     public static final String ROUTE_DOWNLOAD = PATH_VAR_ID + "/download";
 
     @GetMapping({"", PATH_INDEX})
-    public HttpEntity<List<FileMetaDataDto>> getAllFileMetaData(@AuthenticationPrincipal Jwt jwt) {
+    public HttpEntity<List<FileMetaDataDto>> getAllFileMetaData(@AuthenticationPrincipal Jwt jwt, @Nullable @RequestParam(required = false) String query) {
         log.debug("Got Http GET request to retrieve all file meta data");
-        List<FileMetaDataDto> fileMetaData = fileMetaDataApplicationService.getAllFileMetaData(UUID.fromString(jwt.getClaim("sub")));
+        UUID userToken = UUID.fromString(jwt.getClaim("sub"));
+        List<FileMetaDataDto> fileMetaData = (query == null || query.isBlank())
+                ? fileMetaDataApplicationService.getAllFileMetaData(userToken)
+                : fileMetaDataApplicationService.queryFileMetaDta(userToken, query);
         return fileMetaData.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(fileMetaData);

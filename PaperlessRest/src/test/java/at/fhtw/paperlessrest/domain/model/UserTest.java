@@ -3,6 +3,7 @@ package at.fhtw.paperlessrest.domain.model;
 import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -10,6 +11,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @NullUnmarked
 public class UserTest {
+    @Test
+    void ensureGetFilesWithFileTokensWorksProperly() {
+        // Given
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData1 = user.uploadFile("test1.txt", 100, "test1");
+        FileMetaData fileMetaData2 = user.uploadFile("test2.txt", 200, "test2");
+
+        // When
+        List<FileMetaData> results = user.getFilesWithFileTokens(List.of(fileMetaData1.getFileToken()));
+
+        // Then
+        assertThat(results).hasSize(1);
+        assertThat(results).contains(fileMetaData1);
+        assertThat(results).doesNotContain(fileMetaData2);
+    }
+
     @Test
     void ensureGetFileWorksProperly() {
         // Given

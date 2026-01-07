@@ -78,6 +78,19 @@ public class FileRestControllerTest {
     }
 
     @Test
+    void ensureGetAllFileMetaDataWorksProperlyWithQueryString() throws Exception {
+        // Given
+        when(fileMetaDataApplicationService.queryFileMetaDta(any(UUID.class), eq("query"))).thenReturn(List.of(fileMetaDataDto));
+
+        // Perform
+        mockMvc.perform(get("/api/files?query=query").accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(jsonMapper.writeValueAsString(List.of(fileMetaDataDto))));
+    }
+
+    @Test
     void ensureGetAllFileMetaDataReturnsNoContentIfDataCouldNotBeFound() throws Exception {
         // When
         when(fileMetaDataApplicationService.getAllFileMetaData(any(UUID.class))).thenReturn(List.of());

@@ -25,11 +25,13 @@ public class OcrApplicationServiceTest {
     @Mock
     private FileService fileService;
     @Mock
+    private SearchService searchService;
+    @Mock
     private TextExtractedEventPublisher textExtractedEventPublisher;
 
     @BeforeEach
     void setUp() {
-        textExtractionApplicationService = new TextExtractionApplicationService(ocrService, fileService, textExtractedEventPublisher);
+        textExtractionApplicationService = new TextExtractionApplicationService(ocrService, fileService, searchService, textExtractedEventPublisher);
     }
 
     @Test

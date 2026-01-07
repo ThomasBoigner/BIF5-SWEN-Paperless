@@ -52,7 +52,7 @@ describe('FileMetaDataService', () => {
 
         const req = TestBed.inject(HttpTestingController).expectOne({
             method: 'GET',
-            url: 'http://localhost:80/api/files',
+            url: 'http://localhost:80/api/files?query=',
         });
 
         req.flush(expectedFileMetaData);
