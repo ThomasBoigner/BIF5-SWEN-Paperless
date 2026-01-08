@@ -23,6 +23,11 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
+    public TopicExchange genAiWorkerTopic() {
+        return new TopicExchange("at.fhtw.genaiworker", true, false);
+    }
+
+    @Bean
     public TopicExchange paperlessRestTopic() {
         return new TopicExchange("at.fhtw.paperlessrest", true, false);
     }

@@ -28,8 +28,7 @@ public class RabbitMQPaperlessRestListener {
         textExtractionApplicationService.extractText(ExtractTextCommand.builder()
                         .fileToken(event.fileToken().token())
                         .userToken(event.userToken().token())
-                        .fileName(event.fileName()
-                        )
+                        .fileName(event.fileName())
                 .build());
     }
 }

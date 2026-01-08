@@ -75,6 +75,10 @@ public class FileMetaData {
         );
     }
 
+    void addSummary(String summary) {
+        this.setSummary(summary);
+    }
+
     private void setFileToken(@Nullable FileToken fileToken) {
         Objects.requireNonNull(fileToken,  "Token must not be null!");
         this.fileToken = fileToken;

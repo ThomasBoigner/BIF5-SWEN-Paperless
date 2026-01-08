@@ -79,6 +79,16 @@ public class User {
         file.get().addFullText(fullText, this.userToken);
     }
 
+    public void addSummaryToFile(FileToken fileToken, String summary) {
+        Optional<FileMetaData> file = getFile(fileToken);
+
+        if (file.isEmpty()) {
+            return;
+        }
+
+        file.get().addSummary(summary);
+    }
+
     public FileMetaData updateFile(FileToken fileToken, @Nullable String description) {
         Optional<FileMetaData> fileOptional = getFile(fileToken);
 

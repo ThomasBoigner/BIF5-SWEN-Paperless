@@ -33,6 +33,11 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
+    public TopicExchange genAiWorkerTopic() {
+        return new TopicExchange("at.fhtw.genaiworker", true, false);
+    }
+
+    @Bean
     public TopicExchange keycloakTopic() {
         return new TopicExchange("KK.EVENT", true, false);
     }
@@ -65,5 +70,15 @@ public class RabbitMQConfiguration {
     @Bean
     public Binding textExtractedBinding() {
         return BindingBuilder.bind(textExtractedQueue()).to(ocrWorkerTopic()).with("at.fhtw.ocrworker.domain.model.textextracted");
+    }
+
+    @Bean
+    public Queue summaryCreatedQueue() {
+        return QueueBuilder.durable("at.fhtw.genaiworker.domain.model.summarycreated").build();
+    }
+
+    @Bean
+    public Binding summaryCreatedBinding() {
+        return BindingBuilder.bind(summaryCreatedQueue()).to(genAiWorkerTopic()).with("at.fhtw.genaiworker.domain.model.summarycreated");
     }
 }

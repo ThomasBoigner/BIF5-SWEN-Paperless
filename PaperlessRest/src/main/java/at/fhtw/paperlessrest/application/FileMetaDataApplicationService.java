@@ -1,11 +1,11 @@
 package at.fhtw.paperlessrest.application;
 
 import at.fhtw.paperlessrest.application.commands.AddFullTextCommand;
+import at.fhtw.paperlessrest.application.commands.AddSummaryCommand;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
 import at.fhtw.paperlessrest.domain.model.*;
-import at.fhtw.paperlessrest.infrastructure.persistence.jpa.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
@@ -29,7 +29,6 @@ public class FileMetaDataApplicationService {
     private final UserEventPublisher userEventPublisher;
     private final FileService fileService;
     private final SearchService searchService;
-    private final UserEntityRepository userEntityRepository;
 
     public List<FileMetaDataDto> getAllFileMetaData(@Nullable UUID userToken) {
         Objects.requireNonNull(userToken, "userToken must not be null!");
@@ -160,6 +159,27 @@ public class FileMetaDataApplicationService {
         userRepository.save(user);
         userEventPublisher.publishEvents(user);
         log.info("Full text added to file {}", command.fileToken());
+    }
+
+    @Transactional(readOnly = false)
+    public void addSummary(@Nullable AddSummaryCommand command) {
+        Objects.requireNonNull(command, "command must not be null!");
+        log.debug("Trying to add summary with command {}", command);
+
+        Optional<User> entity = userRepository.findUserByUserToken(new UserToken(command.userToken()));
+
+        if (entity.isEmpty()) {
+            log.warn("User with token {} can not be found!", command.fileToken());
+            return;
+        }
+
+        User user = entity.get();
+
+        user.addSummaryToFile(new FileToken(command.fileToken()), command.summary());
+
+        userRepository.save(user);
+        userEventPublisher.publishEvents(user);
+        log.info("Summary added to file {}", command.fileToken());
     }
 
     @Transactional(readOnly = false)
