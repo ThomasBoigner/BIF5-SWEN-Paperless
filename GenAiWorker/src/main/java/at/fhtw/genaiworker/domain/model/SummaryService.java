@@ -1,4 +1,4 @@
-package at.fhtw.genaiworker.domain;
+package at.fhtw.genaiworker.domain.model;
 
 import at.fhtw.genaiworker.application.port.GenAiPort;
 import lombok.RequiredArgsConstructor;

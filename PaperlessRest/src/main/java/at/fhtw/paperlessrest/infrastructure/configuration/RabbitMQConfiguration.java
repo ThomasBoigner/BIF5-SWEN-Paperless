@@ -38,11 +38,6 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
-    public TopicExchange genAiWorkerTopic() {
-        return new TopicExchange("at.fhtw.genaiworker", true, false);
-    }
-
-    @Bean
     public Queue userRegisteredQueue() {
         return QueueBuilder.durable("KK.EVENT.CLIENT.paperless.SUCCESS.*.REGISTER").build();
     }
@@ -70,15 +65,5 @@ public class RabbitMQConfiguration {
     @Bean
     public Binding textExtractedBinding() {
         return BindingBuilder.bind(textExtractedQueue()).to(ocrWorkerTopic()).with("at.fhtw.ocrworker.domain.model.textextracted");
-    }
-
-    @Bean
-    public Queue pdfUploadQueue() {
-        return QueueBuilder.durable("at.fhtw.genaiworker.domain.model.pdfupload").build();
-    }
-
-    @Bean
-    public Binding pdfUploadBinding() {
-        return BindingBuilder.bind(pdfUploadQueue()).to(genAiWorkerTopic()).with("at.fhtw.genaiworker.domain.model.pdfupload");
     }
 }

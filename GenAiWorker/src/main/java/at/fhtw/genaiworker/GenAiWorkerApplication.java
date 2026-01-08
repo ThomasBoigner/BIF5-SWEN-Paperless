@@ -1,7 +1,7 @@
 package at.fhtw.genaiworker;
 
 import at.fhtw.genaiworker.application.port.GenAiPort;
-import at.fhtw.genaiworker.domain.SummaryService;
+import at.fhtw.genaiworker.domain.model.SummaryService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

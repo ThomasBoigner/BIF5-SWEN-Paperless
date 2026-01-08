@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @Slf4j
 @Component
-public class RabbitMQFilePaperlessRestListener {
+public class RabbitMQPaperlessRestListener {
     private final TextExtractionApplicationService textExtractionApplicationService;
 
     @RabbitListener(queues = "at.fhtw.paperlessrest.domain.model.fileuploaded")

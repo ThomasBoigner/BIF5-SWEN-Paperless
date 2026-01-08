@@ -8,7 +8,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import static com.tngtech.archunit.library.Architectures.onionArchitecture;
 
 @AnalyzeClasses(
-        packages = "at.fhtw.paperlessrest",
+        packages = "at.fhtw.genaiworker",
         importOptions = {
             ImportOption.DoNotIncludeTests.class,
             ImportOption.DoNotIncludeJars.class
