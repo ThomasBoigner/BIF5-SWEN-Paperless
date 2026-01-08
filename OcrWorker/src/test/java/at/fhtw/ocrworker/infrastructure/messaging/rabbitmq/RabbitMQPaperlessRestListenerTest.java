@@ -20,14 +20,14 @@ import static org.mockito.Mockito.verify;
 
 @NullUnmarked
 @ExtendWith(MockitoExtension.class)
-public class RabbitMQFilePaperlessRestListenerTest {
-    private RabbitMQFilePaperlessRestListener listener;
+public class RabbitMQPaperlessRestListenerTest {
+    private RabbitMQPaperlessRestListener listener;
     @Mock
     private TextExtractionApplicationService textExtractionApplicationService;
 
     @BeforeEach
     void setUp() {
-        listener = new RabbitMQFilePaperlessRestListener(textExtractionApplicationService);
+        listener = new RabbitMQPaperlessRestListener(textExtractionApplicationService);
     }
 
     @Test

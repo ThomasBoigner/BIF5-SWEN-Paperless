@@ -33,13 +33,13 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
-    public TopicExchange keycloakTopic() {
-        return new TopicExchange("KK.EVENT", true, false);
+    public TopicExchange genAiWorkerTopic() {
+        return new TopicExchange("at.fhtw.genaiworker", true, false);
     }
 
     @Bean
-    public TopicExchange genAiWorkerTopic() {
-        return new TopicExchange("at.fhtw.genaiworker", true, false);
+    public TopicExchange keycloakTopic() {
+        return new TopicExchange("KK.EVENT", true, false);
     }
 
     @Bean
@@ -73,12 +73,12 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
-    public Queue pdfUploadQueue() {
-        return QueueBuilder.durable("at.fhtw.genaiworker.domain.model.pdfupload").build();
+    public Queue summaryCreatedQueue() {
+        return QueueBuilder.durable("at.fhtw.genaiworker.domain.model.summarycreated").build();
     }
 
     @Bean
-    public Binding pdfUploadBinding() {
-        return BindingBuilder.bind(pdfUploadQueue()).to(genAiWorkerTopic()).with("at.fhtw.genaiworker.domain.model.pdfupload");
+    public Binding summaryCreatedBinding() {
+        return BindingBuilder.bind(summaryCreatedQueue()).to(genAiWorkerTopic()).with("at.fhtw.genaiworker.domain.model.summarycreated");
     }
 }

@@ -18,7 +18,7 @@ public class RabbitMQTextExtractedEventPublisher implements TextExtractedEventPu
 
     @Override
     public void publishEvent(TextExtracted event) {
-        log.trace("Publishing file uploaded event: {}", event);
+        log.trace("Publishing text extracted event: {}", event);
         template.convertAndSend(ocrWorkerTopic.getName(), "at.fhtw.ocrworker.domain.model.textextracted", event);
     }
 }

@@ -1,6 +1,7 @@
 package at.fhtw.paperlessrest.application;
 
 import at.fhtw.paperlessrest.application.commands.AddFullTextCommand;
+import at.fhtw.paperlessrest.application.commands.AddSummaryCommand;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
@@ -156,6 +157,29 @@ public class FileMetaDataApplicationService {
         user.addFullTextToFile(new FileToken(command.fileToken()), command.fullText());
 
         userRepository.save(user);
+        userEventPublisher.publishEvents(user);
+        log.info("Full text added to file {}", command.fileToken());
+    }
+
+    @Transactional(readOnly = false)
+    public void addSummary(@Nullable AddSummaryCommand command) {
+        Objects.requireNonNull(command, "command must not be null!");
+        log.debug("Trying to add summary with command {}", command);
+
+        Optional<User> entity = userRepository.findUserByUserToken(new UserToken(command.userToken()));
+
+        if (entity.isEmpty()) {
+            log.warn("User with token {} can not be found!", command.fileToken());
+            return;
+        }
+
+        User user = entity.get();
+
+        user.addSummaryToFile(new FileToken(command.fileToken()), command.summary());
+
+        userRepository.save(user);
+        userEventPublisher.publishEvents(user);
+        log.info("Summary added to file {}", command.fileToken());
     }
 
     @Transactional(readOnly = false)

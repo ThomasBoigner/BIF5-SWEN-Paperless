@@ -27,6 +27,7 @@ public class FileMetaDataEntity {
     @Column(length = 1048576)
     private String fullText;
     @Nullable
+    @Column(length = 1048576)
     private String summary;
 
     public FileMetaDataEntity() {

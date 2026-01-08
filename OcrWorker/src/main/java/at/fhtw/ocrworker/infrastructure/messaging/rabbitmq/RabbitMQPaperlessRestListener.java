@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @Slf4j
 @Component
-public class RabbitMQFilePaperlessRestListener {
+public class RabbitMQPaperlessRestListener {
     private final TextExtractionApplicationService textExtractionApplicationService;
 
     @RabbitListener(queues = "at.fhtw.paperlessrest.domain.model.fileuploaded")
@@ -28,8 +28,7 @@ public class RabbitMQFilePaperlessRestListener {
         textExtractionApplicationService.extractText(ExtractTextCommand.builder()
                         .fileToken(event.fileToken().token())
                         .userToken(event.userToken().token())
-                        .fileName(event.fileName()
-                        )
+                        .fileName(event.fileName())
                 .build());
     }
 }
