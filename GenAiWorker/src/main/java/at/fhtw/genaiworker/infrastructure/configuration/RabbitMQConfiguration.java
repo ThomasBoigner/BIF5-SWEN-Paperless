@@ -29,7 +29,7 @@ public class RabbitMQConfiguration {
 
     @Bean
     public Queue fullTextAddedQueue() {
-        return QueueBuilder.durable("at.fhtw.ocrworker.domain.model.textextracted").build();
+        return QueueBuilder.durable("at.fhtw.paperlessrest.domain.model.fulltextadded").build();
     }
 
     @Bean

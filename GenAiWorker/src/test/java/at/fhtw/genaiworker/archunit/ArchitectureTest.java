@@ -20,8 +20,7 @@ public class ArchitectureTest {
     private static final String PKG_APPLICATION_SERVICES = "..application..";
     private static final String PKG_ADAPTER_PERSISTENCE = "..infrastructure.persistence..";
     private static final String PKG_ADAPTER_CONFIGURATION = "..infrastructure.configuration..";
-    private static final String PKG_ADAPTER_FILESTORAGE = "..infrastructure.filestorage..";
-    private static final String PKG_ADAPTER_REST = "..presentation..";
+    private static final String PKG_ADAPTER_MESSAGING = "..infrastructure.messaging..";
 
     @ArchTest
     static final ArchRule ONION_ARCHITECTURE = onionArchitecture()
@@ -30,8 +29,7 @@ public class ArchitectureTest {
             .applicationServices(PKG_APPLICATION_SERVICES)
             .adapter("persistence", PKG_ADAPTER_PERSISTENCE)
             .adapter("configuration", PKG_ADAPTER_CONFIGURATION)
-            .adapter("filestorage", PKG_ADAPTER_FILESTORAGE)
-            .adapter("rest", PKG_ADAPTER_REST)
+            .adapter("messaging", PKG_ADAPTER_MESSAGING)
             .allowEmptyShould(true);
 
 }

@@ -5,6 +5,7 @@ import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
 import at.fhtw.paperlessrest.domain.model.*;
+import at.fhtw.paperlessrest.infrastructure.persistence.jpa.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
@@ -28,6 +29,7 @@ public class FileMetaDataApplicationService {
     private final UserEventPublisher userEventPublisher;
     private final FileService fileService;
     private final SearchService searchService;
+    private final UserEntityRepository userEntityRepository;
 
     public List<FileMetaDataDto> getAllFileMetaData(@Nullable UUID userToken) {
         Objects.requireNonNull(userToken, "userToken must not be null!");
@@ -156,6 +158,8 @@ public class FileMetaDataApplicationService {
         user.addFullTextToFile(new FileToken(command.fileToken()), command.fullText());
 
         userRepository.save(user);
+        userEventPublisher.publishEvents(user);
+        log.info("Full text added to file {}", command.fileToken());
     }
 
     @Transactional(readOnly = false)

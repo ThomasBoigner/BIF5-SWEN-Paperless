@@ -1,6 +1,6 @@
 package at.fhtw.genaiworker.infrastructure.messaging.rabbitmq;
 
-import at.fhtw.genaiworker.domain.model.SummaryService;
+import at.fhtw.genaiworker.application.SummaryApplicationService;
 import at.fhtw.genaiworker.infrastructure.messaging.rabbitmq.events.FullTextAdded;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,10 +15,11 @@ import java.util.Objects;
 @Slf4j
 @Component
 public class RabbitMQPaperlessRestListener {
-    private final SummaryService summaryService;
+    private final SummaryApplicationService summaryService;
 
     @RabbitListener(queues = "at.fhtw.paperlessrest.domain.model.fulltextadded")
     public void handleOcrFinished(@Nullable FullTextAdded event) {
+        log.trace("Received full text added event: {}", event);
         if (Objects.isNull(event)) {
             log.warn("Received event was null!");
             return;
