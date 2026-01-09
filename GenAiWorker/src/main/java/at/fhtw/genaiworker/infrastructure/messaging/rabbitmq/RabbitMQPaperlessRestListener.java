@@ -19,7 +19,7 @@ public class RabbitMQPaperlessRestListener {
     private final SummaryApplicationService summaryService;
 
     @RabbitListener(queues = "at.fhtw.paperlessrest.domain.model.fulltextadded")
-    public void handleOcrFinished(@Nullable FullTextAdded event) {
+    public void receiveFullTextAddedEvent(@Nullable FullTextAdded event) {
         if (Objects.isNull(event)) {
             log.warn("Received event was null!");
             return;

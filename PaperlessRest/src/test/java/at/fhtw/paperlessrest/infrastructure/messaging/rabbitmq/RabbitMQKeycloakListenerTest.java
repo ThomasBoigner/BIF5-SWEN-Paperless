@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 
 @NullUnmarked
 @ExtendWith(MockitoExtension.class)
-public class RabbitMqKeycloakListenerTest {
+public class RabbitMQKeycloakListenerTest {
     private RabbitMQKeycloakListener listener;
     @Mock
     private UserApplicationService userApplicationService;

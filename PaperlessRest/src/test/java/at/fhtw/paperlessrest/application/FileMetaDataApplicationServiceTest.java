@@ -1,6 +1,7 @@
 package at.fhtw.paperlessrest.application;
 
 import at.fhtw.paperlessrest.application.commands.AddFullTextCommand;
+import at.fhtw.paperlessrest.application.commands.AddSummaryCommand;
 import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
 import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
@@ -251,6 +252,60 @@ public class FileMetaDataApplicationServiceTest {
 
         // Then
         assertThat(fileMetaData.getFullText()).isEqualTo(null);
+    }
+
+    @Test
+    void ensureAddSummaryWorksProperly() {
+        // Given
+        String summary = "Summary";
+
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
+
+        AddSummaryCommand command = AddSummaryCommand.builder()
+                .summary(summary)
+                .userToken(user.getUserToken().token())
+                .fileToken(fileMetaData.getFileToken().token())
+                .build();
+
+        // When
+        fileMetaDataApplicationService.addSummary(command);
+
+        // Then
+        assertThat(fileMetaData.getSummary()).isEqualTo(summary);
+    }
+
+    @Test
+    void ensureAddSummaryThrowsExceptionWhenFileCanNotBeFound() {
+        // Given
+        String summary = "Summary";
+
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.empty());
+
+        AddSummaryCommand command = AddSummaryCommand.builder()
+                .summary(summary)
+                .userToken(user.getUserToken().token())
+                .fileToken(fileMetaData.getFileToken().token())
+                .build();
+
+        // When
+        fileMetaDataApplicationService.addSummary(command);
+
+        // Then
+        assertThat(fileMetaData.getSummary()).isEqualTo(null);
     }
 
     @Test
