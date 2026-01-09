@@ -2,6 +2,7 @@ package at.fhtw.paperlessrest.infrastructure.persistence.jpa;
 
 import at.fhtw.paperlessrest.domain.model.User;
 import at.fhtw.paperlessrest.domain.model.UserToken;
+import at.fhtw.paperlessrest.infrastructure.persistence.elasticsearch.FileDocument;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.jspecify.annotations.Nullable;
@@ -36,12 +37,18 @@ public class UserEntity {
         this.files = user.getFiles().stream().map(FileMetaDataEntity::new).toList();
     }
 
-    public User toUser() {
+    public User toUser(List<FileDocument> fileDocuments) {
         return new User(
                 this.id,
                 new UserToken(this.userToken),
                 this.username,
-                this.files.stream().map(FileMetaDataEntity::toFileMetaData).collect(Collectors.toList())
+                this.files.stream().map(fileMetaDataEntity ->
+                        fileMetaDataEntity.toFileMetaData(
+                                fileDocuments.stream().filter(fileDocument ->
+                                        fileMetaDataEntity.getFileToken().equals(fileDocument.getFileToken())
+                                ).findFirst().orElseThrow()
+                        )
+                ).collect(Collectors.toList())
         );
     }
 }
