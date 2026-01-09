@@ -2,6 +2,7 @@ package at.fhtw.paperlessrest.infrastructure.persistence.jpa;
 
 import at.fhtw.paperlessrest.domain.model.FileMetaData;
 import at.fhtw.paperlessrest.domain.model.FileToken;
+import at.fhtw.paperlessrest.infrastructure.persistence.elasticsearch.FileDocument;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.jspecify.annotations.Nullable;
@@ -23,13 +24,6 @@ public class FileMetaDataEntity {
     @Nullable
     private String description;
 
-    @Nullable
-    @Column(length = 1048576)
-    private String fullText;
-    @Nullable
-    @Column(length = 1048576)
-    private String summary;
-
     public FileMetaDataEntity() {
         this.fileToken = UUID.randomUUID();
         this.creationDate = LocalDateTime.MIN;
@@ -43,11 +37,9 @@ public class FileMetaDataEntity {
         this.fileName = fileMetaData.getFileName();
         this.fileSize = fileMetaData.getFileSize();
         this.description = fileMetaData.getDescription();
-        this.fullText = fileMetaData.getFullText();
-        this.summary = fileMetaData.getSummary();
     }
 
-    public FileMetaData toFileMetaData() {
+    public FileMetaData toFileMetaData(FileDocument fileDocument) {
         return new FileMetaData(
                 this.id,
                 new FileToken(fileToken),
@@ -55,8 +47,8 @@ public class FileMetaDataEntity {
                 this.fileName,
                 this.fileSize,
                 this.description,
-                this.fullText,
-                this.summary
+                fileDocument.getFullText(),
+                fileDocument.getSummary()
         );
     }
 }

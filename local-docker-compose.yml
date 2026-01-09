@@ -103,6 +103,7 @@ services:
       memlock:
         soft: -1
         hard: -1
+    mem_limit: 8g
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     networks:

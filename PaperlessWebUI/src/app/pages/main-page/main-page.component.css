@@ -69,7 +69,8 @@ pdf-viewer {
     height: 100%;
 }
 
-p.full-text {
+p.full-text,
+p.summary {
     white-space: pre-line;
     padding-bottom: 32px;
 }

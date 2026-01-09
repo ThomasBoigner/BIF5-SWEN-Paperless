@@ -28,7 +28,6 @@ public class FileMetaDataApplicationService {
     private final UserRepository userRepository;
     private final UserEventPublisher userEventPublisher;
     private final FileService fileService;
-    private final SearchService searchService;
 
     public List<FileMetaDataDto> getAllFileMetaData(@Nullable UUID userToken) {
         Objects.requireNonNull(userToken, "userToken must not be null!");
@@ -51,8 +50,6 @@ public class FileMetaDataApplicationService {
         Objects.requireNonNull(userToken, "userToken must not be null!");
         log.debug("Trying to get all file of user with token {} with query {}", userToken, query);
 
-        List<UUID> fileTokens = searchService.queryFileMetaData(userToken, query);
-
         Optional<User> entity = userRepository.findUserByUserToken(new UserToken(userToken));
 
         if (entity.isEmpty()) {
@@ -60,6 +57,8 @@ public class FileMetaDataApplicationService {
         }
 
         User user = entity.get();
+
+        List<UUID> fileTokens = userRepository.queryFileMetaData(userToken, query);
 
         List<FileMetaDataDto> fileMetaDataList = user.getFilesWithFileTokens(fileTokens.stream().map(FileToken::new).toList())
                 .stream().map(FileMetaDataDto::new).toList();
@@ -220,11 +219,12 @@ public class FileMetaDataApplicationService {
         }
 
         User user = entity.get();
+        FileToken ft = new FileToken(fileToken);
 
         fileService.deleteFile(fileToken);
-        searchService.deleteFullText(userToken, fileToken);
-        user.removeFile(new FileToken(fileToken));
+        user.removeFile(ft);
         userRepository.save(user);
+        userRepository.removeFile(ft);
         log.info("Successfully deleted file with token {}", fileToken);
     }
 }

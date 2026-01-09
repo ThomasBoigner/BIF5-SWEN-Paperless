@@ -22,7 +22,6 @@ public class ArchitectureTest {
     private static final String PKG_ADAPTER_FILESTORAGE = "..infrastructure.filestorage..";
     private static final String PKG_ADAPTER_MESSAGING = "..infrastructure.messaging..";
     private static final String PKG_ADAPTER_OCR = "..infrastructure.ocr..";
-    private static final String PKG_ADAPTER_SEARCH = "..infrastructure.search..";
 
     @ArchTest
     static final ArchRule ONION_ARCHITECTURE = onionArchitecture()
@@ -33,7 +32,6 @@ public class ArchitectureTest {
             .adapter("filestorage", PKG_ADAPTER_FILESTORAGE)
             .adapter("messaging", PKG_ADAPTER_MESSAGING)
             .adapter("ocr", PKG_ADAPTER_OCR)
-            .adapter("search", PKG_ADAPTER_SEARCH)
             .allowEmptyShould(true);
 
 }

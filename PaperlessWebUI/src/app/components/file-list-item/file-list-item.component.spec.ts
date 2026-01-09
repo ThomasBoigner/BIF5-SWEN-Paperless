@@ -33,6 +33,6 @@ describe('FileListItemComponent', () => {
         const nativeElement = fixture.nativeElement as HTMLElement;
         expect(fixture.componentInstance).toBeDefined();
         expect(nativeElement.textContent).toContain(fileMetaData.fileName);
-        expect(nativeElement.textContent).toContain(fileMetaData.description);
+        expect(nativeElement.textContent).toContain(fileMetaData.summary);
     });
 });

@@ -3,7 +3,7 @@
     routerLink="/file/view/{{ fileMetaData().fileToken }}"
 >
     <h5>{{ fileMetaData().fileName }}</h5>
-    @if (fileMetaData().description) {
-        <p>{{ fileMetaData().description }}</p>
+    @if (fileMetaData().summary) {
+        <p>{{ fileMetaData().summary | summarySlice }}</p>
     }
 </a>
