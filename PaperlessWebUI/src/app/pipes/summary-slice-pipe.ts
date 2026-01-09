@@ -1,16 +1,16 @@
-import {Pipe, PipeTransform} from "@angular/core";
+import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({name: 'summarySlice'})
+@Pipe({ name: 'summarySlice' })
 export class SummarySlicePipe implements PipeTransform {
     transform(summary: string | undefined): string {
         if (!summary) {
-          return '';
+            return '';
         }
 
-        const words = summary.split(' ')
+        const words = summary.split(' ');
 
         if (words.length <= 5) {
-          return summary;
+            return summary;
         }
 
         return `${words.slice(0, 10).join(' ')} ...`;

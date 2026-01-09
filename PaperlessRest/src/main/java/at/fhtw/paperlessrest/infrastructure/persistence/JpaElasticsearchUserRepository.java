@@ -1,5 +1,6 @@
 package at.fhtw.paperlessrest.infrastructure.persistence;
 
+import at.fhtw.paperlessrest.domain.model.FileToken;
 import at.fhtw.paperlessrest.domain.model.User;
 import at.fhtw.paperlessrest.domain.model.UserRepository;
 import at.fhtw.paperlessrest.domain.model.UserToken;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 
@@ -26,6 +28,7 @@ public class JpaElasticsearchUserRepository implements UserRepository {
         this.userEntityRepository.save(userEntity);
         user.getFiles().forEach(file -> fileDocumentRepository.save(FileDocument.builder()
                         .fileToken(file.getFileToken().token())
+                        .userToken(user.getUserToken().token())
                         .fileName(file.getFileName())
                         .fullText(file.getFullText())
                         .summary(file.getSummary())
@@ -47,7 +50,18 @@ public class JpaElasticsearchUserRepository implements UserRepository {
     }
 
     @Override
+    public List<UUID> queryFileMetaData(UUID userToken, String query) {
+        return fileDocumentRepository.findFileDocumentByUserTokenAndFileNameLikeOrSummaryLikeOrFullTextLike(userToken, query, query, query).stream().map(FileDocument::getFileToken).toList();
+    }
+
+    @Override
+    public void removeFile(FileToken fileToken) {
+        fileDocumentRepository.deleteById(fileToken.token());
+    }
+
+    @Override
     public void deleteUserByUserToken(UserToken token) {
         userEntityRepository.deleteUserEntityByUserToken(token.token());
+        fileDocumentRepository.deleteAllByUserToken(token.token());
     }
 }

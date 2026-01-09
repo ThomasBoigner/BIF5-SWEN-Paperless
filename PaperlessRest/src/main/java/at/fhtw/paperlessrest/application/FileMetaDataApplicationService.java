@@ -58,7 +58,10 @@ public class FileMetaDataApplicationService {
 
         User user = entity.get();
 
-        List<FileMetaDataDto> fileMetaDataList = user.getFiles().stream().map(FileMetaDataDto::new).toList();
+        List<UUID> fileTokens = userRepository.queryFileMetaData(userToken, query);
+
+        List<FileMetaDataDto> fileMetaDataList = user.getFilesWithFileTokens(fileTokens.stream().map(FileToken::new).toList())
+                .stream().map(FileMetaDataDto::new).toList();
         log.debug("Retrieved all ({}) file meta data that matches query {}", fileMetaDataList.size(), query);
         return fileMetaDataList;
     }
@@ -216,10 +219,12 @@ public class FileMetaDataApplicationService {
         }
 
         User user = entity.get();
+        FileToken ft = new FileToken(fileToken);
 
         fileService.deleteFile(fileToken);
-        user.removeFile(new FileToken(fileToken));
+        user.removeFile(ft);
         userRepository.save(user);
+        userRepository.removeFile(ft);
         log.info("Successfully deleted file with token {}", fileToken);
     }
 }

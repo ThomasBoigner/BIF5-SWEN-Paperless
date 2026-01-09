@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 import { FileMetaData } from '../../model/file-meta-data';
 import { RouterLink } from '@angular/router';
-import {SummarySlicePipe} from "../../pipes/summary-slice-pipe";
+import { SummarySlicePipe } from '../../pipes/summary-slice-pipe';
 
 @Component({
     selector: 'file-list-item',
