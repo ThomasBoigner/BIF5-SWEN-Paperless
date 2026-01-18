@@ -109,6 +109,25 @@ public class UserTest {
     }
 
     @Test
+    void ensureAddSummaryToFileWorksProperly() {
+        // Given
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        String summary = "summary";
+
+        // When
+        user.addSummaryToFile(fileMetaData.getFileToken(), summary);
+
+        // Then
+        assertThat(fileMetaData.getSummary()).isEqualTo(summary);
+    }
+
+    @Test
     void ensureUpdateFileWorksProperly() {
         // Given
         User user = User.builder()

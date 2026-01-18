@@ -18,7 +18,6 @@ import java.util.Objects;
 public class TextExtractionApplicationService {
     private final OcrService ocrService;
     private final FileService fileService;
-    private final SearchService searchService;
     private final TextExtractedEventPublisher textExtractedEventPublisher;
 
     public void extractText(@Nullable ExtractTextCommand command) {
@@ -34,7 +33,6 @@ public class TextExtractionApplicationService {
                 .fileToken(new FileToken(command.fileToken()))
                 .build();
 
-        searchService.saveFullText(command.userToken(), command.fileToken(), command.fileName(), fullText);
         textExtractedEventPublisher.publishEvent(textExtracted);
     }
 }
