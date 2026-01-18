@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.UUID;
 
@@ -18,7 +20,9 @@ import java.util.UUID;
 public class FileDocument {
     @Id
     private UUID fileToken;
+    @Field(type = FieldType.Keyword)
     private UUID userToken;
+    @Field(type = FieldType.Keyword)
     private String fileName;
     @Nullable
     private String fullText;

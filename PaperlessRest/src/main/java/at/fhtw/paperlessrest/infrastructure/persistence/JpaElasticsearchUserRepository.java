@@ -51,7 +51,7 @@ public class JpaElasticsearchUserRepository implements UserRepository {
 
     @Override
     public List<UUID> queryFileMetaData(UUID userToken, String query) {
-        return fileDocumentRepository.findFileDocumentByUserTokenAndFileNameLikeOrSummaryLikeOrFullTextLike(userToken, query, query, query).stream().map(FileDocument::getFileToken).toList();
+        return fileDocumentRepository.search(userToken, query).stream().map(FileDocument::getFileToken).toList();
     }
 
     @Override
