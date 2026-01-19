@@ -23,6 +23,7 @@
         <module>PaperlessRest</module>
         <module>OcrWorker</module>
         <module>GenAiWorker</module>
+        <module>BatchProcessingWorker</module>
     </modules>
 
     <properties>
