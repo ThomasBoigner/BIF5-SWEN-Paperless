@@ -18,7 +18,7 @@ import java.util.Objects;
 public class RabbitMQOcrWorkerListener {
     private final FileMetaDataApplicationService fileMetaDataApplicationService;
 
-    @RabbitListener(queues = "at.fhtw.ocrworker.domain.model.textextracted")
+    @RabbitListener(queues = "at.fhtw.ocrworker.domain.model.textextracted.paperlessrest")
     public void receiveTextExtractedEvent(@Nullable TextExtracted event) {
         if (Objects.isNull(event)) {
             log.warn("Received event was null!");

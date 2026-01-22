@@ -18,7 +18,7 @@ import java.util.Objects;
 public class RabbitMQPaperlessRestListener {
     private final AccessRecordApplicationService accessRecordApplicationService;
 
-    @RabbitListener(queues = "at.fhtw.paperlessrest.domain.model.fileuploaded")
+    @RabbitListener(queues = "at.fhtw.paperlessrest.domain.model.fileuploaded.batchprocessingworker")
     public void receiveFileUploadedEvent(@Nullable FileUploaded event) {
         if (Objects.isNull(event)) {
             log.warn("Received event was null!");

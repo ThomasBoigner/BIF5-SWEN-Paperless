@@ -18,7 +18,7 @@ import java.util.Objects;
 public class RabbitMQGenAiWorkerListener {
     private final FileMetaDataApplicationService fileMetaDataApplicationService;
 
-    @RabbitListener(queues = "at.fhtw.genaiworker.domain.model.summarycreated")
+    @RabbitListener(queues = "at.fhtw.genaiworker.domain.model.summarycreated.paperlessrest")
     public void receiveSummaryCreatedEvent(@Nullable SummaryCreated event) {
         if (Objects.isNull(event)) {
             log.warn("Received event was null!");

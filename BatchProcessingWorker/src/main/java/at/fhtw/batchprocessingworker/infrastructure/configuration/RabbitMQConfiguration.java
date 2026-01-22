@@ -34,7 +34,7 @@ public class RabbitMQConfiguration {
 
     @Bean
     public Queue fileUploadedQueue() {
-        return QueueBuilder.durable("at.fhtw.paperlessrest.domain.model.fileuploaded").build();
+        return QueueBuilder.durable("at.fhtw.paperlessrest.domain.model.fileuploaded.batchprocessingworker").build();
     }
 
     @Bean

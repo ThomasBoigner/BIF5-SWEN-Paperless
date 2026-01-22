@@ -34,7 +34,7 @@ public class RabbitMQConfiguration {
 
     @Bean
     public Queue fullTextAddedQueue() {
-        return QueueBuilder.durable("at.fhtw.paperlessrest.domain.model.fulltextadded").build();
+        return QueueBuilder.durable("at.fhtw.paperlessrest.domain.model.fulltextadded.genaiworker").build();
     }
 
     @Bean

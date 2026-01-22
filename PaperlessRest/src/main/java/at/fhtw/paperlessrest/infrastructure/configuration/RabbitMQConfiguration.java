@@ -64,7 +64,7 @@ public class RabbitMQConfiguration {
 
     @Bean
     public Queue textExtractedQueue() {
-        return QueueBuilder.durable("at.fhtw.ocrworker.domain.model.textextracted").build();
+        return QueueBuilder.durable("at.fhtw.ocrworker.domain.model.textextracted.paperlessrest").build();
     }
 
     @Bean
@@ -74,7 +74,7 @@ public class RabbitMQConfiguration {
 
     @Bean
     public Queue summaryCreatedQueue() {
-        return QueueBuilder.durable("at.fhtw.genaiworker.domain.model.summarycreated").build();
+        return QueueBuilder.durable("at.fhtw.genaiworker.domain.model.summarycreated.paperlessrest").build();
     }
 
     @Bean
