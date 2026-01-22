@@ -46,6 +46,8 @@
         <pdfbox.version>3.0.6</pdfbox.version>
         <!-- GenAi -->
         <spring-ai-starter-model-google-genai.version>1.1.2</spring-ai-starter-model-google-genai.version>
+        <!-- BatchProcessing -->
+        <jaxb.version>4.0.4</jaxb.version>
         <!-- testing -->
         <archunit-junit5.version>1.4.1</archunit-junit5.version>
         <testcontainers.version>2.0.2</testcontainers.version>
@@ -153,6 +155,20 @@
                 <groupId>org.springframework.ai</groupId>
                 <artifactId>spring-ai-starter-model-google-genai</artifactId>
                 <version>${spring-ai-starter-model-google-genai.version}</version>
+            </dependency>
+
+            <!-- BatchProcessing -->
+            <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>${jaxb.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>${jaxb.version}</version>
+                <scope>compile</scope>
             </dependency>
 
             <!-- testing -->
