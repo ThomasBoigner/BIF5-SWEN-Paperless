@@ -52,8 +52,7 @@ public class FileRestControllerTest {
                 .setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
                 .build();
 
-        jsonMapper = JsonMapper.builder()
-                .build();
+        jsonMapper = JsonMapper.builder().build();
 
         fileMetaDataDto = new FileMetaDataDto(
                 FileMetaData.builder()
