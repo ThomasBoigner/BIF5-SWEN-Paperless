@@ -38,6 +38,11 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
+    public TopicExchange batchProcessingWorkerTopic() {
+        return new TopicExchange("at.fhtw.batchprocessingworker", true, false);
+    }
+
+    @Bean
     public TopicExchange keycloakTopic() {
         return new TopicExchange("KK.EVENT", true, false);
     }
@@ -80,5 +85,15 @@ public class RabbitMQConfiguration {
     @Bean
     public Binding summaryCreatedBinding() {
         return BindingBuilder.bind(summaryCreatedQueue()).to(genAiWorkerTopic()).with("at.fhtw.genaiworker.domain.model.summarycreated");
+    }
+
+    @Bean
+    public Queue accessRecordReadQueue() {
+        return QueueBuilder.durable("at.fhtw.batchprocessingworker.domain.model.accessrecordread.paperlessrest").build();
+    }
+
+    @Bean
+    public Binding accessRecordReadBinding() {
+        return BindingBuilder.bind(accessRecordReadQueue()).to(batchProcessingWorkerTopic()).with("at.fhtw.batchprocessingworker.domain.model.accessrecordread");
     }
 }

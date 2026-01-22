@@ -13,6 +13,7 @@ public record FileMetaDataDto(
         long fileSize,
         @Nullable
         String description,
+        int numberOfAccesses,
         @Nullable
         String fullText,
         @Nullable
@@ -25,6 +26,7 @@ public record FileMetaDataDto(
                 fileMetaData.getFileName(),
                 fileMetaData.getFileSize(),
                 fileMetaData.getDescription(),
+                fileMetaData.getNumberOfAccesses(),
                 fileMetaData.getFullText(),
                 fileMetaData.getSummary()
         );

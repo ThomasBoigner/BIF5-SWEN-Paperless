@@ -172,6 +172,10 @@
                         <h6>Upload date</h6>
                         <p>{{ fileMetaData.creationDate | date: 'dd.MM.yyyy HH:mm' }}</p>
                     </div>
+                    <div class="number-of-accesses-container">
+                        <h6>Number of accesses</h6>
+                        <p>{{ fileMetaData.numberOfAccesses }}</p>
+                    </div>
                 </div>
                 <div class="action-buttons">
                     <file-button
