@@ -21,6 +21,7 @@ public class ArchitectureTest {
     private static final String PKG_ADAPTER_PERSISTENCE = "..infrastructure.persistence..";
     private static final String PKG_ADAPTER_CONFIGURATION = "..infrastructure.configuration..";
     private static final String PKG_ADAPTER_MESSAGING = "..infrastructure.messaging..";
+    private static final String PKG_ADAPTER_XML = "..infrastructure.xml..";
 
     @ArchTest
     static final ArchRule ONION_ARCHITECTURE = onionArchitecture()
@@ -30,6 +31,7 @@ public class ArchitectureTest {
             .adapter("persistence", PKG_ADAPTER_PERSISTENCE)
             .adapter("configuration", PKG_ADAPTER_CONFIGURATION)
             .adapter("messaging", PKG_ADAPTER_MESSAGING)
+            .adapter("xml", PKG_ADAPTER_XML)
             .allowEmptyShould(true);
 
 }

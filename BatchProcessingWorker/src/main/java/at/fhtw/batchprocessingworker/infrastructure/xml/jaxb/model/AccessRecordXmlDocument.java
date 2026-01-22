@@ -8,7 +8,6 @@ import at.fhtw.batchprocessingworker.infrastructure.xml.jaxb.adapter.UUIDAdapter
 import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
