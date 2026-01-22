@@ -1,5 +1,6 @@
 package at.fhtw.batchprocessingworker.domain.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -9,6 +10,7 @@ import org.springframework.util.Assert;
 import java.util.Objects;
 
 @Getter
+@AllArgsConstructor
 @ToString
 public class AccessRecord {
     private AccessRecordToken accessRecordToken;

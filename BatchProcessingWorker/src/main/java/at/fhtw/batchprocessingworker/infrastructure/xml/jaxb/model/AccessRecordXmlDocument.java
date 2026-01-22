@@ -1,6 +1,9 @@
 package at.fhtw.batchprocessingworker.infrastructure.xml.jaxb.model;
 
 import at.fhtw.batchprocessingworker.domain.model.AccessRecord;
+import at.fhtw.batchprocessingworker.domain.model.AccessRecordToken;
+import at.fhtw.batchprocessingworker.domain.model.FileToken;
+import at.fhtw.batchprocessingworker.domain.model.UserToken;
 import at.fhtw.batchprocessingworker.infrastructure.xml.jaxb.adapter.UUIDAdapter;
 import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -38,5 +41,14 @@ public class AccessRecordXmlDocument {
         this.userToken = accessRecord.getUserToken().token();
         this.fileToken = accessRecord.getFileToken().token();
         this.numberOfAccesses = accessRecord.getNumberOfAccesses();
+    }
+
+    public AccessRecord toAccessRecord() {
+        return new AccessRecord(
+                new AccessRecordToken(this.accessRecordToken),
+                new UserToken(this.userToken),
+                new FileToken(this.fileToken),
+                numberOfAccesses
+        );
     }
 }
