@@ -128,6 +128,26 @@ public class UserTest {
     }
 
     @Test
+    void ensureAddNumberOfAccessesToFileWorksProperly() {
+        // Given
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        int numberOfAccesses = 5;
+
+        // When
+        user.addNumberOfAccessesToFile(fileMetaData.getFileToken(), numberOfAccesses);
+        user.addNumberOfAccessesToFile(fileMetaData.getFileToken(), numberOfAccesses);
+
+        // Then
+        assertThat(fileMetaData.getNumberOfAccesses()).isEqualTo(numberOfAccesses + numberOfAccesses);
+    }
+
+    @Test
     void ensureUpdateFileWorksProperly() {
         // Given
         User user = User.builder()
