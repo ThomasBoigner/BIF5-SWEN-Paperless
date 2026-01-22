@@ -89,6 +89,16 @@ public class User {
         file.get().addSummary(summary);
     }
 
+    public void addNumberOfAccessesToFile(FileToken fileToken, int numberOfAccesses) {
+        Optional<FileMetaData> file = getFile(fileToken);
+
+        if (file.isEmpty()) {
+            return;
+        }
+
+        file.get().addNumberOfAccesses(numberOfAccesses);
+    }
+
     public FileMetaData updateFile(FileToken fileToken, @Nullable String description) {
         Optional<FileMetaData> fileOptional = getFile(fileToken);
 

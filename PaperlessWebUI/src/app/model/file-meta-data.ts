@@ -4,6 +4,7 @@ export interface FileMetaData {
     fileName: string;
     fileSize: number;
     description?: string;
+    numberOfAccesses: number;
     fullText?: string;
     summary?: string;
 }

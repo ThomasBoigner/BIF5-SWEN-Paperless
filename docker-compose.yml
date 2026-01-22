@@ -6,6 +6,7 @@ services:
       dockerfile: src/main/docker/Dockerfile
     depends_on:
       - paperless-database
+      - elasticsearch
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://paperless-database:5432/paperless
       - SPRING_DATASOURCE_USERNAME=paperless
@@ -14,6 +15,7 @@ services:
       - MINIO_URL=http://minio:9000
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8080/realms/paperless/protocol/openid-connect/certs
+      - SPRING_ELASTICSEARCH_URIS=elasticsearch:9200
     volumes:
       - paperless-paperless-rest-log4j2:/target/log4j-logs
     networks:
@@ -38,16 +40,24 @@ services:
       context: GenAiWorker
       dockerfile: src/main/docker/Dockerfile
     environment:
-      - SPRING_AI_GOOGLE_PROJECT_ID=${GOOGLE_PROJECT_ID}
       - SPRING_AI_GOOGLE_GENAI_API_KEY=${GEMINI_API_KEY}
-      - SPRING_AI_GOOGLE_GENAI_CHAT_OPTIONS_MODEL=gemini-1.5-flash
-      - SPRING_AI_GOOGLE_GENAI_CHAT_OPTIONS_MAX_OUTPUT_TOKENS=300
+      - SPRING_RABBITMQ_HOST=rabbitmq
     volumes:
       - paperless-gen-ai-worker-log4j2:/target/log4j-logs
     networks:
       - paperless
-    env_file:
-      - .env
+
+  batch-processing-worker:
+    container_name: batch-processing-worker
+    build:
+      context: BatchProcessingWorker
+      dockerfile: src/main/docker/Dockerfile
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    volumes:
+      - paperless-batch-processing-worker-log4j2:/target/log4j-logs
+    networks:
+      - paperless
 
   paperless-database:
     image: 'postgres:17.5'
@@ -113,7 +123,7 @@ services:
     image: 'quay.io/keycloak/keycloak:26.4.5'
     container_name: keycloak
     ports:
-      - "8084:8080"
+      - "8085:8080"
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
@@ -149,6 +159,34 @@ services:
     networks:
       - paperless
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.2.2
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 8g
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - paperless
+
+  kibana:
+    image: kibana:9.2.2
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+    ports:
+      - "9092:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - paperless
+
 volumes:
   paperless-database: {}
   paperless-pgadmin: {}
@@ -156,8 +194,10 @@ volumes:
   paperless-paperless-rest-log4j2: {}
   paperless-ocr-worker-log4j2: {}
   paperless-gen-ai-worker-log4j2: {}
+  paperless-batch-processing-worker-log4j2: {}
   paperless-rabbitmq: {}
   paperless-keycloak-database: {}
+  elasticsearch-data: {}
 
 networks:
   paperless:

@@ -26,6 +26,7 @@ public class FileMetaData {
     private long fileSize;
     @Nullable
     private String description;
+    private int numberOfAccesses;
 
     @Nullable
     private String fullText;
@@ -41,6 +42,7 @@ public class FileMetaData {
         this.setFileName(fileName);
         this.setFileSize(fileSize);
         this.setDescription(description);
+        this.setNumberOfAccesses(0);
         this.fullTextAddedEvents = new ArrayList<>();
         log.debug("FileMetaData {} created", this);
     }
@@ -51,6 +53,7 @@ public class FileMetaData {
                         String fileName,
                         long fileSize,
                         @Nullable String description,
+                        int numberOfAccesses,
                         @Nullable String fullText,
                         @Nullable String summary
     ) {
@@ -60,6 +63,7 @@ public class FileMetaData {
         this.setFileName(fileName);
         this.setFileSize(fileSize);
         this.setDescription(description);
+        this.setNumberOfAccesses(numberOfAccesses);
         this.setFullText(fullText);
         this.setSummary(summary);
         this.fullTextAddedEvents = new ArrayList<>();
@@ -77,6 +81,10 @@ public class FileMetaData {
 
     void addSummary(String summary) {
         this.setSummary(summary);
+    }
+
+    void addNumberOfAccesses(int numberOfAccesses) {
+        this.setNumberOfAccesses(this.numberOfAccesses + numberOfAccesses);
     }
 
     private void setFileToken(@Nullable FileToken fileToken) {
@@ -100,6 +108,11 @@ public class FileMetaData {
             Assert.isTrue(!description.isBlank(), "Description must not be blank!");
         }
         this.description = description;
+    }
+
+    private void setNumberOfAccesses(int numberOfAccesses) {
+        Assert.isTrue(numberOfAccesses >= 0, "Number of accesses can not be smaller than 1!");
+        this.numberOfAccesses = numberOfAccesses;
     }
 
     private void setFullText(@Nullable String fullText) {

@@ -23,6 +23,7 @@ public class FileMetaDataEntity {
     private long fileSize;
     @Nullable
     private String description;
+    private int numberOfAccesses;
 
     public FileMetaDataEntity() {
         this.fileToken = UUID.randomUUID();
@@ -37,6 +38,7 @@ public class FileMetaDataEntity {
         this.fileName = fileMetaData.getFileName();
         this.fileSize = fileMetaData.getFileSize();
         this.description = fileMetaData.getDescription();
+        this.numberOfAccesses = fileMetaData.getNumberOfAccesses();
     }
 
     public FileMetaData toFileMetaData(FileDocument fileDocument) {
@@ -47,6 +49,7 @@ public class FileMetaDataEntity {
                 this.fileName,
                 this.fileSize,
                 this.description,
+                this.numberOfAccesses,
                 fileDocument.getFullText(),
                 fileDocument.getSummary()
         );

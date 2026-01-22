@@ -18,7 +18,7 @@ import java.util.Objects;
 public class RabbitMQPaperlessRestListener {
     private final SummaryApplicationService summaryService;
 
-    @RabbitListener(queues = "at.fhtw.paperlessrest.domain.model.fulltextadded")
+    @RabbitListener(queues = "at.fhtw.paperlessrest.domain.model.fulltextadded.genaiworker")
     public void receiveFullTextAddedEvent(@Nullable FullTextAdded event) {
         if (Objects.isNull(event)) {
             log.warn("Received event was null!");

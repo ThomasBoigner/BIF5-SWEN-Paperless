@@ -23,6 +23,7 @@
         <module>PaperlessRest</module>
         <module>OcrWorker</module>
         <module>GenAiWorker</module>
+        <module>BatchProcessingWorker</module>
     </modules>
 
     <properties>
@@ -45,6 +46,8 @@
         <pdfbox.version>3.0.6</pdfbox.version>
         <!-- GenAi -->
         <spring-ai-starter-model-google-genai.version>1.1.2</spring-ai-starter-model-google-genai.version>
+        <!-- BatchProcessing -->
+        <jaxb.version>4.0.4</jaxb.version>
         <!-- testing -->
         <archunit-junit5.version>1.4.1</archunit-junit5.version>
         <testcontainers.version>2.0.2</testcontainers.version>
@@ -154,6 +157,20 @@
                 <version>${spring-ai-starter-model-google-genai.version}</version>
             </dependency>
 
+            <!-- BatchProcessing -->
+            <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>${jaxb.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>${jaxb.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
             <!-- testing -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -164,6 +181,12 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-webmvc-test</artifactId>
+                <version>${spring-boot-starter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security-test</artifactId>
                 <version>${spring-boot-starter.version}</version>
                 <scope>test</scope>
             </dependency>

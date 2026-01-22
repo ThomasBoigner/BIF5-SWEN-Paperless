@@ -1,9 +1,6 @@
 package at.fhtw.paperlessrest.application;
 
-import at.fhtw.paperlessrest.application.commands.AddFullTextCommand;
-import at.fhtw.paperlessrest.application.commands.AddSummaryCommand;
-import at.fhtw.paperlessrest.application.commands.UpdateFileCommand;
-import at.fhtw.paperlessrest.application.commands.UploadFileCommand;
+import at.fhtw.paperlessrest.application.commands.*;
 import at.fhtw.paperlessrest.application.dtos.FileMetaDataDto;
 import at.fhtw.paperlessrest.domain.model.*;
 import org.jspecify.annotations.NullUnmarked;
@@ -304,6 +301,60 @@ public class FileMetaDataApplicationServiceTest {
 
         // Then
         assertThat(fileMetaData.getSummary()).isEqualTo(null);
+    }
+
+    @Test
+    void ensureAddNumberOfAccessesWorksProperly() {
+        // Given
+        int numberOfAccesses = 5;
+
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.of(user));
+
+        AddNumberOfAccessesCommand command = AddNumberOfAccessesCommand.builder()
+                .numberOfAccesses(numberOfAccesses)
+                .userToken(user.getUserToken().token())
+                .fileToken(fileMetaData.getFileToken().token())
+                .build();
+
+        // When
+        fileMetaDataApplicationService.addNumberOfAccesses(command);
+
+        // Then
+        assertThat(fileMetaData.getNumberOfAccesses()).isEqualTo(numberOfAccesses);
+    }
+
+    @Test
+    void ensureAddNumberOfAccessesThrowsExceptionWhenFileCanNotBeFound() {
+        // Given
+        int numberOfAccesses = 5;
+
+        User user = User.builder()
+                .username("test")
+                .userToken(new UserToken(UUID.randomUUID()))
+                .build();
+
+        FileMetaData fileMetaData = user.uploadFile("test.txt", 100, "test");
+
+        when(userRepository.findUserByUserToken(eq(user.getUserToken()))).thenReturn(Optional.empty());
+
+        AddNumberOfAccessesCommand command = AddNumberOfAccessesCommand.builder()
+                .numberOfAccesses(numberOfAccesses)
+                .userToken(user.getUserToken().token())
+                .fileToken(fileMetaData.getFileToken().token())
+                .build();
+
+        // When
+        fileMetaDataApplicationService.addNumberOfAccesses(command);
+
+        // Then
+        assertThat(fileMetaData.getNumberOfAccesses()).isEqualTo(0);
     }
 
     @Test

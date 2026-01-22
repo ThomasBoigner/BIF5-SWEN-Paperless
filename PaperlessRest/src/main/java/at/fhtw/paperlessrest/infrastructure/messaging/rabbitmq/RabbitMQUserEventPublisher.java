@@ -1,6 +1,5 @@
 package at.fhtw.paperlessrest.infrastructure.messaging.rabbitmq;
 
-
 import at.fhtw.paperlessrest.application.UserEventPublisher;
 import at.fhtw.paperlessrest.domain.model.FileMetaData;
 import at.fhtw.paperlessrest.domain.model.FileUploaded;
